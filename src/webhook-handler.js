@@ -219,7 +219,20 @@ export async function webhookHandler(req, res) {
   const client = global.discordClient;
   if (client) {
     let sentToAny = false;
+    const userGuildIds = new Set();
     for (const tc of standardChannels) {
+      if (userGuildIds.has(tc.guild_id)) continue;
+      const guild = client.guilds.cache.get(tc.guild_id);
+      if (!guild) continue;
+      try {
+        await guild.members.fetch(user.discordId);
+        userGuildIds.add(tc.guild_id);
+      } catch {
+        // user not in this guild
+      }
+    }
+    const relevantChannels = standardChannels.filter(tc => userGuildIds.has(tc.guild_id));
+    for (const tc of relevantChannels) {
       try {
         const channel = client.channels.cache.get(tc.channel_id);
         if (channel && channel.isTextBased()) {
