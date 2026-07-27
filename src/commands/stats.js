@@ -317,11 +317,18 @@ async function statsCompare(interaction) {
   }
 }
 
+async function filterGuildMembers(interaction, users) {
+  await interaction.guild.members.fetch();
+  const memberIds = new Set(interaction.guild.members.cache.map(m => m.id));
+  return users.filter(u => memberIds.has(u.discordId));
+}
+
 async function statsTop(interaction) {
   const allUsers = (await getAllLogins()).filter((u) => u.accessToken);
-  if (allUsers.length === 0) {
+  const guildUsers = await filterGuildMembers(interaction, allUsers);
+  if (guildUsers.length === 0) {
     return interaction.reply({
-      content: "❌ No users have linked their GitHub accounts yet.",
+      content: "❌ No one in this server has linked their GitHub account yet.",
       ephemeral: true,
     });
   }
@@ -333,7 +340,7 @@ async function statsTop(interaction) {
     const yearAgo = yearAgoStr();
 
     const results = [];
-    for (const u of allUsers) {
+    for (const u of guildUsers) {
       try {
         const count = await fetchCommitCount(
           u.githubLogin,
@@ -382,9 +389,10 @@ async function statsTop(interaction) {
 
 async function statsTopDay(interaction) {
   const allUsers = (await getAllLogins()).filter((u) => u.accessToken);
-  if (allUsers.length === 0) {
+  const guildUsers = await filterGuildMembers(interaction, allUsers);
+  if (guildUsers.length === 0) {
     return interaction.reply({
-      content: "📭 No users have linked their GitHub accounts yet.",
+      content: "📭 No one in this server has linked their GitHub account yet.",
       ephemeral: true,
     });
   }
@@ -395,7 +403,7 @@ async function statsTopDay(interaction) {
     const today = todayStr();
 
     const results = [];
-    for (const u of allUsers) {
+    for (const u of guildUsers) {
       try {
         const count = await fetchCommitCount(
           u.githubLogin,
