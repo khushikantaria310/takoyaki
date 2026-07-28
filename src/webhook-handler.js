@@ -67,11 +67,15 @@ function formatMessage(discordId, event, payload, orgSender) {
       const commits = payload.commits || [];
       const count = commits.length;
       if (count === 0) return null;
-      const firstMsg = commits[0]?.message || "No commit message";
+      const commitsMsgs = commits.map(c => (c.message || '').split('\n')[0]).filter(Boolean);
       if (isPrivate) {
         return `${prefix} pushed ${count} commit${count !== 1 ? "s" : ""} to a **private repository**.`;
       }
-      return `${prefix} pushed ${count} commit${count !== 1 ? "s" : ""} to **${repoFull}** — *${firstMsg}*`;
+      if (count === 1) {
+        return `${prefix} pushed 1 commit to **${repoFull}** — *${commitsMsgs[0]}*`;
+      }
+      const bulletList = commitsMsgs.map(l => `• ${l}`).join('\n');
+      return `${prefix} pushed ${count} commits to **${repoFull}**:\n${bulletList}`;
     }
     case "pull_request": {
       const action = payload.action;
