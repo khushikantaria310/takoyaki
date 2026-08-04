@@ -110,6 +110,13 @@ function formatMessage(discordId, event, payload, orgSender) {
     }
     case "repository": {
       if (payload.action === "created") {
+        const isFork = payload.repository?.fork || !!payload.forkee;
+        if (isFork) {
+          const parent = payload.repository?.parent?.full_name || payload.forkee?.parent?.full_name;
+          if (isPrivate) return `${prefix} forked a **private repository**.`;
+          if (parent) return `${prefix} forked **${repoFull}** from **${parent}**`;
+          return `${prefix} forked **${repoFull}**`;
+        }
         if (isPrivate) return `${prefix} created a **private repository**.`;
         return `${prefix} created **${repoFull}**`;
       }
