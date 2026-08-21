@@ -317,9 +317,47 @@ async function statsCompare(interaction) {
   }
 }
 
+const memberCache = new Map();
+const CACHE_TTL = 300000; // 5 minutes
+
 async function filterGuildMembers(interaction, users) {
-  await interaction.guild.members.fetch();
-  const memberIds = new Set(interaction.guild.members.cache.map(m => m.id));
+  const cacheKey = interaction.guildId;
+  const cached = memberCache.get(cacheKey);
+  
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return users.filter(u => cached.memberIds.has(u.discordId));
+  }
+  
+  let members;
+  let retries = 3;
+  let delay = 1000;
+  
+  while (retries > 0) {
+    try {
+      members = await interaction.guild.members.fetch();
+      break;
+    } catch (error) {
+      if (error.message.includes('rate limited') || error.code === 'GatewayRateLimitError') {
+        const waitTime = error.data?.retry_after ? error.data.retry_after * 1000 : delay;
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        delay *= 2;
+        retries--;
+      } else {
+        throw error;
+      }
+    }
+  }
+  
+  if (!members) {
+    return users; // Return unfiltered if fetch fails
+  }
+  
+  const memberIds = new Set(members.map(m => m.id));
+  memberCache.set(cacheKey, {
+    memberIds,
+    timestamp: Date.now()
+  });
+  
   return users.filter(u => memberIds.has(u.discordId));
 }
 
