@@ -53,6 +53,20 @@ function verifySignature(payload, signature, secret) {
   return crypto.timingSafeEqual(sigBuffer, expectedBuffer);
 }
 
+function getOwnCommits(payload, senderLogin) {
+  const commits = payload.commits || [];
+  if (!senderLogin) return commits;
+  const sender = senderLogin.toLowerCase();
+  return commits.filter((c) => {
+    if (c.distinct === false) return false;
+    const authorLogin = c.author?.username?.toLowerCase();
+    if (authorLogin) return authorLogin === sender;
+    const committerLogin = c.committer?.username?.toLowerCase();
+    if (committerLogin) return committerLogin === sender;
+    return false;
+  });
+}
+
 function formatMessage(discordId, event, payload, orgSender) {
   const sender = orgSender || payload.sender?.login;
   const repo = payload.repository?.name;
@@ -64,18 +78,20 @@ function formatMessage(discordId, event, payload, orgSender) {
 
   switch (event) {
     case "push": {
-      const commits = payload.commits || [];
-      const count = commits.length;
+      const ownCommits = getOwnCommits(payload, sender);
+      const count = ownCommits.length;
       if (count === 0) return null;
-      const commitsMsgs = commits.map(c => (c.message || '').split('\n')[0]).filter(Boolean);
+      const commitsMsgs = ownCommits.map(c => (c.message || '').split('\n')[0]).filter(Boolean);
       if (isPrivate) {
         return `${prefix} pushed ${count} commit${count !== 1 ? "s" : ""} to a **private repository**.`;
       }
       if (count === 1) {
         return `${prefix} pushed 1 commit to **${repoFull}** — *${commitsMsgs[0]}*`;
       }
-      const bulletList = commitsMsgs.map(l => `• ${l}`).join('\n');
-      return `${prefix} pushed ${count} commits to **${repoFull}**:\n${bulletList}`;
+      const shown = commitsMsgs.slice(0, 10);
+      const bulletList = shown.map(l => `• ${l}`).join('\n');
+      const extra = count > 10 ? `\n... and ${count - 10} more` : "";
+      return `${prefix} pushed ${count} commits to **${repoFull}**:\n${bulletList}${extra}`;
     }
     case "pull_request": {
       const action = payload.action;
@@ -270,8 +286,10 @@ export async function webhookHandler(req, res) {
   }
 
   if (event === "push") {
-    const commits = parsed.commits || [];
-    await addCommitCount(user.discordId, commits.length);
+    const ownCount = getOwnCommits(parsed, parsed.sender?.login).length;
+    if (ownCount > 0) {
+      await addCommitCount(user.discordId, ownCount);
+    }
   }
 
   res.status(200).send("OK");
