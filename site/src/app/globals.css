@@ -680,3 +680,58 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Phase 2 — one fixed canvas painted above the flat poster fills but below
+   all copy. Ordering matters: the poster background stays level 0 while the
+   chrome and text sit at level 10, so the 3D balls read as printed on top. */
+.scene-canvas {
+  position: fixed;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+}
+
+.scene-canvas canvas {
+  display: block;
+}
+
+.hero {
+  isolation: auto;
+}
+
+.hero::before {
+  z-index: 0;
+}
+
+.hero__copy {
+  z-index: 10;
+}
+
+.dispatch-strip,
+.site-footer {
+  position: relative;
+  z-index: 10;
+}
+
+.poster__scene {
+  z-index: auto;
+}
+
+.poster__head,
+.poster__foot,
+.poster__japanese,
+.poster__letters {
+  z-index: 10;
+}
+
+/* When the live scene is active the CSS stand-ins step aside so the DOM
+   lettering can be revealed by the shared GSAP timeline. */
+.fx .poster__balls,
+.fx .poster__chopstick {
+  opacity: 0;
+}
+
+.fx .poster__letters span {
+  opacity: 0;
+}
+

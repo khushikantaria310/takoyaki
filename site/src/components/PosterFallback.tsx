@@ -14,7 +14,7 @@ export function PosterFallback() {
         <span className="poster__serial">No. 08 / hot &amp; ready</span>
       </div>
 
-      <div className="poster__scene" aria-hidden="true">
+      <div className="poster__scene" data-poster-scene aria-hidden="true">
         <p className="poster__japanese">たこ焼き</p>
         <div className="poster__balls">
           {letters.map((letter, index) => (
@@ -23,7 +23,11 @@ export function PosterFallback() {
         </div>
         <span className="poster__chopstick" />
         <div className="poster__letters">
-          {letters.map((letter, index) => <span key={`${letter}-label-${index}`}>{letter}</span>)}
+          {letters.map((letter, index) => (
+            <span key={`${letter}-label-${index}`} data-hero-letter>
+              {letter}
+            </span>
+          ))}
         </div>
       </div>
 
