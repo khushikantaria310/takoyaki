@@ -356,15 +356,20 @@ button {
 }
 
 /* Balls shoulder-to-shoulder on the plate. */
-.stage-bowl {
+.stage-bowl-wrap {
   position: absolute;
   z-index: 1;
   left: 50%;
   bottom: 5%;
   width: min(78%, 860px);
-  height: auto;
   transform: translateX(-50%);
   filter: drop-shadow(0 26px 28px rgba(18, 24, 10, 0.28));
+}
+
+.stage-bowl {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .stage__script {

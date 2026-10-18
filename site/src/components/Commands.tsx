@@ -78,11 +78,26 @@ export function Commands() {
       });
     };
 
-    const onUp = () => {
+    const onUp = (event: PointerEvent) => {
       const dragging = dragRef.current;
       if (!dragging) return;
       dragRef.current = null;
-      gsap.to(dragging.el, { scale: 1, duration: 0.3, ease: "back.out(2)" });
+
+      // Drop it in the bowl and it stays; drop it outside and it springs back.
+      const bowl = document.querySelector("[data-bowl]");
+      const rect = bowl?.getBoundingClientRect();
+      const inside =
+        !!rect &&
+        event.clientX > rect.left &&
+        event.clientX < rect.right &&
+        event.clientY > rect.top &&
+        event.clientY < rect.bottom;
+
+      if (inside) {
+        gsap.to(dragging.el, { scale: 1, duration: 0.3, ease: "back.out(2)" });
+      } else {
+        gsap.to(dragging.el, { x: 0, y: 0, scale: 1, duration: 0.7, ease: "elastic.out(1, 0.5)" });
+      }
     };
 
     window.addEventListener("pointermove", onMove, { passive: true });
@@ -158,7 +173,9 @@ export function Commands() {
             <h2 className="stage__title">Point at a takoyaki for its command</h2>
           </div>
 
-          <Bowl className="stage-bowl" />
+          <div className="stage-bowl-wrap" data-bowl>
+            <Bowl className="stage-bowl" />
+          </div>
 
           <div className="plate-balls">
             {commands.map((item, index) => {
