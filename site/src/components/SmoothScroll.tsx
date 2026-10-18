@@ -1,26 +1,19 @@
 "use client";
 
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
+import { useEffect } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-/**
- * ONE Lenis instance for the whole site, wired into ONE gsap ticker
- * so smooth scroll and scroll scenes share a single clock.
- * Cleaned up on unmount; disabled for prefers-reduced-motion.
- */
+/** One Lenis instance wired into one GSAP ticker. */
 export default function SmoothScroll() {
-  const scope = useRef<HTMLDivElement>(null);
-
-  useGSAP(() => {
+  useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     gsap.registerPlugin(ScrollTrigger);
     const lenis = new Lenis({ duration: 1.05, smoothWheel: true });
-    const updateScroll = () => ScrollTrigger.update();
-    lenis.on("scroll", updateScroll);
+    const update = () => ScrollTrigger.update();
+    lenis.on("scroll", update);
 
     const tick = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
@@ -35,15 +28,15 @@ export default function SmoothScroll() {
       event.preventDefault();
       lenis.scrollTo(target as HTMLElement, { offset: 0 });
     };
-
     document.addEventListener("click", onClick);
+
     return () => {
       document.removeEventListener("click", onClick);
-      lenis.off("scroll", updateScroll);
+      lenis.off("scroll", update);
       gsap.ticker.remove(tick);
       lenis.destroy();
     };
-  }, { scope });
+  }, []);
 
-  return <div ref={scope} className="scroll-runtime" aria-hidden="true" />;
+  return null;
 }
