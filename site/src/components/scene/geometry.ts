@@ -98,6 +98,21 @@ export function createMayoGeometry(): THREE.TubeGeometry {
   );
 }
 
+/** A shallow ceramic plate, seen from a slight angle. */
+export function createPlateGeometry(): THREE.LatheGeometry {
+  const profile = [
+    new THREE.Vector2(0.001, 0),
+    new THREE.Vector2(0.5, 0.02),
+    new THREE.Vector2(0.72, 0.06),
+    new THREE.Vector2(0.86, 0.12),
+    new THREE.Vector2(0.95, 0.2),
+    new THREE.Vector2(1.0, 0.26),
+  ];
+  const geometry = new THREE.LatheGeometry(profile, 48);
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
 /** A green-onion ring. */
 export function createOnionRingGeometry(): THREE.TorusGeometry {
   return new THREE.TorusGeometry(0.15, 0.05, 10, 24);

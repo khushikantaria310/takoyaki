@@ -82,11 +82,12 @@ button {
 }
 
 .topnav a {
-  font-size: clamp(0.85rem, 1.4vw, 1.05rem);
-  letter-spacing: 0.06em;
+  font-size: clamp(1rem, 1.7vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: 0.05em;
   text-decoration: none;
   color: var(--ink);
-  opacity: 0.75;
+  opacity: 0.78;
   transition: opacity 160ms ease, color 160ms ease;
 }
 
@@ -130,7 +131,7 @@ button {
 
 /* When the live 3D scene runs, the flat stand-ins step aside. */
 .fx .hero-plate,
-.fx .stage-tray,
+.fx .stage-plate,
 .fx .ball-art {
   opacity: 0;
 }
@@ -217,11 +218,12 @@ button {
 }
 
 .about__text {
-  max-width: 40rem;
+  max-width: 44rem;
   margin: 0;
   text-align: center;
-  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
-  line-height: 1.8;
+  font-weight: 600;
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  line-height: 1.75;
 }
 
 /* ---------- Stage sections (features / commands) ---------- */
@@ -243,17 +245,19 @@ button {
 
 .stage__eyebrow {
   margin: 0 0 0.3rem;
-  font-size: 0.75rem;
+  font-size: clamp(0.8rem, 1.4vw, 1rem);
+  font-weight: 600;
   letter-spacing: 0.3em;
   text-transform: lowercase;
   color: var(--navy);
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 .stage__title {
   margin: 0;
-  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  font-size: clamp(1.5rem, 3.4vw, 2.4rem);
   font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--navy);
 }
 
@@ -329,24 +333,24 @@ button {
 
 .tag--box {
   display: grid;
-  gap: 0.1rem;
-  min-width: 190px;
+  gap: 0.15rem;
+  min-width: 220px;
   border: 3px solid var(--ink);
-  border-radius: 12px;
-  padding: 0.5rem 0.85rem;
+  border-radius: 14px;
+  padding: 0.7rem 1.1rem;
   background: var(--paper);
   text-align: left;
   white-space: nowrap;
 }
 
 .tag--box strong {
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 600;
 }
 
 .tag--box em {
   font-style: normal;
-  font-size: 0.78rem;
+  font-size: 0.92rem;
   color: var(--navy);
   opacity: 0.85;
 }
@@ -367,7 +371,7 @@ button {
 .tag__text {
   display: grid;
   color: var(--navy);
-  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  font-size: clamp(1.2rem, 2.4vw, 1.6rem);
   font-weight: 600;
   line-height: 1.2;
   text-align: left;
@@ -375,16 +379,16 @@ button {
 
 .tag__text em {
   font-style: normal;
-  font-size: 0.74rem;
+  font-size: 0.86rem;
   opacity: 0.8;
 }
 
 /* ---------- Tray stage ---------- */
-.stage-tray {
+.stage-plate {
   position: absolute;
   left: 50%;
-  bottom: 4%;
-  width: min(88%, 680px);
+  bottom: 6%;
+  width: min(94%, 760px);
   height: auto;
   transform: translateX(-50%);
 }
@@ -485,7 +489,7 @@ button {
 
 .footer-mark {
   margin: 0;
-  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-size: clamp(1.7rem, 3.6vw, 2.4rem);
   font-weight: 600;
   letter-spacing: 0.3em;
   text-indent: 0.3em;
@@ -494,17 +498,19 @@ button {
 
 .footer-note {
   margin: 0.35rem 0 0;
-  font-size: 0.85rem;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .footer-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.1rem;
+  gap: 1.3rem;
 }
 
 .footer-links a {
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 600;
   letter-spacing: 0.05em;
   text-decoration: none;
   opacity: 0.85;

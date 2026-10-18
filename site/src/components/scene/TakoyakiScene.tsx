@@ -11,8 +11,8 @@ import {
   createChopstickGeometry,
   createMayoGeometry,
   createOnionRingGeometry,
+  createPlateGeometry,
   createSauceGeometry,
-  createTrayGeometry,
 } from "./geometry";
 
 export type SceneMode = "hero" | "skewer" | "bowl";
@@ -22,20 +22,11 @@ const BALLS = 8;
 type BallState = { p: number; lift: number };
 
 const HERO_LAYOUT = [
-  [-0.78, 0.16],
-  [0.0, 0.34],
-  [0.78, 0.16],
-  [-0.44, -0.2],
-  [0.44, -0.2],
-];
-
-const DRIFT = [
-  { x: 0.16, phase: 0.05, speed: 0.06, sesame: false },
-  { x: 0.3, phase: 0.42, speed: 0.05, sesame: true },
-  { x: 0.72, phase: 0.2, speed: 0.052, sesame: true },
-  { x: 0.86, phase: 0.62, speed: 0.058, sesame: false },
-  { x: 0.44, phase: 0.75, speed: 0.066, sesame: false },
-  { x: 0.6, phase: 0.32, speed: 0.05, sesame: false },
+  [-0.92, 0.2],
+  [0.0, 0.42],
+  [0.92, 0.2],
+  [-0.52, -0.24],
+  [0.52, -0.24],
 ];
 
 export default function TakoyakiScene({ mode, trigger }: { mode: SceneMode; trigger?: string }) {
@@ -44,7 +35,7 @@ export default function TakoyakiScene({ mode, trigger }: { mode: SceneMode; trig
   const segments = size.width < 720 ? 40 : 64;
   const ballGeometry = useMemo(() => createBallGeometry(segments), [segments]);
   const chopstickGeometry = useMemo(() => createChopstickGeometry(), []);
-  const trayGeometry = useMemo(() => createTrayGeometry(), []);
+  const plateGeometry = useMemo(() => createPlateGeometry(), []);
   const sauceGeometry = useMemo(() => createSauceGeometry(), []);
   const mayoGeometry = useMemo(() => createMayoGeometry(), []);
   const onionGeometry = useMemo(() => createOnionRingGeometry(), []);
@@ -55,7 +46,7 @@ export default function TakoyakiScene({ mode, trigger }: { mode: SceneMode; trig
     const ctx = canvas.getContext("2d");
     if (ctx) {
       const gradient = ctx.createRadialGradient(64, 64, 4, 64, 64, 62);
-      gradient.addColorStop(0, "rgba(20,26,12,0.55)");
+      gradient.addColorStop(0, "rgba(20,26,12,0.5)");
       gradient.addColorStop(1, "rgba(20,26,12,0)");
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, 128, 128);
@@ -67,22 +58,22 @@ export default function TakoyakiScene({ mode, trigger }: { mode: SceneMode; trig
 
   const groupRef = useRef<THREE.Group>(null);
   const chopstickRef = useRef<THREE.Group>(null);
-  const trayRef = useRef<THREE.Group>(null);
+  const plateRef = useRef<THREE.Group>(null);
   const shadowRef = useRef<THREE.Mesh>(null);
-  const driftRef = useRef<THREE.Group>(null);
   const ballRefs = useRef<(THREE.Group | null)[]>([]);
+  const drizzleRefs = useRef<(THREE.Group | null)[]>([]);
   const state = useRef<BallState[]>(Array.from({ length: BALLS }, () => ({ p: mode === "hero" ? 1 : 0, lift: 0 })));
-  const rectsRef = useRef<{ ball: DOMRect | null; tray: DOMRect | null }>({ ball: null, tray: null });
+  const rectsRef = useRef<{ ball: DOMRect | null; plate: DOMRect | null }>({ ball: null, plate: null });
 
   useEffect(() => {
     let frame = 0;
     const measure = () => {
       frame = 0;
       const ball = document.querySelector("[data-slot]");
-      const tray = document.querySelector("[data-tray]");
+      const plate = document.querySelector("[data-plate]");
       rectsRef.current = {
         ball: ball ? ball.getBoundingClientRect() : null,
-        tray: tray ? tray.getBoundingClientRect() : null,
+        plate: plate ? plate.getBoundingClientRect() : null,
       };
     };
     const schedule = () => {
@@ -101,22 +92,41 @@ export default function TakoyakiScene({ mode, trigger }: { mode: SceneMode; trig
   }, []);
 
   useEffect(() => {
-    const onClick = (event: Event) => {
-      const detail = (event as CustomEvent<{ index: number }>).detail;
-      const index = detail?.index ?? -1;
+    const onHover = (event: Event) => {
+      const index = (event as CustomEvent<{ index: number }>).detail?.index ?? -1;
       state.current.forEach((ball, i) => {
+        const target = i === index;
         gsap.to(ball, {
-          lift: i === index ? 1 : 0,
-          duration: i === index ? 0.5 : 0.35,
-          ease: i === index ? "back.out(2)" : "power2.out",
+          lift: target ? 1 : 0,
+          duration: target ? 0.55 : 0.4,
+          ease: target ? "back.out(2.2)" : "power2.out",
         });
+        // On the skewer, moving the cursor inserts the ball onto the chopstick.
+        if (mode === "skewer" && target) {
+          gsap.to(ball, { p: 1, duration: 0.6, ease: "back.out(2)" });
+        }
       });
     };
-    window.addEventListener("tako:hover", onClick);
-    return () => window.removeEventListener("tako:hover", onClick);
-  }, []);
+    window.addEventListener("tako:hover", onHover);
+    return () => window.removeEventListener("tako:hover", onHover);
+  }, [mode]);
 
   useGSAP(() => {
+    // The drizzle falls onto each ball once, then stays put.
+    drizzleRefs.current.forEach((drizzle, index) => {
+      if (!drizzle) return;
+      gsap.fromTo(
+        drizzle.position,
+        { y: 3.2 },
+        { y: 0, duration: 1.1, delay: 0.5 + index * 0.16, ease: "bounce.out" },
+      );
+      gsap.fromTo(
+        drizzle.scale,
+        { x: 0.35, y: 0.35, z: 0.35 },
+        { x: 1, y: 1, z: 1, duration: 1.1, delay: 0.5 + index * 0.16, ease: "back.out(1.6)" },
+      );
+    });
+
     if (!trigger) return;
     gsap.registerPlugin(ScrollTrigger);
     const timeline = gsap.timeline({
@@ -125,7 +135,7 @@ export default function TakoyakiScene({ mode, trigger }: { mode: SceneMode; trig
     state.current.forEach((ball, index) => {
       timeline.to(ball, { p: 1, duration: 1, ease: "bounce.out" }, index * 0.34);
     });
-  }, { dependencies: [trigger] });
+  }, { dependencies: [trigger, mode] });
 
   useFrame(() => {
     const perspective = camera as THREE.PerspectiveCamera;
@@ -136,42 +146,38 @@ export default function TakoyakiScene({ mode, trigger }: { mode: SceneMode; trig
     const time = performance.now() / 1000;
 
     const slot = rectsRef.current.ball;
-    const slotRadius = slot ? slot.width * 0.5 * wpp : mode === "hero" ? 0.95 : 0.6;
-    const radius = mode === "bowl" ? slotRadius * 0.9 : slotRadius;
+    const slotRadius = slot ? slot.width * 0.5 * wpp : mode === "hero" ? 1.05 : 0.62;
+    const radius = mode === "bowl" ? slotRadius * 0.92 : slotRadius;
     const topWorld = (size.height / 2) * wpp;
 
     if (groupRef.current && mode === "hero") {
-      groupRef.current.rotation.y = Math.sin(time * 0.25) * 0.3;
-      groupRef.current.position.y = 0.55 + Math.sin(time * 0.7) * 0.07;
+      groupRef.current.rotation.y = Math.sin(time * 0.22) * 0.34;
+      groupRef.current.position.y = 0.62 + Math.sin(time * 0.7) * 0.08;
     }
 
     if (chopstickRef.current) {
-      const chopRadius = Math.max(0.02, radius * 0.34);
-      const length = radius * 7.6;
-      chopstickRef.current.position.set(0, radius * 0.2, -0.1);
+      const chopRadius = Math.max(0.022, radius * 0.32);
+      chopstickRef.current.position.set(0, radius * 0.1, -0.12);
       chopstickRef.current.rotation.set(0, 0, 0.02);
-      chopstickRef.current.scale.set(chopRadius / 0.08, length, chopRadius / 0.08);
+      chopstickRef.current.scale.set(chopRadius / 0.08, radius * 7.4, chopRadius / 0.08);
       chopstickRef.current.visible = mode === "skewer";
     }
 
-    if (trayRef.current) {
-      const trayRect = rectsRef.current.tray;
-      const trayRadius = trayRect ? trayRect.width * 0.5 * wpp : 2.0;
-      const cy = trayRect ? toY(trayRect.top + trayRect.height * 0.5) : mode === "hero" ? -1.4 : -2.5;
-      const cx = trayRect ? toX(trayRect.left + trayRect.width * 0.5) : 0;
-      trayRef.current.position.set(cx, cy + (mode === "hero" ? 0.55 : 0), -0.15);
-      trayRef.current.rotation.set(mode === "hero" ? -0.26 : -0.16, 0, 0);
-      trayRef.current.scale.set(trayRadius, trayRadius * 0.5, trayRadius);
-      trayRef.current.visible = mode === "bowl" || mode === "hero";
+    const plateRect = rectsRef.current.plate;
+    const plateRadius = plateRect ? plateRect.width * 0.5 * wpp : mode === "hero" ? 3.1 : 2.6;
+    const plateCy = plateRect ? toY(plateRect.top + plateRect.height * 0.42) : mode === "hero" ? -1.5 : -2.4;
+    const plateCx = plateRect ? toX(plateRect.left + plateRect.width * 0.5) : 0;
+
+    if (plateRef.current) {
+      plateRef.current.position.set(plateCx, plateCy + (mode === "hero" ? 0.62 : 0), -0.18);
+      plateRef.current.rotation.set(-0.62, 0, 0);
+      plateRef.current.scale.set(plateRadius, plateRadius * 0.34, plateRadius * 0.82);
+      plateRef.current.visible = mode !== "skewer";
     }
 
     if (shadowRef.current) {
-      const trayRect = rectsRef.current.tray;
-      const trayRadius = trayRect ? trayRect.width * 0.5 * wpp : 2.6;
-      const cy = trayRect ? toY(trayRect.top + trayRect.height * 0.72) : -2.5;
-      const cx = trayRect ? toX(trayRect.left + trayRect.width * 0.5) : 0;
-      shadowRef.current.position.set(cx, cy, -0.4);
-      shadowRef.current.scale.set(trayRadius * 1.9, trayRadius * 0.7, 1);
+      shadowRef.current.position.set(plateCx, plateCy - plateRadius * 0.34, -0.45);
+      shadowRef.current.scale.set(plateRadius * 2.1, plateRadius * 0.8, 1);
       shadowRef.current.visible = mode !== "skewer";
     }
 
@@ -195,39 +201,30 @@ export default function TakoyakiScene({ mode, trigger }: { mode: SceneMode; trig
       }
 
       const startY = topWorld + radius * 3 + i * radius * 0.6;
-      const y = THREE.MathUtils.lerp(startY, targetY, s.p) + s.lift * radius * 2.6;
-      const z = 0.2 + s.lift * 0.5;
+      const y = THREE.MathUtils.lerp(startY, targetY, s.p) + s.lift * radius * 2.4;
+      const z = 0.25 + s.lift * 0.6;
 
-      ball.position.set(targetX, y + Math.sin(time * 2.6 + i) * radius * 0.05 * s.p, z);
-      ball.rotation.y = time * 0.25 + i;
+      ball.position.set(targetX, y + Math.sin(time * 2.4 + i) * radius * 0.04 * s.p, z);
+      ball.rotation.y = time * 0.2 + i;
       ball.rotation.z = (1 - s.p) * 0.5 * Math.sin(i);
 
-      const squash = 1 - 0.22 * Math.sin(Math.min(1, Math.max(0, (s.p - 0.85) * 6.6)) * Math.PI);
-      const liftScale = 1 + s.lift * 0.12;
-      ball.scale.setScalar(radius * squash * liftScale);
-    }
-
-    const drift = driftRef.current;
-    if (drift) {
-      drift.children.forEach((child, index) => {
-        const piece = DRIFT[index % DRIFT.length];
-        const progress = (time * piece.speed + piece.phase) % 1;
-        child.position.set(
-          (piece.x - 0.5) * size.width * wpp,
-          topWorld - progress * size.height * wpp,
-          0.6,
-        );
-        child.rotation.z = time * 0.9 + index;
-        child.rotation.x = Math.sin(time * 0.5 + index) * 0.7;
-      });
+      const squash = 1 - 0.2 * Math.sin(Math.min(1, Math.max(0, (s.p - 0.86) * 6.6)) * Math.PI);
+      ball.scale.setScalar(radius * squash * (1 + s.lift * 0.14));
     }
   });
 
   return (
     <group>
-      <group ref={trayRef}>
-        <mesh geometry={trayGeometry} castShadow receiveShadow>
-          <meshStandardMaterial color="#D9BE8E" roughness={0.92} metalness={0} side={THREE.DoubleSide} />
+      <group ref={plateRef}>
+        <mesh geometry={plateGeometry} castShadow receiveShadow>
+          <meshPhysicalMaterial
+            color="#EFE7D2"
+            roughness={0.34}
+            metalness={0}
+            clearcoat={0.5}
+            clearcoatRoughness={0.3}
+            side={THREE.DoubleSide}
+          />
         </mesh>
       </group>
 
@@ -238,23 +235,8 @@ export default function TakoyakiScene({ mode, trigger }: { mode: SceneMode; trig
 
       <group ref={chopstickRef}>
         <mesh geometry={chopstickGeometry} castShadow>
-          <meshStandardMaterial color="#E6CD9E" roughness={0.7} metalness={0} />
+          <meshStandardMaterial color="#E6CD9E" roughness={0.68} metalness={0} />
         </mesh>
-      </group>
-
-      <group ref={driftRef}>
-        {DRIFT.map((piece, index) =>
-          piece.sesame ? (
-            <mesh key={index} scale={0.7}>
-              <sphereGeometry args={[0.07, 12, 12]} />
-              <meshStandardMaterial color="#F5EEDC" roughness={0.6} />
-            </mesh>
-          ) : (
-            <mesh key={index} geometry={onionGeometry} scale={1.15 + (index % 3) * 0.2}>
-              <meshStandardMaterial color="#6FA53A" roughness={0.65} />
-            </mesh>
-          ),
-        )}
       </group>
 
       <group ref={groupRef}>
@@ -268,34 +250,41 @@ export default function TakoyakiScene({ mode, trigger }: { mode: SceneMode; trig
             <mesh geometry={ballGeometry} castShadow receiveShadow>
               <meshPhysicalMaterial
                 color="#CE8A3E"
-                roughness={0.62}
+                roughness={0.6}
                 metalness={0}
-                clearcoat={0.45}
-                clearcoatRoughness={0.5}
-                sheen={0.4}
+                clearcoat={0.5}
+                clearcoatRoughness={0.45}
+                sheen={0.45}
                 sheenColor="#E0A94A"
               />
             </mesh>
-            <mesh geometry={sauceGeometry}>
-              <meshPhysicalMaterial color="#5E2A0E" roughness={0.22} metalness={0} clearcoat={0.9} clearcoatRoughness={0.2} />
-            </mesh>
-            <mesh geometry={mayoGeometry}>
-              <meshStandardMaterial color="#F5EEDC" roughness={0.75} />
-            </mesh>
-            <mesh geometry={onionGeometry} position={[0.15, 0.9, 0.35]} rotation={[0.4, 0, 0.3]} scale={1.6}>
-              <meshStandardMaterial color="#6FA53A" roughness={0.6} />
-            </mesh>
-            <mesh geometry={onionGeometry} position={[-0.45, 0.6, 0.6]} rotation={[0.2, 0.6, -0.4]} scale={1.3}>
-              <meshStandardMaterial color="#6FA53A" roughness={0.6} />
-            </mesh>
-            <mesh position={[0.55, 0.45, 0.6]} scale={1}>
-              <sphereGeometry args={[0.055, 12, 12]} />
-              <meshStandardMaterial color="#F5EEDC" roughness={0.5} />
-            </mesh>
-            <mesh position={[-0.2, 0.72, 0.65]} scale={1}>
-              <sphereGeometry args={[0.05, 12, 12]} />
-              <meshStandardMaterial color="#F5EEDC" roughness={0.5} />
-            </mesh>
+
+            <group
+              ref={(element) => {
+                drizzleRefs.current[index] = element;
+              }}
+            >
+              <mesh geometry={sauceGeometry}>
+                <meshPhysicalMaterial color="#5E2A0E" roughness={0.2} metalness={0} clearcoat={0.95} clearcoatRoughness={0.15} />
+              </mesh>
+              <mesh geometry={mayoGeometry}>
+                <meshStandardMaterial color="#F7F1E0" roughness={0.7} />
+              </mesh>
+              <mesh geometry={onionGeometry} position={[0.15, 0.9, 0.35]} rotation={[0.4, 0, 0.3]} scale={1.6}>
+                <meshStandardMaterial color="#6FA53A" roughness={0.6} />
+              </mesh>
+              <mesh geometry={onionGeometry} position={[-0.45, 0.6, 0.6]} rotation={[0.2, 0.6, -0.4]} scale={1.3}>
+                <meshStandardMaterial color="#6FA53A" roughness={0.6} />
+              </mesh>
+              <mesh position={[0.55, 0.45, 0.6]}>
+                <sphereGeometry args={[0.055, 12, 12]} />
+                <meshStandardMaterial color="#F7F1E0" roughness={0.5} />
+              </mesh>
+              <mesh position={[-0.2, 0.72, 0.65]}>
+                <sphereGeometry args={[0.05, 12, 12]} />
+                <meshStandardMaterial color="#F7F1E0" roughness={0.5} />
+              </mesh>
+            </group>
           </group>
         ))}
       </group>

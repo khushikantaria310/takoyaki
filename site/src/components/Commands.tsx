@@ -5,20 +5,20 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ball } from "@/components/Ball";
-import { Tray } from "@/components/Tray";
+import { Plate } from "@/components/Plate";
 import { HandArrow } from "@/components/HandArrow";
 import SceneMount from "@/components/SceneMount";
 import { bill, commands } from "@/lib/data";
 
 const slots = [
-  { left: 33, top: 65, tilt: -7 },
-  { left: 45, top: 62, tilt: 5 },
-  { left: 57, top: 65, tilt: -4 },
-  { left: 69, top: 69, tilt: 8 },
-  { left: 28, top: 79, tilt: -6 },
-  { left: 42, top: 82, tilt: 3 },
-  { left: 56, top: 82, tilt: -9 },
-  { left: 70, top: 79, tilt: 6 },
+  { left: 34, top: 62, tilt: -7 },
+  { left: 46, top: 59, tilt: 5 },
+  { left: 58, top: 62, tilt: -4 },
+  { left: 70, top: 66, tilt: 8 },
+  { left: 30, top: 74, tilt: -6 },
+  { left: 43, top: 78, tilt: 3 },
+  { left: 57, top: 78, tilt: -9 },
+  { left: 70, top: 74, tilt: 6 },
 ];
 
 const hover = (index: number) =>
@@ -68,7 +68,7 @@ export function Commands() {
             <SceneMount mode="bowl" trigger="#commands" />
           </div>
 
-          <Tray className="stage-tray" data-tray />
+          <Plate className="stage-plate" data-plate />
 
           {commands.map((item, index) => {
             const slot = slots[index % slots.length];
