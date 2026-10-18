@@ -103,6 +103,29 @@ button {
   transform: translateY(0);
 }
 
+/* ---------- Bonito flake cursor ---------- */
+.has-flake-cursor,
+.has-flake-cursor * {
+  cursor: none !important;
+}
+
+.bonito-cursor {
+  position: fixed;
+  z-index: 70;
+  top: -6px;
+  left: -4px;
+  width: 44px;
+  height: 30px;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 6px rgba(18, 24, 10, 0.3));
+  will-change: transform;
+}
+
+.bonito-cursor svg {
+  display: block;
+  overflow: visible;
+}
+
 /* ---------- Nav (plain text, right side, no box) ---------- */
 .topnav {
   position: fixed;
@@ -252,7 +275,7 @@ button {
 /* ---------- Stage sections (features / commands) ---------- */
 .stage {
   position: relative;
-  height: 165vh;
+  height: 135vh;
 }
 
 .stage__head {
@@ -324,12 +347,12 @@ button {
 }
 
 .skewer-balls .ball + .ball {
-  margin-top: -42px;
+  margin-top: -54px;
 }
 
 .ball--skewer {
-  width: 116px;
-  height: 116px;
+  width: 150px;
+  height: 150px;
 }
 
 /* Balls shoulder-to-shoulder on the plate. */

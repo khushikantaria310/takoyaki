@@ -38,18 +38,6 @@ export function TakoyakiPlate({ className }: { className?: string }) {
       role="img"
       aria-label="A folded paper tray of takoyaki with sauce, mayo, green onion, and sesame"
     >
-      {/* tray */}
-      <path
-        d="M40 120 L420 120 L366 232 Q230 268 94 232 Z"
-        fill="var(--tray)"
-        stroke="var(--ink)"
-        strokeWidth="5"
-        strokeLinejoin="round"
-      />
-      <path d="M40 120 L94 232" fill="none" stroke="var(--ink)" strokeWidth="3" />
-      <path d="M420 120 L366 232" fill="none" stroke="var(--ink)" strokeWidth="3" />
-      <path d="M92 126 L138 226 M368 126 L322 226" fill="none" stroke="var(--ink)" strokeWidth="2.5" opacity="0.45" />
-
       {/* balls */}
       {ball(150, 168, 1.42, 6, "a")}
       {ball(300, 168, 1.42, -8, "b")}
