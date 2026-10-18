@@ -321,7 +321,7 @@ button {
   position: absolute;
   z-index: 3;
   left: 50%;
-  bottom: 11%;
+  bottom: 20%;
   display: grid;
   gap: 0;
   transform: translateX(-50%);
@@ -333,15 +333,15 @@ button {
 }
 
 .plate-balls__row > .ball + .ball {
-  margin-left: -16px;
+  margin-left: -26px;
 }
 
 .plate-balls__row + .plate-balls__row {
-  margin-top: -34px;
+  margin-top: -54px;
 }
 
 .plate-balls__row:nth-child(2) {
-  margin-left: 50px;
+  margin-left: 74px;
 }
 
 .plate-balls__row:nth-child(2) .ball {
@@ -349,8 +349,8 @@ button {
 }
 
 .ball--plate {
-  width: 96px;
-  height: 96px;
+  width: 148px;
+  height: 148px;
 }
 
 .slot {
@@ -506,6 +506,20 @@ button {
   transform: translateX(-50%);
 }
 
+.tag--right {
+  left: calc(100% + 14px);
+  right: auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tag--left {
+  left: auto;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .tag__cmd {
   display: inline-flex;
   align-items: center;
@@ -525,8 +539,8 @@ button {
 .stage-plate {
   position: absolute;
   left: 50%;
-  bottom: 3%;
-  width: min(92%, 720px);
+  bottom: -8%;
+  width: min(160%, 1600px);
   height: auto;
   transform: translateX(-50%);
 }
@@ -665,8 +679,34 @@ button {
     min-width: 150px;
   }
 
-  .tag__arrow {
-    width: 40px;
+  .tag--glass {
+    width: min(260px, 62vw);
+  }
+
+  .ball--skewer {
+    width: 72px;
+    height: 72px;
+  }
+
+  .skewer-balls .ball + .ball {
+    margin-top: -26px;
+  }
+
+  .ball--plate {
+    width: 96px;
+    height: 96px;
+  }
+
+  .plate-balls__row > .ball + .ball {
+    margin-left: -18px;
+  }
+
+  .plate-balls__row + .plate-balls__row {
+    margin-top: -36px;
+  }
+
+  .plate-balls__row:nth-child(2) {
+    margin-left: 48px;
   }
 
   .site-footer__inner {

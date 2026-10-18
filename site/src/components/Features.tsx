@@ -56,7 +56,7 @@ export function Features() {
               aria-label={`${feature.label}. ${feature.desc}`}
             >
               <Ball size={104} tilt={tilts[index % tilts.length]} />
-              <span className="tag tag--glass">
+              <span className={`tag tag--glass ${index % 2 === 0 ? "tag--left" : "tag--right"}`}>
                 <strong>{feature.label}</strong>
                 <span className="tag__desc">{feature.desc}</span>
                 <em>{feature.note}</em>
