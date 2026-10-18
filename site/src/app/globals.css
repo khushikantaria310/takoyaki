@@ -111,8 +111,6 @@ button {
 .topnav a.is-active {
   opacity: 1;
   color: var(--navy);
-  text-decoration: underline;
-  text-underline-offset: 0.3em;
 }
 
 /* ---------- Screens ---------- */
@@ -293,16 +291,16 @@ button {
   position: absolute;
   z-index: 3;
   left: 50%;
-  width: 108px;
-  height: 108px;
-  margin: -54px 0 0 -54px;
+  width: 100px;
+  height: 100px;
+  margin: -50px 0 0 -50px;
   transform: translateX(-50%);
 }
 
 .slot--tray {
-  width: 104px;
-  height: 104px;
-  margin: -52px 0 0 -52px;
+  width: 96px;
+  height: 96px;
+  margin: -48px 0 0 -48px;
 }
 
 .ball {
@@ -402,8 +400,8 @@ button {
 .stage-tray {
   position: absolute;
   left: 50%;
-  bottom: 4%;
-  width: min(90%, 620px);
+  bottom: 3%;
+  width: min(92%, 640px);
   height: auto;
   transform: translateX(-50%);
 }

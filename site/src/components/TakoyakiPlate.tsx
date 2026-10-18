@@ -2,32 +2,31 @@
 export function TakoyakiPlate({ className }: { className?: string }) {
   const ball = (x: number, y: number, scale: number, tilt: number, key: string) => (
     <g key={key} transform={`translate(${x} ${y}) rotate(${tilt}) scale(${scale})`}>
-      <circle r="40" fill="var(--takoyaki)" stroke="var(--ink)" strokeWidth="4" />
+      <circle r="40" fill="#e39a34" stroke="var(--ink)" strokeWidth="4" />
+      <path d="M-35 2c2 15 16 26 35 26 12 0 22-5 28-13-6 6-16 9-28 9-14 0-26-8-30-22Z" fill="#f2b85e" />
       <path
-        d="M-39-4c6-14 21-20 39-20s33 6 39 20c-4 14-20 22-39 22S-35 10-39-4Z"
-        fill="var(--takoyaki-dark)"
+        d="M-37 0c0-20 16-34 37-34s37 14 37 34c0 12-9 20-22 22-4 1-7-1-8-5-1-4-5-6-9-4-3 1-5 5-9 5-5 0-7-4-9-8-1-3-3-5-6-5-6 0-11-3-11-5Z"
+        fill="#6b3410"
         stroke="var(--ink)"
         strokeWidth="3"
         strokeLinejoin="round"
       />
       <path
-        d="M-30-8c6-7 13-7 19-2 6 5 13 5 19-1 5-4 12-4 17 1"
-        fill="none"
-        stroke="var(--mayo)"
-        strokeWidth="6"
-        strokeLinecap="round"
+        d="M-12-23c-3-9 6-14 10-8 1-8 11-8 13 0 5-5 13 0 10 9-3 7-9 9-16 9s-14-3-17-10Z"
+        fill="#e8c98a"
+        stroke="var(--ink)"
+        strokeWidth="2.5"
+        strokeLinejoin="round"
       />
-      <g stroke="var(--onion)" strokeWidth="5" strokeLinecap="round">
-        <path d="M-20-16l7-3" />
-        <path d="M-4-20l8-1" />
-        <path d="M12-16l7 3" />
-        <path d="M-12-4l-7 3" />
-        <path d="M8-2l8 2" />
+      <g fill="#4e7a2e">
+        <rect x="-21" y="-18" width="7" height="4" rx="2" transform="rotate(-20 -21 -18)" />
+        <rect x="7" y="-20" width="7" height="4" rx="2" transform="rotate(16 7 -20)" />
+        <rect x="-6" y="-8" width="6" height="3.5" rx="1.8" transform="rotate(-8 -6 -8)" />
       </g>
-      <g fill="var(--mayo)">
-        <ellipse cx="-8" cy="-12" rx="3" ry="1.8" />
-        <ellipse cx="8" cy="-10" rx="3" ry="1.8" />
-        <ellipse cx="0" cy="0" rx="3" ry="1.8" />
+      <g fill="#f2e8c9">
+        <circle cx="-13" cy="-9" r="1.6" />
+        <circle cx="11" cy="-7" r="1.6" />
+        <circle cx="0" cy="-15" r="1.6" />
       </g>
     </g>
   );

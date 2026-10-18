@@ -10,14 +10,14 @@ import { HandArrow } from "@/components/HandArrow";
 import { bill, commands } from "@/lib/data";
 
 const slots = [
-  { left: 34, top: 62, tilt: -7 },
-  { left: 46, top: 59, tilt: 5 },
-  { left: 58, top: 62, tilt: -4 },
-  { left: 70, top: 66, tilt: 8 },
-  { left: 30, top: 74, tilt: -6 },
-  { left: 43, top: 78, tilt: 3 },
-  { left: 57, top: 78, tilt: -9 },
-  { left: 70, top: 74, tilt: 6 },
+  { left: 30, top: 71, tilt: -7 },
+  { left: 44, top: 68, tilt: 5 },
+  { left: 58, top: 68, tilt: -4 },
+  { left: 72, top: 71, tilt: 8 },
+  { left: 26, top: 81, tilt: -6 },
+  { left: 39, top: 83, tilt: 3 },
+  { left: 52, top: 83, tilt: -9 },
+  { left: 65, top: 81, tilt: 6 },
 ];
 
 const hover = (index: number) =>
