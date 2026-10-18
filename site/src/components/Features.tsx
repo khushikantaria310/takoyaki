@@ -28,9 +28,9 @@ export function Features() {
     balls.forEach((ball, index) => {
       drop.fromTo(
         ball,
-        { yPercent: -420, opacity: 0 },
-        { yPercent: 0, opacity: 1, ease: "bounce.out", duration: 1 },
-        index * 0.32,
+        { yPercent: -150, opacity: 0, rotate: side * 12 },
+        { yPercent: 0, opacity: 1, rotate: 0, ease: "back.out(1.25)", duration: 1 },
+        index * 0.3,
       );
     });
   }, { scope });
