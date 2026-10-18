@@ -5,7 +5,6 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ball } from "@/components/Ball";
-import SceneMount from "@/components/SceneMount";
 import { features } from "@/lib/data";
 
 const tilts = [-8, 6, -4, 9, -6, 3, -9, 5];
@@ -33,9 +32,7 @@ export function Features() {
       </div>
 
       <div className="stage__sticky">
-        <div className="scene-layer">
-          <SceneMount mode="skewer" trigger="#features" />
-        </div>
+        <div className="skewer" data-skewer aria-hidden="true" />
 
         {features.map((feature, index) => (
           <div className="slot" key={feature.id} style={{ top: `${20 + index * 8.5}%` }}>
@@ -43,6 +40,7 @@ export function Features() {
               type="button"
               className="ball"
               data-slot
+              data-kind="stick"
               aria-label={`${feature.label} — ${feature.note}`}
               onMouseEnter={() => hover(index)}
               onFocus={() => hover(index)}

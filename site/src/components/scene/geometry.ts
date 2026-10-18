@@ -98,15 +98,18 @@ export function createMayoGeometry(): THREE.TubeGeometry {
   );
 }
 
-/** A shallow ceramic plate, seen from a slight angle. */
+/** A shallow plate with a flat top and a rounded rim. */
 export function createPlateGeometry(): THREE.LatheGeometry {
   const profile = [
-    new THREE.Vector2(0.001, 0),
-    new THREE.Vector2(0.5, 0.02),
-    new THREE.Vector2(0.72, 0.06),
-    new THREE.Vector2(0.86, 0.12),
-    new THREE.Vector2(0.95, 0.2),
-    new THREE.Vector2(1.0, 0.26),
+    new THREE.Vector2(0.001, 0.1),
+    new THREE.Vector2(0.55, 0.1),
+    new THREE.Vector2(0.82, 0.085),
+    new THREE.Vector2(0.94, 0.045),
+    new THREE.Vector2(1.0, 0.0),
+    new THREE.Vector2(1.0, -0.035),
+    new THREE.Vector2(0.9, -0.075),
+    new THREE.Vector2(0.55, -0.1),
+    new THREE.Vector2(0.001, -0.1),
   ];
   const geometry = new THREE.LatheGeometry(profile, 48);
   geometry.computeVertexNormals();

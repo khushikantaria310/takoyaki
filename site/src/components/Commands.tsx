@@ -7,7 +7,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ball } from "@/components/Ball";
 import { Plate } from "@/components/Plate";
 import { HandArrow } from "@/components/HandArrow";
-import SceneMount from "@/components/SceneMount";
 import { bill, commands } from "@/lib/data";
 
 const slots = [
@@ -64,10 +63,6 @@ export function Commands() {
         </div>
 
         <div className="stage__sticky">
-          <div className="scene-layer">
-            <SceneMount mode="bowl" trigger="#commands" />
-          </div>
-
           <Plate className="stage-plate" data-plate />
 
           {commands.map((item, index) => {
@@ -82,6 +77,7 @@ export function Commands() {
                   type="button"
                   className="ball ball--sm"
                   data-slot
+                  data-kind="plate"
                   aria-label={`${item.command} — ${item.note}`}
                   onMouseEnter={() => hover(index)}
                   onFocus={() => hover(index)}

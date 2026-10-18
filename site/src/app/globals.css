@@ -24,8 +24,24 @@
 
 html,
 body {
-  background: var(--sage);
+  background: linear-gradient(180deg, #b3c187 0%, #a3b073 100%) fixed;
   scroll-behavior: auto;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+}
+
+.world-canvas {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+}
+
+.world-canvas canvas {
+  display: block;
 }
 
 body {
@@ -132,6 +148,7 @@ button {
 /* When the live 3D scene runs, the flat stand-ins step aside. */
 .fx .hero-plate,
 .fx .stage-plate,
+.fx .skewer,
 .fx .ball-art {
   opacity: 0;
 }
