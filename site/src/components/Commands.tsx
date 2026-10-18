@@ -11,16 +11,16 @@ import { commands } from "@/lib/data";
 
 const tilts = [-6, 4, -3, 6, -5, 3, -7, 5];
 
-/** 2 front · 2 right · 2 left · 2 back, so every ball stays visible. */
+/** A neat 4 + 4 grid, centred on the plate. */
 const ballPositions = [
-  { left: 43, top: 51 },
-  { left: 57, top: 51 },
-  { left: 26, top: 65 },
-  { left: 26, top: 81 },
-  { left: 74, top: 65 },
-  { left: 74, top: 81 },
-  { left: 43, top: 91 },
-  { left: 57, top: 91 },
+  { left: 35, top: 65 },
+  { left: 45, top: 65 },
+  { left: 55, top: 65 },
+  { left: 65, top: 65 },
+  { left: 35, top: 79 },
+  { left: 45, top: 79 },
+  { left: 55, top: 79 },
+  { left: 65, top: 79 },
 ];
 
 export function Commands() {

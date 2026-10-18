@@ -329,8 +329,8 @@ button {
 }
 
 .ball--plate {
-  width: clamp(132px, 13.5vw, 178px);
-  height: clamp(132px, 13.5vw, 178px);
+  width: clamp(96px, 10vw, 134px);
+  height: clamp(96px, 10vw, 134px);
   cursor: grab;
 }
 
