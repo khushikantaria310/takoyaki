@@ -22,12 +22,20 @@ export function Commands() {
     const drop = gsap.timeline({
       scrollTrigger: { trigger: "#commands", start: "top top", end: "bottom bottom", scrub: 1 },
     });
+
+    // The plate slides in from the right; the balls drop the moment it lands.
+    drop.fromTo(
+      "[data-plate]",
+      { xPercent: 125, opacity: 0 },
+      { xPercent: 0, opacity: 1, ease: "power3.out", duration: 1.1 },
+      0,
+    );
     balls.forEach((ball, index) => {
       drop.fromTo(
         ball,
-        { yPercent: -460, opacity: 0 },
+        { yPercent: -560, opacity: 0 },
         { yPercent: 0, opacity: 1, ease: "bounce.out", duration: 1 },
-        index * 0.3,
+        1 + index * 0.3,
       );
     });
 
@@ -87,7 +95,9 @@ export function Commands() {
         </div>
 
         <div className="stage__sticky">
-          <Plate className="stage-plate" />
+          <div className="stage-plate-wrap" data-plate>
+            <Plate className="stage-plate-img" />
+          </div>
 
           <div className="plate-balls">
             {row(commands.slice(0, 4), 0)}
