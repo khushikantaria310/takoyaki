@@ -5,7 +5,7 @@ const repo = "https://github.com/logizel/takoyaki";
 export function Footer() {
   return (
     <footer className="site-footer">
-      <span className="footer-watermark" aria-hidden="true">たこやき</span>
+      <span className="footer-watermark" data-footer-mark aria-hidden="true">たこやき</span>
       <div className="footer-inner">
         <h2 className="footer-headline">never miss a commit again</h2>
         <p className="footer-sub">pings, stats &amp; leaderboards — right in your Discord</p>

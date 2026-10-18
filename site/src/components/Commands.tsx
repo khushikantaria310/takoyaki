@@ -5,21 +5,22 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ball } from "@/components/Ball";
+import { Bowl } from "@/components/Bowl";
 import { HandArrow } from "@/components/HandArrow";
 import { commands } from "@/lib/data";
 
 const tilts = [-6, 4, -3, 6, -5, 3, -7, 5];
 
-/** 4 at the back, 4 in front, adjacent — the back row stays half visible. */
+/** 4 at the back, 4 in front, seated in the bowl. */
 const ballPositions = [
-  { left: 32, top: 55 },
-  { left: 44, top: 55 },
-  { left: 56, top: 55 },
-  { left: 68, top: 55 },
-  { left: 32, top: 70 },
-  { left: 44, top: 70 },
-  { left: 56, top: 70 },
-  { left: 68, top: 70 },
+  { left: 33, top: 63 },
+  { left: 44, top: 63 },
+  { left: 56, top: 63 },
+  { left: 67, top: 63 },
+  { left: 33, top: 77 },
+  { left: 44, top: 77 },
+  { left: 56, top: 77 },
+  { left: 67, top: 77 },
 ];
 
 const steps = [
@@ -157,6 +158,8 @@ export function Commands() {
         </div>
 
         <div className="stage__sticky">
+          <Bowl className="stage-bowl" />
+
           <div className="plate-balls">
             {commands.map((item, index) => {
               const slot = ballPositions[index % ballPositions.length];
