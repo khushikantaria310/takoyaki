@@ -102,8 +102,9 @@ export function Commands() {
           </div>
 
           <div className="plate-balls">
-            {row(commands.slice(0, 4), 0)}
-            {row(commands.slice(4, 8), 4)}
+            {row(commands.slice(0, 3), 0)}
+            {row(commands.slice(3, 6), 3)}
+            {row(commands.slice(6, 8), 6)}
           </div>
         </div>
       </section>

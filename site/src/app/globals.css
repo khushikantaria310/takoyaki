@@ -321,7 +321,7 @@ button {
   position: absolute;
   z-index: 3;
   left: 50%;
-  bottom: 9%;
+  bottom: 6%;
   display: grid;
   gap: 0;
   transform: translateX(-50%);
@@ -333,24 +333,32 @@ button {
 }
 
 .plate-balls__row > .ball + .ball {
-  margin-left: -58px;
+  margin-left: -66px;
 }
 
 .plate-balls__row + .plate-balls__row {
-  margin-top: -112px;
+  margin-top: -120px;
 }
 
 .plate-balls__row:nth-child(2) {
-  margin-left: 146px;
+  margin-left: 78px;
+}
+
+.plate-balls__row:nth-child(3) {
+  margin-left: -44px;
 }
 
 .plate-balls__row:nth-child(2) .ball {
   z-index: 2;
 }
 
+.plate-balls__row:nth-child(3) .ball {
+  z-index: 3;
+}
+
 .ball--plate {
-  width: clamp(172px, 23vw, 300px);
-  height: clamp(172px, 23vw, 300px);
+  width: clamp(200px, 26vw, 340px);
+  height: clamp(200px, 26vw, 340px);
 }
 
 .slot {
