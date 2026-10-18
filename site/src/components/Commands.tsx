@@ -5,7 +5,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ball } from "@/components/Ball";
-import { Plate } from "@/components/Plate";
+import { Tray } from "@/components/Tray";
 import { HandArrow } from "@/components/HandArrow";
 import { bill, commands } from "@/lib/data";
 
@@ -29,6 +29,19 @@ export function Commands() {
 
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
+
+    const balls = gsap.utils.toArray<HTMLElement>("[data-slot]", scope.current);
+    const drop = gsap.timeline({
+      scrollTrigger: { trigger: "#commands", start: "top top", end: "bottom bottom", scrub: 1 },
+    });
+    balls.forEach((ball, index) => {
+      drop.fromTo(
+        ball,
+        { yPercent: -560, opacity: 0, rotate: 12 },
+        { yPercent: 0, opacity: 1, rotate: 0, ease: "bounce.out", duration: 1 },
+        index * 0.34,
+      );
+    });
 
     gsap.to("[data-curtain]", {
       yPercent: -102,
@@ -63,7 +76,7 @@ export function Commands() {
         </div>
 
         <div className="stage__sticky">
-          <Plate className="stage-plate" data-plate />
+          <Tray className="stage-tray" />
 
           {commands.map((item, index) => {
             const slot = slots[index % slots.length];

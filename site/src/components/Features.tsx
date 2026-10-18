@@ -18,10 +18,24 @@ export function Features() {
 
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
+
     const reveal = gsap.timeline({
       scrollTrigger: { trigger: scope.current, start: "top 70%", end: "top 20%", scrub: true },
     });
     reveal.fromTo("[data-feature-head]", { opacity: 0, y: 24 }, { opacity: 1, y: 0 });
+
+    const balls = gsap.utils.toArray<HTMLElement>("[data-slot]", scope.current);
+    const drop = gsap.timeline({
+      scrollTrigger: { trigger: scope.current, start: "top top", end: "bottom bottom", scrub: 1 },
+    });
+    balls.forEach((ball, index) => {
+      drop.fromTo(
+        ball,
+        { yPercent: -520, opacity: 0, rotate: -12 },
+        { yPercent: 0, opacity: 1, rotate: 0, ease: "bounce.out", duration: 1 },
+        index * 0.34,
+      );
+    });
   }, { scope });
 
   return (
