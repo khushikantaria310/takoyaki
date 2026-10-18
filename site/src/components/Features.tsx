@@ -45,7 +45,10 @@ export function Features() {
           <p className="stage__sub">Except you don’t have to. It shows up where your team already talks.</p>
         </div>
 
-        <div className="skewer" data-skewer aria-hidden="true" />
+        <div className="chopsticks" aria-hidden="true">
+          <span className="chopstick chopstick--a" />
+          <span className="chopstick chopstick--b" />
+        </div>
 
         <div className="skewer-balls">
           {features.map((feature, index) => (

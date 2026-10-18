@@ -332,19 +332,39 @@ button {
   overflow: hidden;
 }
 
-.skewer {
+/* Two chopsticks crossing on a diagonal. */
+.chopsticks {
   position: absolute;
+  z-index: 2;
   left: 50%;
-  top: 46%;
-  width: 18px;
-  height: 48%;
-  transform: translateX(-50%);
-  border: 3px solid var(--ink);
-  border-radius: 11px 11px 5px 5px;
-  background: linear-gradient(90deg, var(--tray-dark), var(--tray) 46%, #e6cfa0);
+  top: 50%;
+  width: clamp(120px, 22vw, 260px);
+  height: 62vh;
+  transform: translate(-50%, -50%) rotate(-14deg);
 }
 
-/* Balls stacked shoulder-to-shoulder on the chopstick. */
+.chopstick {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 16px;
+  height: 100%;
+  border: 3px solid var(--ink);
+  border-radius: 8px 8px 4px 4px;
+  background: linear-gradient(90deg, var(--tray-dark), var(--tray) 44%, #f0dcae 60%, #c39a63);
+  box-shadow: 3px 4px 0 rgba(24, 30, 12, 0.22);
+}
+
+.chopstick--a {
+  transform: translateX(-50%);
+}
+
+.chopstick--b {
+  transform: translateX(-50%) rotate(13deg);
+  opacity: 0.95;
+}
+
+/* Balls stacked shoulder-to-shoulder along the diagonal chopstick. */
 .skewer-balls {
   position: absolute;
   z-index: 3;
@@ -353,7 +373,7 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transform: translateX(-50%);
+  transform: translateX(-50%) rotate(-14deg);
 }
 
 .skewer-balls .ball + .ball {
