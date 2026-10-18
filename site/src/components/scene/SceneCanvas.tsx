@@ -3,12 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { AdaptiveDpr } from "@react-three/drei";
-import SceneRouter from "./SceneRouter";
+import HeroScene from "./HeroScene";
 
 /**
- * ONE persistent, fixed canvas behind the whole site (it lives in the root
- * layout, so it survives route changes). It pauses whenever the tab is hidden
- * or the 3D stage scrolls out of view, and clamps DPR for cost.
+ * ONE persistent, fixed canvas behind the whole site. It pauses whenever the
+ * tab is hidden or the poster scrolls out of view, and clamps DPR for cost.
  */
 export default function SceneCanvas() {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -26,13 +25,11 @@ export default function SceneCanvas() {
   useEffect(() => {
     let observer: IntersectionObserver | null = null;
     let frame = 0;
-    let tries = 0;
 
     const attach = () => {
       const target = document.querySelector("[data-poster-scene]");
       if (!target) {
-        // Some routes (commands) have no 3D stage — stop after a short while.
-        if (tries++ < 90) frame = requestAnimationFrame(attach);
+        frame = requestAnimationFrame(attach);
         return;
       }
       observer = new IntersectionObserver(
@@ -61,7 +58,7 @@ export default function SceneCanvas() {
         <ambientLight intensity={1.15} />
         <directionalLight position={[3, 6, 7]} intensity={2.2} />
         <directionalLight position={[-5, -3, 4]} intensity={0.6} color="#F7EBC0" />
-        <SceneRouter />
+        <HeroScene />
         <AdaptiveDpr pixelated={false} />
       </Canvas>
     </div>

@@ -39,6 +39,7 @@ export default function FeatureCard() {
               transition={{ duration: shouldReduceMotion ? 0 : 0.22, ease: [0.22, 1, 0.36, 1] }}
             >
               <span className="feature-card__title">{feature.title}</span>
+              {feature.comingSoon ? <span className="feature-card__badge">Coming soon</span> : null}
               {feature.command ? <code className="feature-card__cmd">{feature.command}</code> : null}
             </motion.div>
           </div>
