@@ -7,40 +7,51 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ball } from "@/components/Ball";
 import { Plate } from "@/components/Plate";
 import { HandArrow } from "@/components/HandArrow";
-import { bill, commands } from "@/lib/data";
+import { commands } from "@/lib/data";
 
 const tilts = [-6, 4, -3, 6, -5, 3, -7, 5];
 
-/** Balls drop into the plate and sit shoulder to shoulder; point for a command. */
+/** 2 front · 2 right · 2 left · 2 back, so every ball stays visible. */
+const ballPositions = [
+  { left: 43, top: 51 },
+  { left: 57, top: 51 },
+  { left: 26, top: 65 },
+  { left: 26, top: 81 },
+  { left: 74, top: 65 },
+  { left: 74, top: 81 },
+  { left: 43, top: 91 },
+  { left: 57, top: 91 },
+];
+
 export function Commands() {
   const scope = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const balls = gsap.utils.toArray<HTMLElement>("[data-ball]", scope.current);
     const drop = gsap.timeline({
       scrollTrigger: { trigger: "#commands", start: "top top", end: "bottom bottom", scrub: 1 },
     });
 
-    // The plate slides in from the right; the balls drop the moment it lands.
-    // The plate slides in from the right and lands centred; the balls drop
-    // the moment it settles.
+    // Plate glides in from the right and lands centred.
     drop.fromTo(
       "[data-plate]",
       { xPercent: 130, opacity: 0 },
       { xPercent: 0, opacity: 1, ease: "power4.out", duration: 1.3 },
       0,
     );
-    balls.forEach((ball, index) => {
+
+    // Balls fall in smoothly once the plate has landed.
+    gsap.utils.toArray<HTMLElement>("[data-ball]", scope.current).forEach((ball, index) => {
       drop.fromTo(
         ball,
         { yPercent: -560, opacity: 0 },
-        { yPercent: 0, opacity: 1, ease: "bounce.out", duration: 1 },
-        1.25 + index * 0.3,
+        { yPercent: 0, opacity: 1, ease: "back.out(1.25)", duration: 1.1 },
+        1.1 + index * 0.26,
       );
     });
 
+    // Curtain slides away.
     gsap.to("[data-curtain]", {
       yPercent: -102,
       ease: "none",
@@ -52,41 +63,29 @@ export function Commands() {
       },
     });
 
+    // The bill flies in like a sheet of paper, then settles with a gentle float.
     gsap.fromTo(
       "[data-receipt]",
-      { opacity: 0, scale: 0.86, y: 40 },
+      { opacity: 0, y: 140, rotate: -16, scale: 0.84, transformOrigin: "50% 90%" },
       {
         opacity: 1,
-        scale: 1,
         y: 0,
+        rotate: 0,
+        scale: 1,
         ease: "power3.out",
-        scrollTrigger: { trigger: "[data-curtain-section]", start: "top 60%", end: "top 10%", scrub: true },
+        scrollTrigger: { trigger: "[data-curtain-section]", start: "top 70%", end: "top 15%", scrub: true },
       },
     );
+    gsap.to("[data-receipt]", {
+      y: -10,
+      rotate: 1.4,
+      duration: 3.6,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: -1,
+      delay: 0.6,
+    });
   }, { scope });
-
-  const row = (items: typeof commands, start: number) => (
-    <div className="plate-balls__row">
-      {items.map((item, index) => (
-        <button
-          type="button"
-          className="ball ball--plate"
-          data-ball
-          key={item.id}
-          aria-label={`${item.command}. ${item.note}`}
-        >
-          <Ball size={92} tilt={tilts[(start + index) % tilts.length]} />
-          <span className="tag tag--glass tag--above">
-            <span className="tag__cmd">
-              <HandArrow className="tag__arrow" />
-              {item.command}
-            </span>
-            <span className="tag__desc">{item.note}</span>
-          </span>
-        </button>
-      ))}
-    </div>
-  );
 
   return (
     <div ref={scope}>
@@ -102,9 +101,28 @@ export function Commands() {
           </div>
 
           <div className="plate-balls">
-            {row(commands.slice(0, 3), 0)}
-            {row(commands.slice(3, 6), 3)}
-            {row(commands.slice(6, 8), 6)}
+            {commands.map((item, index) => {
+              const slot = ballPositions[index % ballPositions.length];
+              return (
+                <div className="plate-slot" key={item.id} style={{ left: `${slot.left}%`, top: `${slot.top}%` }}>
+                  <button
+                    type="button"
+                    className="ball ball--plate"
+                    data-ball
+                    aria-label={`${item.command}. ${item.note}`}
+                  >
+                    <Ball size={170} tilt={tilts[index % tilts.length]} />
+                    <span className="tag tag--glass tag--above">
+                      <span className="tag__cmd">
+                        <HandArrow className="tag__arrow" />
+                        {item.command}
+                      </span>
+                      <span className="tag__desc">{item.note}</span>
+                    </span>
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -112,20 +130,39 @@ export function Commands() {
       <section className="curtain" data-curtain-section>
         <div className="curtain__receipt">
           <div className="receipt" data-receipt>
-            <p className="receipt__title">たこやき · setup</p>
-            <div className="receipt__rows">
-              {bill.map((line) => (
-                <div className="receipt__row" key={line.label}>
-                  <span>{line.label}</span>
-                  <span>{line.value}</span>
+            <p className="receipt__thanks">Thank you!</p>
+            <p className="receipt__lead">Set up Takoyaki in your server</p>
+            <p className="receipt__note">
+              From real-time pings to sticky stats — your commits are always welcome at Takoyaki.
+            </p>
+
+            <p className="receipt__dash">Catch you on your next commit</p>
+
+            <div className="receipt__table">
+              <div className="receipt__tr receipt__tr--head">
+                <span>Qty</span>
+                <span>Item</span>
+                <span>Price</span>
+              </div>
+              {commands.map((item) => (
+                <div className="receipt__tr" key={`bill-${item.id}`}>
+                  <span>1</span>
+                  <span className="receipt__item">{item.command}</span>
+                  <span>{item.price}</span>
                 </div>
               ))}
+              <div className="receipt__tr receipt__tr--total">
+                <span />
+                <span>Total</span>
+                <span>hot &amp; ready</span>
+              </div>
             </div>
-            <div className="receipt__row receipt__row--total">
-              <span>total</span>
-              <span>hot &amp; ready</span>
-            </div>
-            <p className="receipt__foot">GitHub → Discord · served fresh</p>
+
+            <div className="receipt__divider" aria-hidden="true" />
+
+            <p className="receipt__brand">Takoyaki</p>
+            <p className="receipt__estd">estd 2025</p>
+            <p className="receipt__tag">hot off the grill!</p>
           </div>
         </div>
         <div className="curtain__panel" data-curtain aria-hidden="true" />

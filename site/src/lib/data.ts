@@ -9,6 +9,7 @@ export type CommandItem = {
   id: string;
   command: string;
   note: string;
+  price: string;
 };
 
 /** Feature copy follows the Logizel/takoyaki README. */
@@ -64,14 +65,14 @@ export const features: Feature[] = [
 ];
 
 export const commands: CommandItem[] = [
-  { id: "link", command: "/github link", note: "Install the app & link your account." },
-  { id: "unlink", command: "/github unlink", note: "Remove your GitHub link." },
-  { id: "setchannel", command: "/setchannel", note: "Pick a channel, Standard or Org mode. Admin only." },
-  { id: "me", command: "/stats me", note: "Your commits today and over the past 365 days." },
-  { id: "streak", command: "/stats streak", note: "Your commit streak chart for the past year." },
-  { id: "compare", command: "/stats compare", note: "Compare your commits with another user." },
-  { id: "top", command: "/stats top", note: "The server leaderboard for the past 365 days." },
-  { id: "topday", command: "/stats top-day", note: "Who has the most commits today." },
+  { id: "link", command: "/github link", note: "Install the app & link your account.", price: "free" },
+  { id: "unlink", command: "/github unlink", note: "Remove your GitHub link.", price: "free" },
+  { id: "setchannel", command: "/setchannel", note: "Pick a channel, Standard or Org mode. Admin only.", price: "admin" },
+  { id: "me", command: "/stats me", note: "Your commits today and over the past 365 days.", price: "auto" },
+  { id: "streak", command: "/stats streak", note: "Your commit streak chart for the past year.", price: "auto" },
+  { id: "compare", command: "/stats compare", note: "Compare your commits with another user.", price: "auto" },
+  { id: "top", command: "/stats top", note: "The server leaderboard for the past 365 days.", price: "auto" },
+  { id: "topday", command: "/stats top-day", note: "Who has the most commits today.", price: "auto" },
 ];
 
 export const bill = [
