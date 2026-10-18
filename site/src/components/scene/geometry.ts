@@ -59,14 +59,37 @@ export function createChopstickGeometry(): THREE.LatheGeometry {
   return geometry;
 }
 
+/** A shallow folded-paper boat tray, faceted like origami. */
+export function createTrayGeometry(): THREE.BufferGeometry {
+  const profile = [
+    new THREE.Vector2(0.001, 0.0),
+    new THREE.Vector2(0.3, 0.02),
+    new THREE.Vector2(0.52, 0.08),
+    new THREE.Vector2(0.74, 0.18),
+    new THREE.Vector2(0.9, 0.32),
+    new THREE.Vector2(1.0, 0.48),
+  ];
+  const geometry = new THREE.LatheGeometry(profile, 9);
+  geometry.rotateX(Math.PI);
+  // Non-indexed + recomputed normals gives a faceted, folded-paper look.
+  const flat = geometry.toNonIndexed();
+  flat.computeVertexNormals();
+  return flat;
+}
+
 function surfacePoints(points: [number, number, number][], radius = 1.02): THREE.Vector3[] {
   return points.map(([x, y, z]) => new THREE.Vector3(x, y, z).normalize().multiplyScalar(radius));
 }
 
-/** One continuous mayo zig-zag drawn across the front of the ball. */
+function drizzle(points: [number, number, number][], thickness: number): THREE.TubeGeometry {
+  const curve = new THREE.CatmullRomCurve3(surfacePoints(points));
+  return new THREE.TubeGeometry(curve, 48, thickness, 7, false);
+}
+
+/** White mayo zig-zag drawn across the front of the ball. */
 export function createMayoGeometry(): THREE.TubeGeometry {
-  const curve = new THREE.CatmullRomCurve3(
-    surfacePoints([
+  return drizzle(
+    [
       [-0.57, 0.42, 0.66],
       [-0.2, 0.62, 0.74],
       [0.04, 0.32, 0.94],
@@ -75,9 +98,26 @@ export function createMayoGeometry(): THREE.TubeGeometry {
       [0.16, -0.08, 0.98],
       [-0.24, 0.03, 0.97],
       [-0.52, -0.2, 0.84],
-    ]),
+    ],
+    0.05,
   );
-  return new THREE.TubeGeometry(curve, 48, 0.052, 7, false);
+}
+
+/** A darker sauce drizzle layered beside the mayo. */
+export function createSauceGeometry(): THREE.TubeGeometry {
+  return drizzle(
+    [
+      [-0.62, 0.12, 0.76],
+      [-0.26, 0.0, 0.95],
+      [0.08, -0.14, 0.98],
+      [0.4, -0.02, 0.9],
+      [0.6, 0.34, 0.72],
+      [0.24, 0.5, 0.82],
+      [-0.14, 0.44, 0.9],
+      [-0.46, 0.3, 0.86],
+    ],
+    0.038,
+  );
 }
 
 /** Three thin curved green-onion strands resting on top. */

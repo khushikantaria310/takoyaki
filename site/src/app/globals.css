@@ -72,6 +72,7 @@ a {
   transform: translateY(0);
 }
 
+/* ---------- Header ---------- */
 .site-header {
   position: sticky;
   z-index: 30;
@@ -217,40 +218,39 @@ a {
   background: var(--paper);
 }
 
+/* ---------- Hero ---------- */
 .hero {
   position: relative;
-  isolation: isolate;
-  padding: clamp(2rem, 5vw, 4.5rem) 1.5rem 3rem;
+  padding: clamp(3rem, 5vw, 5rem) 1.5rem 3rem;
 }
 
 .hero::before {
   position: absolute;
-  z-index: -1;
+  z-index: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  height: 34%;
-  background: linear-gradient(164deg, transparent 0 39%, rgba(191, 166, 118, 0.22) 39.2%, var(--tray) 100%);
+  height: 30%;
+  background: linear-gradient(166deg, transparent 0 40%, rgba(191, 166, 118, 0.22) 40.2%, var(--tray) 100%);
   content: "";
 }
 
 .hero__inner {
   display: grid;
   width: min(100%, 1240px);
-  grid-template-columns: minmax(0, 0.9fr) minmax(390px, 1.1fr);
+  grid-template-columns: minmax(0, 0.86fr) minmax(360px, 1.14fr);
   align-items: center;
-  gap: clamp(2rem, 6vw, 6rem);
+  gap: clamp(2rem, 6vw, 5rem);
   margin: 0 auto;
 }
 
 .hero__copy {
   position: relative;
-  z-index: 2;
-  padding: 1rem 0 2.5rem;
+  z-index: 10;
+  padding: 1rem 0 2rem;
 }
 
 .hero__eyebrow,
-.poster__stamp,
 .poster__serial,
 .dispatch-label {
   font-family: var(--font-mono), ui-monospace, monospace;
@@ -277,7 +277,7 @@ a {
 .hero__title {
   max-width: 12ch;
   margin: 0;
-  font-size: clamp(3rem, 6.1vw, 5.8rem);
+  font-size: clamp(3rem, 6.1vw, 5.6rem);
   font-weight: 900;
   letter-spacing: -0.075em;
   line-height: 0.94;
@@ -329,102 +329,165 @@ a {
   font-size: 0.72rem;
 }
 
-.poster {
-  position: relative;
-  display: grid;
-  min-height: 610px;
-  grid-template-rows: auto 1fr auto;
-  overflow: hidden;
-  border: 4px solid var(--ink);
-  background: var(--steel-blue);
-  box-shadow: 12px 13px 0 var(--ink);
-  color: var(--paper);
+.scroll-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--takoyaki-shadow);
 }
 
-.poster::before {
+.scroll-cue::before {
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  content: "";
+}
+
+/* ---------- Poster ---------- */
+.poster {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  justify-self: end;
+  padding: 12px;
+  border: 3px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 14px 15px 0 var(--ink);
+}
+
+.poster__scene {
+  position: relative;
+  min-height: 620px;
+  overflow: hidden;
+  border: 3px solid var(--ink);
+  background:
+    linear-gradient(168deg, transparent 0 62%, var(--paper) 62.4%, var(--paper) 100%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 40px, rgba(9, 20, 34, 0.055) 40px 80px),
+    var(--steel-blue);
+}
+
+.poster__scene::before {
   position: absolute;
-  z-index: 0;
   inset: 0;
-  background-image: radial-gradient(rgba(247, 235, 192, 0.24) 0.9px, transparent 1px);
+  background-image: radial-gradient(rgba(247, 235, 192, 0.3) 0.9px, transparent 1px);
   background-size: 7px 7px;
   content: "";
-  opacity: 0.62;
+  opacity: 0.5;
   pointer-events: none;
 }
 
-.poster__head,
-.poster__foot,
-.poster__scene {
-  position: relative;
-  z-index: 1;
-}
-
-.poster__head,
-.poster__foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.15rem;
-}
-
-.poster__head {
-  border-bottom: 2px solid var(--ink);
-}
-
-.poster__foot {
-  border-top: 2px solid var(--ink);
-  background: var(--paper);
-  color: var(--ink);
-}
-
-.poster__stamp {
-  border: 2px solid currentColor;
-  padding: 0.35rem 0.5rem;
-  color: var(--label-orange);
-  transform: rotate(-4deg);
-}
-
-.poster__serial {
-  font-size: 0.58rem;
-}
-
-.poster__scene {
-  display: grid;
-  min-height: 480px;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 0.72fr);
-  align-items: center;
-  justify-items: center;
-  padding: 1.4rem 1rem;
-}
-
-.poster__japanese {
+.poster__letters {
   position: absolute;
-  top: 1rem;
-  left: 1.2rem;
-  margin: 0;
-  color: var(--paper);
+  z-index: 10;
+  top: 1.1rem;
+  left: 1.1rem;
+  display: flex;
+  height: min(64%, 400px);
+  gap: clamp(0.05rem, 0.4vw, 0.22rem);
+  color: var(--label-orange);
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+  font-weight: 900;
+  line-height: 1;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  text-shadow: 2px 2px 0 var(--ink);
+}
+
+.poster__letters span {
+  display: inline-block;
+}
+
+.poster__seal {
+  position: absolute;
+  z-index: 10;
+  left: 1.1rem;
+  bottom: 1.1rem;
+  padding: 0.45rem 0.22rem;
+  border: 2px solid var(--ink);
+  background: var(--label-orange);
+  color: var(--ink);
   font-family: var(--font-jp), sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.22em;
   writing-mode: vertical-rl;
 }
 
-.poster__balls {
+.poster__serial {
+  position: absolute;
+  z-index: 10;
+  top: 1.1rem;
+  right: 1.1rem;
+  color: var(--paper);
+  font-size: 0.55rem;
+}
+
+/* Static stand-in art: shown while WebGL warms up, if it fails, or for
+   reduced-motion. When the live scene runs, this fades out. */
+.poster__fallback {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+}
+
+.poster__fallback-balls {
+  position: absolute;
+  top: 6%;
+  right: 7%;
   display: grid;
-  width: min(100%, 245px);
+  width: min(50%, 220px);
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: center;
   justify-items: center;
-  gap: 0.8rem 0.55rem;
-  padding-top: 1.3rem;
+  gap: 0.6rem 0.4rem;
+}
+
+.poster__fallback-balls .takoyaki-ball {
+  width: clamp(42px, 6vw, 60px);
+}
+
+.poster__fallback-tray {
+  position: absolute;
+  left: 50%;
+  bottom: 5%;
+  display: flex;
+  width: 72%;
+  min-height: 96px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  transform: translateX(-50%);
+  border: 3px solid var(--ink);
+  border-radius: 16px 16px 40px 40px / 16px 16px 34px 34px;
+  background: var(--tray);
+  box-shadow: inset 0 -12px 0 var(--tray-shadow);
+}
+
+.poster__fallback-tray .takoyaki-ball {
+  width: clamp(36px, 5vw, 50px);
+}
+
+.poster__chopstick {
+  position: absolute;
+  left: 50%;
+  top: 9%;
+  width: 16px;
+  height: 46%;
+  transform: translateX(-50%) rotate(2deg);
+  border: 3px solid var(--ink);
+  border-radius: 10px 10px 4px 4px;
+  background: linear-gradient(90deg, var(--tray-shadow), var(--tray) 48%, #f3e2b7);
 }
 
 .takoyaki-ball {
   position: relative;
   display: block;
-  width: clamp(58px, 6.3vw, 76px);
+  width: clamp(52px, 6vw, 72px);
   aspect-ratio: 1;
   border: 3px solid var(--ink);
   border-radius: 50%;
@@ -450,69 +513,52 @@ a {
 }
 
 .takoyaki-ball::before { left: 13%; }
-.takoyaki-ball::after { top: 42%; left: 28%; transform: rotate(-24deg); }
+.takoyaki-ball::after { top: 42%; left: 28%; background: var(--takoyaki-shadow); transform: rotate(-24deg); }
 
-.takoyaki-ball:nth-child(3n)::before { background: var(--green-onion); }
-.takoyaki-ball:nth-child(4n)::after { background: var(--green-onion); }
-
-.poster__chopstick {
-  position: relative;
-  width: 17px;
-  height: min(430px, 78vw);
-  border: 3px solid var(--ink);
-  border-radius: 12px 12px 4px 4px;
-  background: linear-gradient(90deg, var(--tray-shadow), var(--tray) 48%, #f3e2b7);
-  box-shadow: 5px 5px 0 rgba(27, 27, 34, 0.42);
-  transform: rotate(3deg);
-}
-
-.poster__letters {
+.poster__foot {
   display: flex;
-  height: 400px;
   align-items: center;
-  justify-content: center;
-  gap: clamp(0.15rem, 0.7vw, 0.5rem);
-  color: var(--label-orange);
-  font-size: clamp(1.5rem, 2.7vw, 2.4rem);
-  font-weight: 900;
-  line-height: 1;
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  text-shadow: 2px 2px 0 var(--ink);
-}
-
-.poster__letters span {
-  display: inline-block;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 10px;
+  padding: 0.65rem 0.85rem;
+  border: 3px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
 }
 
 .poster__foot strong {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   letter-spacing: 0.04em;
 }
 
 .poster__foot span {
+  color: var(--label-orange);
   font-family: var(--font-jp), sans-serif;
-  font-size: 0.77rem;
+  font-size: 0.72rem;
   font-weight: 700;
 }
 
+/* ---------- Dispatch ---------- */
 .dispatch-strip {
+  position: relative;
+  z-index: 10;
   width: min(100% - 3rem, 1240px);
   margin: 0 auto;
   border-top: 2px solid var(--ink);
-  padding: 1.3rem 0 2rem;
+  padding: 1.6rem 0 2.4rem;
 }
 
 .dispatch-strip__heading {
   display: flex;
   align-items: baseline;
   gap: 0.75rem;
-  margin: 0 0 0.9rem;
+  margin: 0 0 1.2rem;
 }
 
 .dispatch-strip__heading h2 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 900;
 }
 
@@ -521,10 +567,33 @@ a {
   font-size: 0.58rem;
 }
 
+.dispatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.6rem;
+}
+
+.dispatch-group h3 {
+  margin: 0 0 0.7rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.dispatch-group--live h3 {
+  color: var(--green-onion);
+}
+
+.dispatch-group--soon h3 {
+  color: var(--takoyaki-shadow);
+}
+
 .dispatch-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: 0.55rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -538,7 +607,16 @@ a {
   font-weight: 700;
 }
 
+.dispatch-group--soon .dispatch-list li {
+  border-style: dashed;
+  background: transparent;
+  color: rgba(27, 27, 34, 0.66);
+}
+
+/* ---------- Footer ---------- */
 .site-footer {
+  position: relative;
+  z-index: 10;
   border-top: 2px solid var(--ink);
   background: var(--ink);
   color: var(--paper);
@@ -592,30 +670,47 @@ a {
   text-transform: uppercase;
 }
 
-@media (max-width: 900px) {
+/* ---------- Fixed scene canvas ----------
+   Painted above the flat poster fills but below all copy, so the 3D balls
+   read as printed on top of the blue panel. */
+.scene-canvas {
+  position: fixed;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+}
+
+.scene-canvas canvas {
+  display: block;
+}
+
+/* When the live scene runs, the CSS stand-ins step aside so the DOM
+   lettering can be revealed by the shared GSAP timeline. */
+.fx .poster__fallback {
+  opacity: 0;
+}
+
+.fx .poster__letters span {
+  opacity: 0;
+}
+
+@media (max-width: 980px) {
   .hero__inner {
     grid-template-columns: minmax(0, 0.95fr) minmax(330px, 1.05fr);
     gap: 2.2rem;
   }
 
-  .poster {
-    min-height: 540px;
-  }
-
   .poster__scene {
-    min-height: 420px;
-  }
-
-  .poster__balls {
-    gap: 0.55rem 0.35rem;
+    min-height: 560px;
   }
 }
 
-@media (max-width: 740px) {
+@media (max-width: 760px) {
   .site-header__inner,
   .hero__inner,
-  .site-footer__inner {
-    width: min(100% - 2.25rem, 600px);
+  .site-footer__inner,
+  .dispatch-strip {
+    width: min(100% - 2.25rem, 640px);
   }
 
   .site-header__inner {
@@ -628,9 +723,7 @@ a {
   .site-header__invite .invite-button { min-height: 42px; padding: 0.5rem 0.7rem; font-size: 0.72rem; }
   .menu-toggle { display: inline-flex; flex: 0 0 auto; }
 
-  .hero {
-    padding: 2.6rem 1rem 2rem;
-  }
+  .hero { padding: 2.4rem 1rem 2rem; }
 
   .hero__inner {
     grid-template-columns: 1fr;
@@ -638,13 +731,22 @@ a {
   }
 
   .hero__copy { padding: 0; }
-  .hero__title { max-width: 13ch; font-size: clamp(3.3rem, 12vw, 5.2rem); }
-  .poster { width: min(100%, 560px); min-height: 500px; justify-self: center; }
-  .poster__scene { min-height: 390px; }
-  .poster__letters { height: 330px; }
-  .poster__chopstick { height: 360px; }
-  .dispatch-strip { width: min(100% - 2.25rem, 600px); }
-  .site-footer__inner { min-height: 0; align-items: flex-start; flex-direction: column; gap: 1.3rem; padding: 1.5rem 0; }
+  .hero__title { max-width: 13ch; font-size: clamp(3.2rem, 12vw, 5rem); }
+
+  .poster {
+    max-width: 520px;
+    justify-self: center;
+  }
+
+  .poster__scene { min-height: 520px; }
+
+  .site-footer__inner {
+    min-height: 0;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1.3rem;
+    padding: 1.5rem 0;
+  }
 }
 
 @media (max-width: 420px) {
@@ -653,17 +755,18 @@ a {
   .brand__seal { width: 29px; }
   .site-header__invite .invite-button__arrow { display: none; }
   .menu-toggle { width: 38px; height: 38px; }
-  .hero__title { font-size: clamp(2.75rem, 13vw, 3.5rem); }
+  .hero__title { font-size: clamp(2.7rem, 13vw, 3.5rem); }
   .hero__tagline { font-size: 0.96rem; }
-  .poster { min-height: 440px; border-width: 3px; box-shadow: 7px 8px 0 var(--ink); }
-  .poster__head, .poster__foot { padding: 0.7rem; }
-  .poster__serial { font-size: 0.5rem; }
-  .poster__scene { min-height: 350px; grid-template-columns: minmax(0, 1fr) 14px minmax(0, 0.65fr); padding: 1rem 0.55rem; }
-  .poster__balls { gap: 0.55rem 0.25rem; }
-  .takoyaki-ball { width: clamp(47px, 14vw, 58px); border-width: 2px; box-shadow: 2px 3px 0 var(--ink); }
-  .poster__chopstick { width: 13px; height: 300px; border-width: 2px; }
-  .poster__letters { height: 290px; gap: 0.08rem; font-size: 1.3rem; }
-  .poster__japanese { top: 0.7rem; left: 0.65rem; font-size: 0.7rem; }
+  .poster { border-width: 2px; box-shadow: 8px 9px 0 var(--ink); }
+  .poster__scene { min-height: 460px; }
+  .poster__letters { top: 0.8rem; left: 0.8rem; height: 58%; font-size: 1.3rem; }
+  .poster__seal { bottom: 0.8rem; left: 0.8rem; }
+  .poster__serial { top: 0.8rem; right: 0.8rem; }
+  .poster__fallback-balls { gap: 0.45rem 0.3rem; }
+  .poster__fallback-balls .takoyaki-ball { width: clamp(34px, 12vw, 46px); }
+  .poster__fallback-tray { width: 78%; min-height: 78px; }
+  .poster__fallback-tray .takoyaki-ball { width: clamp(30px, 10vw, 40px); }
+  .poster__chopstick { width: 12px; }
   .dispatch-strip { width: calc(100% - 1.5rem); }
   .dispatch-strip__heading { align-items: flex-start; flex-direction: column; gap: 0.25rem; }
   .footer-links { gap: 0.8rem 1rem; }
@@ -680,58 +783,3 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
-
-/* Phase 2 — one fixed canvas painted above the flat poster fills but below
-   all copy. Ordering matters: the poster background stays level 0 while the
-   chrome and text sit at level 10, so the 3D balls read as printed on top. */
-.scene-canvas {
-  position: fixed;
-  z-index: 5;
-  inset: 0;
-  pointer-events: none;
-}
-
-.scene-canvas canvas {
-  display: block;
-}
-
-.hero {
-  isolation: auto;
-}
-
-.hero::before {
-  z-index: 0;
-}
-
-.hero__copy {
-  z-index: 10;
-}
-
-.dispatch-strip,
-.site-footer {
-  position: relative;
-  z-index: 10;
-}
-
-.poster__scene {
-  z-index: auto;
-}
-
-.poster__head,
-.poster__foot,
-.poster__japanese,
-.poster__letters {
-  z-index: 10;
-}
-
-/* When the live scene is active the CSS stand-ins step aside so the DOM
-   lettering can be revealed by the shared GSAP timeline. */
-.fx .poster__balls,
-.fx .poster__chopstick {
-  opacity: 0;
-}
-
-.fx .poster__letters span {
-  opacity: 0;
-}
-
