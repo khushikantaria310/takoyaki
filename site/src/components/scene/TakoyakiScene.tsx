@@ -22,11 +22,11 @@ const BALLS = 8;
 type BallState = { p: number; lift: number };
 
 const HERO_LAYOUT = [
-  [-0.62, 0.18],
+  [-0.78, 0.16],
   [0.0, 0.34],
-  [0.62, 0.18],
-  [-0.34, -0.24],
-  [0.34, -0.24],
+  [0.78, 0.16],
+  [-0.44, -0.2],
+  [0.44, -0.2],
 ];
 
 const DRIFT = [
@@ -136,8 +136,8 @@ export default function TakoyakiScene({ mode, trigger }: { mode: SceneMode; trig
     const time = performance.now() / 1000;
 
     const slot = rectsRef.current.ball;
-    const slotRadius = slot ? slot.width * 0.5 * wpp : mode === "hero" ? 0.82 : 0.55;
-    const radius = mode === "bowl" ? slotRadius * 0.94 : slotRadius;
+    const slotRadius = slot ? slot.width * 0.5 * wpp : mode === "hero" ? 0.95 : 0.6;
+    const radius = mode === "bowl" ? slotRadius * 0.9 : slotRadius;
     const topWorld = (size.height / 2) * wpp;
 
     if (groupRef.current && mode === "hero") {
@@ -156,8 +156,8 @@ export default function TakoyakiScene({ mode, trigger }: { mode: SceneMode; trig
 
     if (trayRef.current) {
       const trayRect = rectsRef.current.tray;
-      const trayRadius = trayRect ? trayRect.width * 0.5 * wpp : 2.6;
-      const cy = trayRect ? toY(trayRect.top + trayRect.height * 0.5) : mode === "hero" ? -1.5 : -2.5;
+      const trayRadius = trayRect ? trayRect.width * 0.5 * wpp : 2.0;
+      const cy = trayRect ? toY(trayRect.top + trayRect.height * 0.5) : mode === "hero" ? -1.4 : -2.5;
       const cx = trayRect ? toX(trayRect.left + trayRect.width * 0.5) : 0;
       trayRef.current.position.set(cx, cy + (mode === "hero" ? 0.55 : 0), -0.15);
       trayRef.current.rotation.set(mode === "hero" ? -0.26 : -0.16, 0, 0);

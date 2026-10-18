@@ -135,10 +135,23 @@ button {
   opacity: 0;
 }
 
+.screen--home::before {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: min(120vw, 1100px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -58%);
+  background: radial-gradient(circle, rgba(243, 236, 215, 0.55) 0%, rgba(243, 236, 215, 0) 62%);
+  content: "";
+  pointer-events: none;
+}
+
 .hero-plate {
-  width: min(78vw, 600px);
+  width: min(88vw, 720px);
   height: auto;
-  filter: drop-shadow(0 10px 0 rgba(35, 40, 28, 0.08));
+  filter: drop-shadow(0 14px 0 rgba(35, 40, 28, 0.08));
 }
 
 .wordmark {
@@ -151,14 +164,14 @@ button {
 }
 
 .wordmark__jp {
-  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-size: clamp(3rem, 8vw, 5.4rem);
   font-weight: 600;
   letter-spacing: 0.35em;
   text-indent: 0.35em;
 }
 
 .wordmark__rm {
-  font-size: clamp(1rem, 2.4vw, 1.6rem);
+  font-size: clamp(1.2rem, 3vw, 2rem);
   letter-spacing: 0.55em;
   text-indent: 0.55em;
 }
@@ -254,12 +267,12 @@ button {
 .skewer {
   position: absolute;
   left: 50%;
-  top: 12%;
-  width: 16px;
-  height: 78%;
+  top: 10%;
+  width: 20px;
+  height: 82%;
   transform: translateX(-50%);
   border: 3px solid var(--ink);
-  border-radius: 9px 9px 4px 4px;
+  border-radius: 11px 11px 5px 5px;
   background: linear-gradient(90deg, var(--tray-dark), var(--tray) 46%, #e6cfa0);
 }
 
@@ -267,16 +280,16 @@ button {
   position: absolute;
   z-index: 3;
   left: 50%;
-  width: 92px;
-  height: 92px;
-  margin: -46px 0 0 -46px;
+  width: 108px;
+  height: 108px;
+  margin: -54px 0 0 -54px;
   transform: translateX(-50%);
 }
 
 .slot--tray {
-  width: 78px;
-  height: 78px;
-  margin: -39px 0 0 -39px;
+  width: 104px;
+  height: 104px;
+  margin: -52px 0 0 -52px;
 }
 
 .ball {
@@ -370,8 +383,8 @@ button {
 .stage-tray {
   position: absolute;
   left: 50%;
-  bottom: 10%;
-  width: min(74%, 540px);
+  bottom: 4%;
+  width: min(88%, 680px);
   height: auto;
   transform: translateX(-50%);
 }
@@ -398,7 +411,6 @@ button {
   height: 100svh;
   margin-top: -100svh;
   background: var(--sage);
-  border-top: 4px solid var(--ink);
   will-change: transform;
 }
 
@@ -521,15 +533,15 @@ button {
 
 @media (max-width: 520px) {
   .slot {
-    width: 76px;
-    height: 76px;
-    margin: -38px 0 0 -38px;
+    width: 84px;
+    height: 84px;
+    margin: -42px 0 0 -42px;
   }
 
   .slot--tray {
-    width: 62px;
-    height: 62px;
-    margin: -31px 0 0 -31px;
+    width: 76px;
+    height: 76px;
+    margin: -38px 0 0 -38px;
   }
 
   .tag {

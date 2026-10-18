@@ -11,14 +11,14 @@ import SceneMount from "@/components/SceneMount";
 import { bill, commands } from "@/lib/data";
 
 const slots = [
-  { left: 34, top: 62, tilt: -7 },
-  { left: 46, top: 57, tilt: 5 },
-  { left: 58, top: 62, tilt: -4 },
-  { left: 40, top: 71, tilt: 8 },
-  { left: 52, top: 72, tilt: -6 },
-  { left: 64, top: 70, tilt: 3 },
-  { left: 28, top: 71, tilt: -9 },
-  { left: 70, top: 60, tilt: 6 },
+  { left: 33, top: 65, tilt: -7 },
+  { left: 45, top: 62, tilt: 5 },
+  { left: 57, top: 65, tilt: -4 },
+  { left: 69, top: 69, tilt: 8 },
+  { left: 28, top: 79, tilt: -6 },
+  { left: 42, top: 82, tilt: 3 },
+  { left: 56, top: 82, tilt: -9 },
+  { left: 70, top: 79, tilt: 6 },
 ];
 
 const hover = (index: number) =>

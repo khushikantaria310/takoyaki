@@ -38,7 +38,7 @@ export function Features() {
         </div>
 
         {features.map((feature, index) => (
-          <div className="slot" key={feature.id} style={{ top: `${22 + index * 8}%` }}>
+          <div className="slot" key={feature.id} style={{ top: `${20 + index * 8.5}%` }}>
             <button
               type="button"
               className="ball"
