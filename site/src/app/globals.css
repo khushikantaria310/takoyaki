@@ -308,12 +308,12 @@ button {
 }
 
 .skewer-balls .ball + .ball {
-  margin-top: -30px;
+  margin-top: -36px;
 }
 
 .ball--skewer {
-  width: 88px;
-  height: 88px;
+  width: 104px;
+  height: 104px;
 }
 
 /* Balls shoulder-to-shoulder on the plate. */
@@ -321,7 +321,7 @@ button {
   position: absolute;
   z-index: 3;
   left: 50%;
-  bottom: 20%;
+  bottom: 22%;
   display: grid;
   gap: 0;
   transform: translateX(-50%);
@@ -333,15 +333,15 @@ button {
 }
 
 .plate-balls__row > .ball + .ball {
-  margin-left: -26px;
+  margin-left: -30px;
 }
 
 .plate-balls__row + .plate-balls__row {
-  margin-top: -54px;
+  margin-top: -66px;
 }
 
 .plate-balls__row:nth-child(2) {
-  margin-left: 74px;
+  margin-left: 92px;
 }
 
 .plate-balls__row:nth-child(2) .ball {
@@ -349,8 +349,8 @@ button {
 }
 
 .ball--plate {
-  width: 148px;
-  height: 148px;
+  width: 184px;
+  height: 184px;
 }
 
 .slot {
@@ -465,36 +465,36 @@ button {
 /* Transparent dialogue box */
 .tag--glass {
   display: grid;
-  gap: 0.3rem;
-  width: min(320px, 34vw);
+  gap: 0.4rem;
+  width: min(430px, 46vw);
   border: 2px solid rgba(35, 40, 28, 0.55);
-  border-radius: 14px;
-  padding: 0.85rem 1rem;
+  border-radius: 18px;
+  padding: 1.15rem 1.35rem;
   background: rgba(243, 236, 215, 0.32);
-  -webkit-backdrop-filter: blur(10px) saturate(1.1);
-  backdrop-filter: blur(10px) saturate(1.1);
-  box-shadow: 0 10px 30px rgba(35, 40, 28, 0.14);
+  -webkit-backdrop-filter: blur(12px) saturate(1.1);
+  backdrop-filter: blur(12px) saturate(1.1);
+  box-shadow: 0 12px 36px rgba(35, 40, 28, 0.16);
   text-align: left;
   white-space: normal;
   z-index: 20;
 }
 
 .tag--glass strong {
-  font-size: 1.15rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: var(--navy);
+  color: var(--ink);
 }
 
 .tag--glass .tag__desc {
-  font-size: 0.88rem;
-  line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.55;
   color: var(--ink);
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
 .tag--glass em {
   font-style: normal;
-  font-size: 0.82rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--takoyaki-dark);
 }
@@ -539,8 +539,8 @@ button {
 .stage-plate {
   position: absolute;
   left: 50%;
-  bottom: -8%;
-  width: min(160%, 1600px);
+  bottom: -18%;
+  width: min(170%, 1700px);
   height: auto;
   transform: translateX(-50%);
 }
@@ -625,9 +625,9 @@ button {
 
 /* ---------- Footer ---------- */
 .site-footer {
-  border-top: 4px solid var(--ink);
   background: linear-gradient(180deg, #a9b77c 0%, #c3d094 100%);
   padding: clamp(2.4rem, 7vh, 4.5rem) clamp(1.2rem, 5vw, 3rem) clamp(2rem, 5vh, 3rem);
+  text-align: center;
 }
 
 .footer-inner {
@@ -654,6 +654,7 @@ button {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 1.2rem;
   margin-top: 1.4rem;
 }
@@ -703,14 +704,17 @@ button {
 
 .footer-columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  justify-items: center;
   gap: 1.6rem 2rem;
 }
 
 .footer-col {
   display: grid;
+  justify-items: center;
   align-content: start;
   gap: 0.55rem;
+  text-align: center;
 }
 
 .footer-col h3 {
@@ -724,7 +728,7 @@ button {
 }
 
 .footer-link {
-  justify-self: start;
+  justify-self: center;
   font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
@@ -745,6 +749,7 @@ button {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 0.9rem 1.6rem;
   font-size: 0.86rem;
   color: rgba(35, 40, 28, 0.8);
