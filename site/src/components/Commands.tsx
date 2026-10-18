@@ -151,6 +151,14 @@ export function Commands() {
       repeat: -1,
       delay: 0.4,
     });
+
+    // Steam drifting off the bowl.
+    gsap.utils.toArray<HTMLElement>(".steam__wisp", scope.current).forEach((wisp, index) => {
+      gsap
+        .timeline({ repeat: -1, delay: index * 0.7 })
+        .fromTo(wisp, { yPercent: 30, opacity: 0, scale: 0.8 }, { opacity: 0.5, duration: 1.3, ease: "sine.out" })
+        .to(wisp, { yPercent: -160, scale: 1.3, opacity: 0, duration: 2.6, ease: "sine.in" });
+    });
   }, { scope });
 
   return (
@@ -164,6 +172,12 @@ export function Commands() {
 
           <div className="stage-bowl-wrap" data-bowl>
             <Bowl className="stage-bowl" />
+          </div>
+
+          <div className="steam" aria-hidden="true">
+            {[0, 1, 2, 3].map((wisp) => (
+              <span className="steam__wisp" key={wisp} style={{ left: `${30 + wisp * 13}%` }} />
+            ))}
           </div>
 
           <div className="plate-balls">
