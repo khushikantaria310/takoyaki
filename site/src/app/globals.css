@@ -152,9 +152,9 @@ a {
   height: min(84%, 680px);
   gap: clamp(0.02rem, 0.3vw, 0.14rem);
   color: var(--label-orange);
-  font-size: clamp(2.4rem, 8.4vh, 6.2rem);
+  font-size: clamp(3rem, 11vh, 8rem);
   font-weight: 900;
-  line-height: 0.84;
+  line-height: 0.82;
   writing-mode: vertical-rl;
   text-orientation: upright;
   text-shadow: 3px 3px 0 var(--ink);

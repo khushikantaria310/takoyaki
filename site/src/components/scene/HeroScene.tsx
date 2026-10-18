@@ -95,9 +95,9 @@ export default function HeroScene() {
       drop.to(ball, { p: 1, duration: 0.7, ease: "power2.in" }, at);
       drop.fromTo(
         ball,
-        { s: 1 },
-        { s: 0, duration: 0.95, ease: "elastic.out(1, 0.32)" },
-        at + 0.6,
+        { s: 1.15 },
+        { s: 0, duration: 1.05, ease: "elastic.out(1, 0.28)" },
+        at + 0.62,
       );
       if (letters[index]) {
         drop.to(
@@ -168,6 +168,7 @@ export default function HeroScene() {
     }
 
     const arc = rect.height * 0.16 * wpp;
+    const time = performance.now() / 1000;
 
     for (let i = 0; i < BALL_COUNT; i++) {
       const group = ballRefs.current[i];
@@ -194,15 +195,32 @@ export default function HeroScene() {
         THREE.MathUtils.lerp(dropY, slotY, transferAmount) +
         arc * Math.sin(Math.PI * transferAmount);
 
-      group.position.set(x, y, THREE.MathUtils.lerp(0.12 + i * 0.015, slotZ, transferAmount));
-      group.rotation.z = (1 - progress) * 0.5 + transferAmount * 0.15 * Math.sin(i);
-      group.rotation.y = (1 - progress) * 0.7;
-
+      // Cartoon motion: stretch while falling, big squash on impact, then a
+      // lazy jiggle while the ball rests on the chopstick.
+      const falling = 1 - progress;
       const squash = ball.s;
+      const stretch = 1 + 0.5 * falling;
+      const width = 1 - 0.24 * falling;
+      const impactY = 1 - 0.46 * squash;
+      const impactXZ = 1 + 0.3 * squash;
+
+      const idle = (1 - transferAmount) * (progress >= 1 ? 1 : 0);
+
+      group.position.set(
+        x,
+        y + Math.sin(time * 3.2 + i) * radius * 0.14 * idle,
+        THREE.MathUtils.lerp(0.12 + i * 0.015, slotZ, transferAmount),
+      );
+      group.rotation.z =
+        (1 - progress) * 0.9 * Math.sin(i * 1.7) * 0.6 +
+        Math.sin(time * 4 + i) * 0.07 * idle +
+        transferAmount * 0.18 * Math.sin(i * 2.1);
+      group.rotation.y = (1 - progress) * 0.7 + transferAmount * Math.PI * 0.6;
+
       group.scale.set(
-        radius * (1 + 0.2 * squash),
-        radius * (1 - 0.34 * squash),
-        radius * (1 + 0.2 * squash),
+        radius * impactXZ * width,
+        radius * impactY * stretch,
+        radius * impactXZ * width,
       );
     }
 
