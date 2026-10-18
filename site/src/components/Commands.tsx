@@ -5,22 +5,21 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ball } from "@/components/Ball";
-import { Plate } from "@/components/Plate";
 import { HandArrow } from "@/components/HandArrow";
 import { commands } from "@/lib/data";
 
 const tilts = [-6, 4, -3, 6, -5, 3, -7, 5];
 
-/** A neat 4 + 4 grid, centred on the plate. */
+/** 4 at the back, 4 in front, adjacent — the back row stays half visible. */
 const ballPositions = [
-  { left: 35, top: 65 },
-  { left: 45, top: 65 },
-  { left: 55, top: 65 },
-  { left: 65, top: 65 },
-  { left: 35, top: 79 },
-  { left: 45, top: 79 },
-  { left: 55, top: 79 },
-  { left: 65, top: 79 },
+  { left: 32, top: 55 },
+  { left: 44, top: 55 },
+  { left: 56, top: 55 },
+  { left: 68, top: 55 },
+  { left: 32, top: 70 },
+  { left: 44, top: 70 },
+  { left: 56, top: 70 },
+  { left: 68, top: 70 },
 ];
 
 const steps = [
@@ -78,21 +77,11 @@ export function Commands() {
       });
     };
 
-    const onUp = (event: PointerEvent) => {
+    const onUp = () => {
       const dragging = dragRef.current;
       if (!dragging) return;
       dragRef.current = null;
-      const plate = document.querySelector("[data-plate]");
-      const rect = plate?.getBoundingClientRect();
-      const inside =
-        rect &&
-        event.clientX > rect.left &&
-        event.clientX < rect.right &&
-        event.clientY > rect.top &&
-        event.clientY < rect.bottom;
-      if (!inside) {
-        gsap.to(dragging.el, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.5)" });
-      }
+      gsap.to(dragging.el, { scale: 1, duration: 0.3, ease: "back.out(2)" });
     };
 
     window.addEventListener("pointermove", onMove, { passive: true });
@@ -109,13 +98,6 @@ export function Commands() {
     const drop = gsap.timeline({
       scrollTrigger: { trigger: "#commands", start: "top top", end: "bottom bottom", scrub: 1 },
     });
-
-    drop.fromTo(
-      "[data-plate]",
-      { xPercent: 130, opacity: 0 },
-      { xPercent: 0, opacity: 1, ease: "power4.out", duration: 1.3 },
-      0,
-    );
 
     gsap.utils.toArray<HTMLElement>("[data-ball]", scope.current).forEach((ball, index) => {
       const side = index % 3 === 2 ? 1 : -1; // two from the left, one from the right
@@ -171,14 +153,10 @@ export function Commands() {
       <section id="commands" className="stage stage--tray">
         <div className="stage__head">
           <p className="stage__eyebrow">Commands</p>
-          <h2 className="stage__title">Pick up a takoyaki and place it on the plate</h2>
+          <h2 className="stage__title">Point at a takoyaki for its command</h2>
         </div>
 
         <div className="stage__sticky">
-          <div className="stage-plate-wrap" data-plate>
-            <Plate className="stage-plate-img" />
-          </div>
-
           <div className="plate-balls">
             {commands.map((item, index) => {
               const slot = ballPositions[index % ballPositions.length];
