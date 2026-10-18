@@ -162,24 +162,24 @@ export default function SkewerPlateWorld() {
     }
 
     if (plateRef.current && plateRect) {
-      const plateRadius = plateRect.width * 0.5 * wpp;
-      plateRef.current.position.set(
-        toX(plateRect.left + plateRect.width * 0.5),
-        toY(plateRect.top + plateRect.height * 0.55),
-        -0.1,
-      );
-      plateRef.current.rotation.set(-0.5, 0, 0);
-      plateRef.current.scale.set(plateRadius, plateRadius * 0.9, plateRadius * 0.78);
+      const plateRadius = plateRect.width * 0.44 * wpp;
+      const cx = toX(plateRect.left + plateRect.width * 0.5);
+      const anchorY = plates.length
+        ? plates.reduce((sum, rect) => sum + (rect.top + rect.height * 0.5), 0) / plates.length
+        : plateRect.top + plateRect.height * 0.6;
+      plateRef.current.position.set(cx, toY(anchorY) - plateRadius * 0.24, -0.14);
+      plateRef.current.rotation.set(-0.3, 0, 0);
+      plateRef.current.scale.set(plateRadius, plateRadius * 0.5, plateRadius * 0.76);
     }
 
     if (shadowRef.current && plateRect) {
-      const plateRadius = plateRect.width * 0.5 * wpp;
+      const plateRadius = plateRect.width * 0.44 * wpp;
       shadowRef.current.position.set(
         toX(plateRect.left + plateRect.width * 0.5),
-        toY(plateRect.top + plateRect.height * 0.96),
+        toY(plateRect.top + plateRect.height * 0.9) - plateRadius * 0.3,
         -0.4,
       );
-      shadowRef.current.scale.set(plateRadius * 2, plateRadius * 0.7, 1);
+      shadowRef.current.scale.set(plateRadius * 2, plateRadius * 0.55, 1);
     }
 
     const stick0 = sticks[0];
@@ -196,7 +196,7 @@ export default function SkewerPlateWorld() {
       const sx = toX(stick.left + stick.width * 0.5);
       const sy = toY(stick.top + stick.height * 0.5);
       const px = toX(seat.left + seat.width * 0.5);
-      const py = toY(seat.top + seat.height * 0.5);
+      const py = toY(seat.top + seat.height * 0.5) - radius * 0.3;
 
       const dropY = topWorld + radius * 3 + i * radius * 0.6;
       const baseY = THREE.MathUtils.lerp(dropY, sy, s.insert);

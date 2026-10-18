@@ -246,7 +246,7 @@ button {
 /* ---------- Stage sections (features / commands) ---------- */
 .stage {
   position: relative;
-  height: 230vh;
+  height: 165vh;
 }
 
 .stage__head {
@@ -413,7 +413,7 @@ button {
 /* ---------- Curtain + receipt ---------- */
 .curtain {
   position: relative;
-  height: 230vh;
+  height: 112vh;
 }
 
 .curtain__receipt {
