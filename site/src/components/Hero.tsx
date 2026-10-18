@@ -1,6 +1,8 @@
 import { ArrowDownRight } from "lucide-react";
 import { discordInviteUrl } from "@/lib/site-config";
 import { PosterArt } from "@/components/PosterArt";
+import FeatureCard from "@/components/FeatureCard";
+import FeatureNav from "@/components/FeatureNav";
 
 export function Hero() {
   return (
@@ -16,6 +18,9 @@ export function Hero() {
           </div>
         </div>
       </section>
+
+      <FeatureNav />
+      <FeatureCard />
 
       <a
         className="invite-button cta-float"

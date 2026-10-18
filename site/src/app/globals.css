@@ -106,19 +106,20 @@ a {
   top: 0;
   height: 100svh;
   background:
-    linear-gradient(168deg, transparent 0 58%, var(--paper) 58.4%, var(--paper) 100%),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 40px, rgba(9, 20, 34, 0.055) 40px 80px),
-    var(--steel-blue);
+    radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 32%),
+    repeating-conic-gradient(from 0deg at 50% 46%, rgba(13, 58, 120, 0.3) 0deg 0.7deg, rgba(13, 58, 120, 0) 0.7deg 4.5deg),
+    radial-gradient(circle at 50% 46%, #5cc0f5 0%, #2f8edd 46%, #1c5fb4 100%);
 }
 
 .poster__bg::before {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(247, 235, 192, 0.3) 0.9px, transparent 1px);
-  background-size: 7px 7px;
+  background-image: radial-gradient(rgba(10, 45, 100, 0.45) 1.3px, transparent 1.5px);
+  background-size: 9px 9px;
   content: "";
-  opacity: 0.5;
   pointer-events: none;
+  -webkit-mask-image: radial-gradient(circle at 50% 46%, transparent 10%, #000 60%);
+  mask-image: radial-gradient(circle at 50% 46%, transparent 10%, #000 60%);
 }
 
 .poster__ui {
@@ -149,15 +150,17 @@ a {
   top: clamp(0.5rem, 3vh, 1.8rem);
   left: clamp(0.8rem, 3vw, 2.5rem);
   display: flex;
-  height: min(84%, 680px);
+  height: min(88%, 760px);
   gap: clamp(0.02rem, 0.3vw, 0.14rem);
-  color: var(--label-orange);
-  font-size: clamp(3rem, 11vh, 8rem);
+  color: #ffffff;
+  font-size: clamp(3.4rem, 12vh, 8.5rem);
   font-weight: 900;
-  line-height: 0.82;
+  line-height: 0.84;
   writing-mode: vertical-rl;
   text-orientation: upright;
-  text-shadow: 3px 3px 0 var(--ink);
+  -webkit-text-stroke: 0.075em #123a66;
+  paint-order: stroke fill;
+  text-shadow: 0 0.07em 0 rgba(8, 34, 72, 0.5);
   will-change: transform;
 }
 
@@ -269,6 +272,110 @@ a {
   bottom: clamp(0.9rem, 2.5vw, 1.6rem);
 }
 
+/* ---------- Feature speech bubbles ---------- */
+.feature-card-layer {
+  position: fixed;
+  z-index: 45;
+  inset: 0;
+  pointer-events: none;
+}
+
+.feature-card-anchor {
+  position: fixed;
+  transform: translateY(-50%);
+}
+
+.feature-card {
+  position: relative;
+  max-width: 330px;
+  padding: 0.85rem 1.15rem;
+  border: 3px solid var(--ink);
+  border-radius: 16px;
+  background: #ffffff;
+  color: var(--ink);
+  box-shadow: 6px 8px 0 rgba(9, 40, 88, 0.4);
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  font-weight: 900;
+  line-height: 1.12;
+}
+
+.feature-card::before {
+  position: absolute;
+  top: 50%;
+  left: -14px;
+  transform: translateY(-50%);
+  border-top: 12px solid transparent;
+  border-right: 15px solid var(--ink);
+  border-bottom: 12px solid transparent;
+  content: "";
+}
+
+.feature-card::after {
+  position: absolute;
+  top: 50%;
+  left: -8px;
+  transform: translateY(-50%);
+  border-top: 9px solid transparent;
+  border-right: 11px solid #ffffff;
+  border-bottom: 9px solid transparent;
+  content: "";
+}
+
+.feature-card__badge {
+  display: inline-block;
+  margin-top: 0.45rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  background: var(--label-orange);
+  color: var(--ink);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.feature-card__cmd {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+}
+
+/* ---------- Keyboard/touch feature dots ---------- */
+.feature-nav {
+  position: fixed;
+  z-index: 45;
+  bottom: clamp(0.9rem, 2.5vw, 1.4rem);
+  left: 50%;
+  display: flex;
+  gap: 0.4rem;
+  transform: translateX(-50%);
+}
+
+.feature-nav__dot {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: rgba(247, 235, 192, 0.92);
+  color: var(--ink);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 140ms ease, transform 140ms ease;
+}
+
+.feature-nav__dot:hover,
+.feature-nav__dot:focus-visible {
+  background: var(--label-orange);
+  transform: translateY(-2px);
+}
+
 /* ---------- Fixed scene canvas ---------- */
 .scene-canvas {
   position: fixed;
@@ -295,8 +402,8 @@ a {
   }
 
   .poster__letters {
-    height: 76%;
-    font-size: clamp(2rem, 9vh, 3.6rem);
+    height: 80%;
+    font-size: clamp(2.6rem, 11vh, 5rem);
   }
 
   .poster__fallback-balls {
@@ -306,9 +413,9 @@ a {
 
 @media (max-width: 640px) {
   .poster__letters {
-    height: 68%;
-    font-size: clamp(1.8rem, 9vw, 2.6rem);
-    text-shadow: 2px 2px 0 var(--ink);
+    height: 66%;
+    font-size: clamp(2.2rem, 11vw, 3.4rem);
+    -webkit-text-stroke-width: 0.06em;
   }
 
   .poster__fallback-balls {
@@ -318,6 +425,20 @@ a {
 
   .poster__fallback-tray {
     width: 74%;
+  }
+
+  .feature-nav {
+    bottom: 4.6rem;
+    gap: 0.3rem;
+  }
+
+  .feature-nav__dot {
+    width: 27px;
+    height: 27px;
+  }
+
+  .feature-card {
+    max-width: 62vw;
   }
 }
 

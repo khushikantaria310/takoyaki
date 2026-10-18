@@ -185,13 +185,8 @@ export function createOnionGeometries(): THREE.TubeGeometry[] {
   });
 }
 
-/** A loose green-onion ribbon used as a drifting garnish in the air. */
-export function createGarnishGeometry(): THREE.TubeGeometry {
-  const curve = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(-0.5, 0.1, 0),
-    new THREE.Vector3(-0.1, 0.4, 0.05),
-    new THREE.Vector3(0.3, 0.05, 0),
-    new THREE.Vector3(0.6, 0.3, -0.05),
-  ]);
-  return new THREE.TubeGeometry(curve, 18, 0.045, 6, false);
+/** A green-onion ring used on the balls and as drifting garnish in the air. */
+export function createOnionRingGeometry(): THREE.TorusGeometry {
+  const geometry = new THREE.TorusGeometry(0.16, 0.055, 6, 16);
+  return geometry;
 }
