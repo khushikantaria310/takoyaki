@@ -109,45 +109,22 @@ export default function HeroScene() {
     });
 
     // 2. Scroll: the same balls arc off the chopstick and settle in the tray.
-    //    Desktop pins the poster for a cinematic transfer; phones keep the
-    //    scroll-driven sequence without pinning so nothing is trapped.
-    const media = gsap.matchMedia();
-
-    media.add("(min-width: 761px)", () => {
-      const transfer = gsap.timeline({
-        scrollTrigger: {
-          trigger: "#opening",
-          start: "top top",
-          end: "+=110%",
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-        },
-      });
-      state.current.forEach((ball, index) => {
-        transfer.to(ball, { t: 1, duration: 1, ease: "power2.inOut" }, index * 0.24);
-      });
-      return () => transfer.kill();
+    //    The poster is pinned with CSS sticky, so a single scrubbed timeline
+    //    covers desktop and touch alike.
+    const transfer = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#opening",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1,
+      },
     });
-
-    media.add("(max-width: 760px)", () => {
-      const transfer = gsap.timeline({
-        scrollTrigger: {
-          trigger: "#opening",
-          start: "top 65%",
-          end: "bottom 30%",
-          scrub: 1,
-        },
-      });
-      state.current.forEach((ball, index) => {
-        transfer.to(ball, { t: 1, duration: 1, ease: "power2.inOut" }, index * 0.24);
-      });
-      return () => transfer.kill();
+    state.current.forEach((ball, index) => {
+      transfer.to(ball, { t: 1, duration: 1, ease: "power2.inOut" }, index * 0.24);
     });
 
     return () => {
       drop.kill();
-      media.revert();
     };
   }, { dependencies: [] });
 

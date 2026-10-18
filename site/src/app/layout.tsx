@@ -3,8 +3,6 @@ import { Archivo, Geist_Mono, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import SceneCanvasMount from "@/components/SceneCanvasMount";
-import { Nav } from "@/components/Nav";
-import { Footer } from "@/components/Footer";
 
 const display = Archivo({
   subsets: ["latin"],
@@ -42,9 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a className="skip-link" href="#main">Skip to the poster</a>
         <SceneCanvasMount />
         <SmoothScroll />
-        <Nav />
         {children}
-        <Footer />
       </body>
     </html>
   );
