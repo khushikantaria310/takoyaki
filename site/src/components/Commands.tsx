@@ -152,12 +152,12 @@ export function Commands() {
   return (
     <div ref={scope}>
       <section id="commands" className="stage stage--tray">
-        <div className="stage__head">
-          <p className="stage__eyebrow">Commands</p>
-          <h2 className="stage__title">Point at a takoyaki for its command</h2>
-        </div>
-
         <div className="stage__sticky">
+          <div className="stage__head">
+            <p className="stage__eyebrow">Commands</p>
+            <h2 className="stage__title">Point at a takoyaki for its command</h2>
+          </div>
+
           <Bowl className="stage-bowl" />
 
           <div className="plate-balls">

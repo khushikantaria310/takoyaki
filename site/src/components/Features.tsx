@@ -37,14 +37,14 @@ export function Features() {
 
   return (
     <section id="features" className="stage" ref={scope}>
-      <div className="stage__head" data-feature-head>
-        <p className="stage__script">hot off the grill</p>
-        <h2 className="stage__title">Everything you’d check a dashboard for</h2>
-        <p className="stage__chip">real-time pings · real commits</p>
-        <p className="stage__sub">Except you don’t have to. It shows up where your team already talks.</p>
-      </div>
-
       <div className="stage__sticky">
+        <div className="stage__head" data-feature-head>
+          <p className="stage__script">hot off the grill</p>
+          <h2 className="stage__title">Everything you’d check a dashboard for</h2>
+          <p className="stage__chip">real-time pings · real commits</p>
+          <p className="stage__sub">Except you don’t have to. It shows up where your team already talks.</p>
+        </div>
+
         <div className="skewer" data-skewer aria-hidden="true" />
 
         <div className="skewer-balls">

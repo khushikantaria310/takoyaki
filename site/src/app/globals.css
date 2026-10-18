@@ -281,9 +281,9 @@ button {
 .stage__head {
   position: absolute;
   z-index: 6;
-  top: clamp(5rem, 15vh, 9rem);
+  top: clamp(3.2rem, 7vh, 5rem);
   left: 50%;
-  width: min(100% - 3rem, 780px);
+  width: min(100% - 3rem, 660px);
   transform: translateX(-50%);
   text-align: center;
   pointer-events: none;
@@ -325,9 +325,9 @@ button {
 .skewer {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 40%;
   width: 18px;
-  height: 42%;
+  height: 54%;
   transform: translateX(-50%);
   border: 3px solid var(--ink);
   border-radius: 11px 11px 5px 5px;
@@ -339,7 +339,7 @@ button {
   position: absolute;
   z-index: 3;
   left: 50%;
-  top: 48%;
+  top: 41%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -347,12 +347,12 @@ button {
 }
 
 .skewer-balls .ball + .ball {
-  margin-top: -176px;
+  margin-top: -148px;
 }
 
 .ball--skewer {
-  width: 262px;
-  height: 262px;
+  width: 200px;
+  height: 200px;
 }
 
 /* Balls shoulder-to-shoulder on the plate. */
