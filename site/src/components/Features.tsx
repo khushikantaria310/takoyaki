@@ -26,6 +26,7 @@ export function Features() {
       scrollTrigger: { trigger: scope.current, start: "top top", end: "bottom bottom", scrub: 1 },
     });
     balls.forEach((ball, index) => {
+      const side = index % 2 === 0 ? -1 : 1;
       drop.fromTo(
         ball,
         { yPercent: -150, opacity: 0, rotate: side * 12 },
