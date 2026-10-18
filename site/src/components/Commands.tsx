@@ -7,18 +7,22 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ball } from "@/components/Ball";
 import { Tray } from "@/components/Tray";
 import { HandArrow } from "@/components/HandArrow";
+import SceneMount from "@/components/SceneMount";
 import { bill, commands } from "@/lib/data";
 
 const slots = [
-  { left: 34, top: 64, tilt: -7 },
-  { left: 46, top: 59, tilt: 5 },
-  { left: 58, top: 64, tilt: -4 },
-  { left: 40, top: 73, tilt: 8 },
-  { left: 52, top: 74, tilt: -6 },
-  { left: 64, top: 72, tilt: 3 },
-  { left: 28, top: 73, tilt: -9 },
-  { left: 70, top: 62, tilt: 6 },
+  { left: 34, top: 62, tilt: -7 },
+  { left: 46, top: 57, tilt: 5 },
+  { left: 58, top: 62, tilt: -4 },
+  { left: 40, top: 71, tilt: 8 },
+  { left: 52, top: 72, tilt: -6 },
+  { left: 64, top: 70, tilt: 3 },
+  { left: 28, top: 71, tilt: -9 },
+  { left: 70, top: 60, tilt: 6 },
 ];
+
+const hover = (index: number) =>
+  window.dispatchEvent(new CustomEvent("tako:hover", { detail: { index } }));
 
 /** Balls drop into the tray, then a curtain slides away to the setup bill. */
 export function Commands() {
@@ -26,19 +30,6 @@ export function Commands() {
 
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
-
-    const balls = gsap.utils.toArray<HTMLElement>("[data-tray-ball]", scope.current);
-    const timeline = gsap.timeline({
-      scrollTrigger: { trigger: "#commands", start: "top top", end: "bottom bottom", scrub: 1 },
-    });
-    balls.forEach((ball, index) => {
-      timeline.fromTo(
-        ball,
-        { y: -820, opacity: 0, rotate: 14 },
-        { y: 0, opacity: 1, rotate: 0, ease: "bounce.out", duration: 1 },
-        index * 0.34,
-      );
-    });
 
     gsap.to("[data-curtain]", {
       yPercent: -102,
@@ -50,6 +41,18 @@ export function Commands() {
         scrub: 1,
       },
     });
+
+    gsap.fromTo(
+      "[data-receipt]",
+      { opacity: 0, scale: 0.86, y: 40 },
+      {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        ease: "power3.out",
+        scrollTrigger: { trigger: "[data-curtain-section]", start: "top 60%", end: "top 10%", scrub: true },
+      },
+    );
   }, { scope });
 
   return (
@@ -61,7 +64,11 @@ export function Commands() {
         </div>
 
         <div className="stage__sticky">
-          <Tray className="stage-tray" />
+          <div className="scene-layer">
+            <SceneMount mode="bowl" trigger="#commands" />
+          </div>
+
+          <Tray className="stage-tray" data-tray />
 
           {commands.map((item, index) => {
             const slot = slots[index % slots.length];
@@ -74,8 +81,12 @@ export function Commands() {
                 <button
                   type="button"
                   className="ball ball--sm"
-                  data-tray-ball
+                  data-slot
                   aria-label={`${item.command} — ${item.note}`}
+                  onMouseEnter={() => hover(index)}
+                  onFocus={() => hover(index)}
+                  onMouseLeave={() => hover(-1)}
+                  onBlur={() => hover(-1)}
                 >
                   <Ball size={66} tilt={slot.tilt} />
                   <span className="tag tag--free">
@@ -94,7 +105,7 @@ export function Commands() {
 
       <section className="curtain" data-curtain-section>
         <div className="curtain__receipt">
-          <div className="receipt">
+          <div className="receipt" data-receipt>
             <p className="receipt__title">たこやき · setup</p>
             <div className="receipt__rows">
               {bill.map((line) => (

@@ -21,6 +21,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{var m=!window.matchMedia('(prefers-reduced-motion: reduce)').matches;var c=document.createElement('canvas');var g=c.getContext('webgl2')||c.getContext('webgl');if(m&&g){document.documentElement.classList.add('fx');}}catch(e){}})();",
+          }}
+        />
         <a className="skip-link" href="#main">Skip to content</a>
         <SmoothScroll />
         <Nav />
