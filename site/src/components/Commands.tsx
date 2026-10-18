@@ -11,16 +11,16 @@ import { commands } from "@/lib/data";
 
 const tilts = [-6, 4, -3, 6, -5, 3, -7, 5];
 
-/** 4 at the back, 4 in front, seated in the bowl. */
+/** The balls start in two rows above the bowl; drag them into it. */
 const ballPositions = [
-  { left: 33, top: 63 },
-  { left: 44, top: 63 },
-  { left: 56, top: 63 },
-  { left: 67, top: 63 },
-  { left: 33, top: 77 },
-  { left: 44, top: 77 },
-  { left: 56, top: 77 },
-  { left: 67, top: 77 },
+  { left: 34, top: 26 },
+  { left: 45, top: 26 },
+  { left: 56, top: 26 },
+  { left: 67, top: 26 },
+  { left: 34, top: 39 },
+  { left: 45, top: 39 },
+  { left: 56, top: 39 },
+  { left: 67, top: 39 },
 ];
 
 const steps = [
@@ -48,8 +48,6 @@ export function Commands() {
   const dragRef = useRef<{ el: HTMLButtonElement; sx: number; sy: number } | null>(null);
 
   useEffect(() => {
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-
     quickRef.current = ballsRef.current.map((ball) =>
       ball
         ? {
@@ -94,17 +92,16 @@ export function Commands() {
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const drop = gsap.timeline({
-      scrollTrigger: { trigger: "#commands", start: "top top", end: "bottom bottom", scrub: 1 },
+    const intro = gsap.timeline({
+      scrollTrigger: { trigger: "#commands", start: "top 70%", end: "top 20%", scrub: true },
     });
+    intro.fromTo("[data-commands-head]", { opacity: 0, y: 20 }, { opacity: 1, y: 0 });
 
     gsap.utils.toArray<HTMLElement>("[data-ball]", scope.current).forEach((ball, index) => {
-      const side = index % 3 === 2 ? 1 : -1; // two from the left, one from the right
-      drop.fromTo(
+      gsap.fromTo(
         ball,
-        { xPercent: side * 58, yPercent: -520, opacity: 0, rotate: side * 16 },
-        { xPercent: 0, yPercent: 0, opacity: 1, rotate: 0, ease: "back.out(1.25)", duration: 1.15 },
-        1.1 + index * 0.26,
+        { opacity: 0, scale: 0.7 },
+        { opacity: 1, scale: 1, ease: "back.out(1.4)", duration: 0.7, delay: index * 0.06 },
       );
     });
 
@@ -151,9 +148,9 @@ export function Commands() {
     <div ref={scope}>
       <section id="commands" className="stage stage--tray">
         <div className="stage__sticky">
-          <div className="stage__head">
+          <div className="stage__head" data-commands-head>
             <p className="stage__eyebrow">Commands</p>
-            <h2 className="stage__title">Point at a takoyaki for its command</h2>
+            <h2 className="stage__title">Drag each takoyaki into the bowl</h2>
           </div>
 
           <div className="stage-bowl-wrap" data-bowl>
@@ -174,7 +171,6 @@ export function Commands() {
                       ballsRef.current[index] = element;
                     }}
                     onPointerDown={(event) => {
-                      if (!window.matchMedia("(pointer: fine)").matches) return;
                       const ball = ballsRef.current[index];
                       if (!ball) return;
                       event.preventDefault();
