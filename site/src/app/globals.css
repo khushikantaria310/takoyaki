@@ -871,12 +871,33 @@ button {
 
 /* ---------- Footer ---------- */
 .site-footer {
-  background: linear-gradient(180deg, #a9b77c 0%, #c3d094 100%);
-  padding: clamp(2.4rem, 7vh, 4.5rem) clamp(1.2rem, 5vw, 3rem) clamp(2rem, 5vh, 3rem);
+  position: relative;
+  overflow: hidden;
+  background: none;
+  padding: clamp(3rem, 9vh, 5.5rem) clamp(1.2rem, 5vw, 3rem) clamp(2rem, 5vh, 3rem);
   text-align: center;
 }
 
+.footer-watermark {
+  position: absolute;
+  z-index: 0;
+  top: -0.28em;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Dela Gothic One", system-ui, sans-serif;
+  font-size: clamp(5rem, 22vw, 19rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: rgba(35, 40, 28, 0.1);
+  text-shadow: 0 12px 0 rgba(35, 40, 28, 0.05);
+  pointer-events: none;
+  user-select: none;
+}
+
 .footer-inner {
+  position: relative;
+  z-index: 1;
   width: min(100%, 1120px);
   margin: 0 auto;
 }
