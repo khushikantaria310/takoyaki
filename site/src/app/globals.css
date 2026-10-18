@@ -321,7 +321,7 @@ button {
   position: absolute;
   z-index: 3;
   left: 50%;
-  bottom: 14%;
+  bottom: 10%;
   display: grid;
   gap: 0;
   transform: translateX(-50%);
@@ -333,15 +333,15 @@ button {
 }
 
 .plate-balls__row > .ball + .ball {
-  margin-left: -38px;
+  margin-left: -52px;
 }
 
 .plate-balls__row + .plate-balls__row {
-  margin-top: -74px;
+  margin-top: -102px;
 }
 
 .plate-balls__row:nth-child(2) {
-  margin-left: 118px;
+  margin-left: 150px;
 }
 
 .plate-balls__row:nth-child(2) .ball {
@@ -349,8 +349,8 @@ button {
 }
 
 .ball--plate {
-  width: 208px;
-  height: 208px;
+  width: 268px;
+  height: 268px;
 }
 
 .slot {
