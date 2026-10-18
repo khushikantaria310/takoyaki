@@ -213,10 +213,24 @@ export function Commands() {
         <div className="bill__sticky">
           <div className="bill__shadow" data-receipt-shadow aria-hidden="true" />
           <div className="bill__stage">
-            <div className="receipt__chopsticks" aria-hidden="true">
-              <span className="receipt__stick receipt__stick--a" />
-              <span className="receipt__stick receipt__stick--b" />
-            </div>
+            <svg className="receipt__chopsticks" viewBox="0 0 660 130" aria-hidden="true">
+              <polygon
+                points="2,118 18,96 654,30 654,39 18,107"
+                fill="url(#takoWood)"
+                stroke="var(--ink)"
+                strokeWidth="3"
+                strokeLinejoin="round"
+              />
+              <polygon
+                points="58,10 76,18 642,102 642,111 76,28"
+                fill="url(#takoWood)"
+                stroke="var(--ink)"
+                strokeWidth="3"
+                strokeLinejoin="round"
+              />
+              <line x1="24" y1="101" x2="648" y2="34" stroke="rgba(255,255,255,0.4)" strokeWidth="3" strokeLinecap="round" />
+              <line x1="80" y1="20" x2="636" y2="105" stroke="rgba(255,255,255,0.32)" strokeWidth="3" strokeLinecap="round" />
+            </svg>
 
             <div className="receipt" data-receipt>
               <p className="receipt__thanks">Setup</p>
