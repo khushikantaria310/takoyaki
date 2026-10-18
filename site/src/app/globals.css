@@ -48,9 +48,25 @@ body {
   margin: 0;
   min-width: 320px;
   color: var(--ink);
-  font-family: "Klee One", "Zen Maru Gothic", "Hiragino Maru Gothic ProN", system-ui, sans-serif;
+  font-family: "Zen Kaku Gothic New", "Klee One", "Hiragino Maru Gothic ProN", system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.6;
+}
+
+/* Big bold Japanese display face for the headings and wordmark. */
+.wordmark,
+.stage__title,
+.about__name,
+.footer-headline,
+.footer-mark,
+.receipt__brand,
+.receipt__thanks,
+.footer-button,
+.topnav a,
+.tag--glass strong,
+.tag__cmd {
+  font-family: "Dela Gothic One", "Zen Kaku Gothic New", system-ui, sans-serif;
+  font-weight: 400;
 }
 
 a {
@@ -332,6 +348,61 @@ button {
   width: clamp(96px, 10vw, 134px);
   height: clamp(96px, 10vw, 134px);
   cursor: grab;
+}
+
+.stage-plate-img {
+  filter: drop-shadow(0 34px 30px rgba(18, 24, 10, 0.34));
+}
+
+/* Chopsticks holding the bill, and its flowy shadow. */
+.curtain__receipt {
+  position: relative;
+}
+
+.receipt__chopsticks {
+  position: absolute;
+  top: -46px;
+  left: 50%;
+  width: 118%;
+  height: 60px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.receipt__stick {
+  position: absolute;
+  top: 22px;
+  height: 14px;
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--tray-dark), var(--tray) 46%, #e6cfa0);
+  box-shadow: 0 8px 14px rgba(18, 24, 10, 0.22);
+}
+
+.receipt__stick--a {
+  left: -2%;
+  width: 62%;
+  transform: rotate(-7deg);
+}
+
+.receipt__stick--b {
+  right: -2%;
+  width: 62%;
+  transform: rotate(6deg);
+}
+
+.receipt__shadow {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: -34px;
+  width: 86%;
+  height: 60px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(18, 24, 10, 0.4) 0%, rgba(18, 24, 10, 0) 70%);
+  filter: blur(6px);
+  pointer-events: none;
 }
 
 .ball--plate:active {

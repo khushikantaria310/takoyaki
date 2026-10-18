@@ -103,10 +103,12 @@ export function Commands() {
     );
 
     gsap.utils.toArray<HTMLElement>("[data-ball]", scope.current).forEach((ball, index) => {
+      // Two fall from the left, one from the right, and so on.
+      const side = index % 3 === 2 ? 1 : -1;
       drop.fromTo(
         ball,
-        { yPercent: -560, opacity: 0 },
-        { yPercent: 0, opacity: 1, ease: "back.out(1.25)", duration: 1.1 },
+        { xPercent: side * 58, yPercent: -520, opacity: 0, rotate: side * 16 },
+        { xPercent: 0, yPercent: 0, opacity: 1, rotate: 0, ease: "back.out(1.25)", duration: 1.15 },
         1.1 + index * 0.26,
       );
     });
@@ -137,6 +139,15 @@ export function Commands() {
     gsap.to("[data-receipt]", {
       y: -10,
       rotate: 1.4,
+      duration: 3.6,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: -1,
+      delay: 0.6,
+    });
+    gsap.to("[data-receipt-shadow]", {
+      scaleX: 1.08,
+      opacity: 0.34,
       duration: 3.6,
       ease: "sine.inOut",
       yoyo: true,
@@ -197,7 +208,13 @@ export function Commands() {
 
       <section className="curtain" data-curtain-section>
         <div className="curtain__receipt">
+          <div className="receipt__shadow" data-receipt-shadow aria-hidden="true" />
           <div className="receipt" data-receipt>
+            <div className="receipt__chopsticks" aria-hidden="true">
+              <span className="receipt__stick receipt__stick--a" />
+              <span className="receipt__stick receipt__stick--b" />
+            </div>
+
             <p className="receipt__thanks">Thank you!</p>
             <p className="receipt__lead">Set up Takoyaki in your server</p>
             <p className="receipt__note">
