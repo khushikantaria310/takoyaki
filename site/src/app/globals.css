@@ -397,11 +397,11 @@ button {
 }
 
 /* ---------- Tray stage ---------- */
-.stage-tray {
+.stage-plate {
   position: absolute;
   left: 50%;
   bottom: 3%;
-  width: min(92%, 640px);
+  width: min(92%, 720px);
   height: auto;
   transform: translateX(-50%);
 }
