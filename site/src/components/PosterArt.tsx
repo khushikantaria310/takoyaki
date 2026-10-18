@@ -1,9 +1,9 @@
 const letters = ["T", "A", "K", "O", "Y", "A", "K", "I"];
 
 /**
- * The printed poster art: vertical letters, serial, seal, and the static
- * stand-in balls/chopstick/tray used before WebGL, if WebGL fails, or when
- * the visitor prefers reduced motion.
+ * The printed poster art: big vertical letters plus the static stand-in
+ * balls/chopstick/tray used before WebGL, if WebGL fails, or when the visitor
+ * prefers reduced motion.
  */
 export function PosterArt() {
   return (
@@ -17,7 +17,6 @@ export function PosterArt() {
       </div>
 
       <span className="poster__serial" aria-hidden="true">No. 08 · 焼きたて</span>
-      <span className="poster__seal" aria-hidden="true">たこ焼き</span>
 
       <div className="poster__fallback" aria-hidden="true">
         <div className="poster__fallback-balls">

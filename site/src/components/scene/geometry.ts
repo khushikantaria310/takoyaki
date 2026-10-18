@@ -20,8 +20,8 @@ export function createGradientMap(steps = 4, floor = 0.32): THREE.DataTexture {
 }
 
 /** A lumpy sphere reads as a grilled takoyaki ball. */
-export function createBallGeometry(segments = 40): THREE.SphereGeometry {
-  const geometry = new THREE.SphereGeometry(1, segments, Math.max(16, Math.round(segments * 0.7)));
+export function createBallGeometry(segments = 48): THREE.SphereGeometry {
+  const geometry = new THREE.SphereGeometry(1, segments, Math.max(20, Math.round(segments * 0.72)));
   const position = geometry.attributes.position;
   const point = new THREE.Vector3();
 
@@ -30,10 +30,8 @@ export function createBallGeometry(segments = 40): THREE.SphereGeometry {
     const normal = point.clone().normalize();
     const ripple =
       1 +
-      0.06 *
-        Math.sin(normal.x * 7.5) *
-        Math.sin(normal.y * 6.1 + 1.3) *
-        Math.sin(normal.z * 7.9 + 2.1);
+      0.055 * Math.sin(normal.x * 7.5) * Math.sin(normal.y * 6.1 + 1.3) * Math.sin(normal.z * 7.9 + 2.1) +
+      0.02 * Math.sin(normal.x * 16.0 + 0.5) * Math.sin(normal.z * 15.0);
     point.copy(normal).multiplyScalar(ripple);
     position.setXYZ(i, point.x, point.y, point.z);
   }
@@ -59,22 +57,53 @@ export function createChopstickGeometry(): THREE.LatheGeometry {
   return geometry;
 }
 
-/** A shallow folded-paper boat tray, faceted like origami. */
+/**
+ * A folded-paper boat tray: a rim polygon at the top tapering into a narrower
+ * flat bottom. Kept non-indexed so the facets read as crisp origami creases.
+ */
 export function createTrayGeometry(): THREE.BufferGeometry {
-  const profile = [
-    new THREE.Vector2(0.001, 0.0),
-    new THREE.Vector2(0.3, 0.02),
-    new THREE.Vector2(0.52, 0.08),
-    new THREE.Vector2(0.74, 0.18),
-    new THREE.Vector2(0.9, 0.32),
-    new THREE.Vector2(1.0, 0.48),
+  const rim: [number, number][] = [
+    [1.0, 0.0],
+    [0.58, 0.6],
+    [-0.58, 0.6],
+    [-1.0, 0.0],
+    [-0.58, -0.6],
+    [0.58, -0.6],
   ];
-  const geometry = new THREE.LatheGeometry(profile, 9);
-  geometry.rotateX(Math.PI);
-  // Non-indexed + recomputed normals gives a faceted, folded-paper look.
-  const flat = geometry.toNonIndexed();
-  flat.computeVertexNormals();
-  return flat;
+  const bottom = rim.map(([x, z]) => [x * 0.6, z * 0.46] as [number, number]);
+  const rimY = 0.4;
+  const bottomY = -1.0;
+  const vertices: number[] = [];
+  const push = (x: number, y: number, z: number) => vertices.push(x, y, z);
+  const count = rim.length;
+
+  for (let i = 0; i < count; i++) {
+    const j = (i + 1) % count;
+    const [rx, rz] = rim[i];
+    const [rx2, rz2] = rim[j];
+    const [bx, bz] = bottom[i];
+    const [bx2, bz2] = bottom[j];
+
+    push(rx, rimY, rz);
+    push(bx, bottomY, bz);
+    push(bx2, bottomY, bz2);
+
+    push(rx, rimY, rz);
+    push(bx2, bottomY, bz2);
+    push(rx2, rimY, rz2);
+  }
+
+  for (let i = 0; i < count; i++) {
+    const j = (i + 1) % count;
+    push(0, bottomY, 0);
+    push(bottom[i][0], bottomY, bottom[i][1]);
+    push(bottom[j][0], bottomY, bottom[j][1]);
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+  geometry.computeVertexNormals();
+  return geometry;
 }
 
 function surfacePoints(points: [number, number, number][], radius = 1.02): THREE.Vector3[] {
@@ -120,7 +149,7 @@ export function createSauceGeometry(): THREE.TubeGeometry {
   );
 }
 
-/** Three thin curved green-onion strands resting on top. */
+/** Curved green-onion ribbons resting on top of a ball. */
 export function createOnionGeometries(): THREE.TubeGeometry[] {
   const strands: [number, number, number][][] = [
     [
@@ -138,10 +167,31 @@ export function createOnionGeometries(): THREE.TubeGeometry[] {
       [-0.5, 0.68, -0.08],
       [-0.56, 0.48, -0.32],
     ],
+    [
+      [-0.05, 0.52, 0.85],
+      [0.18, 0.4, 0.9],
+      [0.38, 0.24, 0.86],
+    ],
+    [
+      [-0.44, 0.62, 0.62],
+      [-0.2, 0.5, 0.84],
+      [0.02, 0.6, 0.8],
+    ],
   ];
 
   return strands.map((points) => {
     const curve = new THREE.CatmullRomCurve3(surfacePoints(points));
     return new THREE.TubeGeometry(curve, 20, 0.03, 6, false);
   });
+}
+
+/** A loose green-onion ribbon used as a drifting garnish in the air. */
+export function createGarnishGeometry(): THREE.TubeGeometry {
+  const curve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(-0.5, 0.1, 0),
+    new THREE.Vector3(-0.1, 0.4, 0.05),
+    new THREE.Vector3(0.3, 0.05, 0),
+    new THREE.Vector3(0.6, 0.3, -0.05),
+  ]);
+  return new THREE.TubeGeometry(curve, 18, 0.045, 6, false);
 }

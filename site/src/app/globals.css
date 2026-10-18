@@ -146,18 +146,19 @@ a {
 
 .poster__letters {
   position: absolute;
-  top: clamp(1rem, 4vh, 2.5rem);
-  left: clamp(1rem, 3vw, 2.5rem);
+  top: clamp(0.5rem, 3vh, 1.8rem);
+  left: clamp(0.8rem, 3vw, 2.5rem);
   display: flex;
-  height: min(64%, 440px);
-  gap: clamp(0.05rem, 0.4vw, 0.2rem);
+  height: min(84%, 680px);
+  gap: clamp(0.02rem, 0.3vw, 0.14rem);
   color: var(--label-orange);
-  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  font-size: clamp(2.4rem, 8.4vh, 6.2rem);
   font-weight: 900;
-  line-height: 1;
+  line-height: 0.84;
   writing-mode: vertical-rl;
   text-orientation: upright;
-  text-shadow: 2px 2px 0 var(--ink);
+  text-shadow: 3px 3px 0 var(--ink);
+  will-change: transform;
 }
 
 .poster__letters span {
@@ -174,21 +175,6 @@ a {
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-}
-
-.poster__seal {
-  position: absolute;
-  bottom: clamp(1rem, 4vh, 2.5rem);
-  left: clamp(1rem, 3vw, 2.5rem);
-  padding: 0.5rem 0.26rem;
-  border: 2px solid var(--ink);
-  background: var(--label-orange);
-  color: var(--ink);
-  font-family: var(--font-jp), sans-serif;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.24em;
-  writing-mode: vertical-rl;
 }
 
 .poster__fallback {
@@ -275,66 +261,12 @@ a {
 .takoyaki-ball::before { left: 13%; }
 .takoyaki-ball::after { top: 42%; left: 28%; background: var(--takoyaki-shadow); transform: rotate(-24deg); }
 
-/* ---------- Copy overlay ---------- */
-.overlay {
-  position: absolute;
-  right: clamp(1rem, 3.5vw, 3rem);
-  bottom: clamp(1rem, 5vh, 3rem);
-  z-index: 7;
-  width: min(100% - 2rem, 420px);
-  padding: 1.4rem 1.5rem 1.5rem;
-  border: 3px solid var(--ink);
-  background: rgba(247, 235, 192, 0.94);
-  box-shadow: 8px 9px 0 var(--ink);
-}
-
-.overlay__eyebrow {
-  margin: 0 0 0.7rem;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--takoyaki-shadow);
-}
-
-.overlay__title {
-  margin: 0;
-  font-size: clamp(2.1rem, 3.6vw, 3rem);
-  font-weight: 900;
-  letter-spacing: -0.07em;
-  line-height: 0.96;
-}
-
-.overlay__title em {
-  color: var(--takoyaki);
-  font-style: normal;
-}
-
-.overlay__tagline {
-  margin: 0.8rem 0 0;
-  font-size: 0.95rem;
-  font-weight: 700;
-  line-height: 1.45;
-}
-
-.overlay__setup {
-  margin: 0.9rem 0 1.1rem;
-  font-size: 0.76rem;
-  line-height: 1.6;
-}
-
-.overlay__setup code {
-  border: 1px solid rgba(27, 27, 34, 0.25);
-  padding: 0.08rem 0.24rem;
-  background: rgba(243, 233, 214, 0.8);
-  white-space: nowrap;
-}
-
-.overlay__note {
-  margin: 0.7rem 0 0;
-  font-size: 0.7rem;
-  color: rgba(27, 27, 34, 0.72);
+/* ---------- Floating conversion action ---------- */
+.cta-float {
+  position: fixed;
+  z-index: 40;
+  right: clamp(0.9rem, 2.5vw, 1.6rem);
+  bottom: clamp(0.9rem, 2.5vw, 1.6rem);
 }
 
 /* ---------- Fixed scene canvas ---------- */
@@ -363,7 +295,8 @@ a {
   }
 
   .poster__letters {
-    height: 52%;
+    height: 76%;
+    font-size: clamp(2rem, 9vh, 3.6rem);
   }
 
   .poster__fallback-balls {
@@ -373,12 +306,9 @@ a {
 
 @media (max-width: 640px) {
   .poster__letters {
-    font-size: clamp(1.5rem, 7vw, 2rem);
-    height: 46%;
-  }
-
-  .poster__seal {
-    display: none;
+    height: 68%;
+    font-size: clamp(1.8rem, 9vw, 2.6rem);
+    text-shadow: 2px 2px 0 var(--ink);
   }
 
   .poster__fallback-balls {
@@ -388,19 +318,6 @@ a {
 
   .poster__fallback-tray {
     width: 74%;
-  }
-
-  .overlay {
-    right: 0.9rem;
-    bottom: 0.9rem;
-    left: 0.9rem;
-    width: auto;
-    padding: 1.1rem 1.1rem 1.2rem;
-    box-shadow: 6px 7px 0 var(--ink);
-  }
-
-  .overlay__title {
-    font-size: clamp(1.9rem, 9vw, 2.4rem);
   }
 }
 

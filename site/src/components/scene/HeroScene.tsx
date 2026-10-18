@@ -9,6 +9,7 @@ import * as THREE from "three";
 import {
   createBallGeometry,
   createChopstickGeometry,
+  createGarnishGeometry,
   createGradientMap,
   createMayoGeometry,
   createOnionGeometries,
@@ -21,37 +22,35 @@ const INK = "#1B1B22";
 
 type BallState = { p: number; s: number; t: number };
 
-/** A handful of loose onion strands drifting in the blue panel. */
-const SCATTER = [
-  { x: 0.2, y: 0.75, r: 0.7 },
-  { x: 0.74, y: 0.62, r: -0.4 },
-  { x: 0.3, y: 0.44, r: 2.1 },
-  { x: 0.82, y: 0.34, r: 1.2 },
-  { x: 0.14, y: 0.28, r: -1.6 },
-  { x: 0.66, y: 0.18, r: 0.5 },
+/** Garnish drifting continuously down through the blue panel. */
+const DRIFT = [
+  { x: 0.14, phase: 0.05, speed: 0.055, sauce: false },
+  { x: 0.3, phase: 0.42, speed: 0.048, sauce: true },
+  { x: 0.46, phase: 0.7, speed: 0.06, sauce: false },
+  { x: 0.62, phase: 0.18, speed: 0.05, sauce: true },
+  { x: 0.76, phase: 0.55, speed: 0.058, sauce: false },
+  { x: 0.88, phase: 0.85, speed: 0.045, sauce: true },
+  { x: 0.38, phase: 0.3, speed: 0.065, sauce: false },
+  { x: 0.68, phase: 0.66, speed: 0.052, sauce: true },
 ];
 
-/**
- * The hero composition lives in world space but is aligned to the DOM
- * `[data-poster-scene]` box every frame, so the 3D balls sit exactly inside
- * the printed poster while the DOM supplies the vertical lettering.
- */
 export default function HeroScene() {
   const { camera, size } = useThree();
 
-  const segments = size.width < 720 ? 28 : 40;
+  const segments = size.width < 720 ? 32 : 48;
   const ballGeometry = useMemo(() => createBallGeometry(segments), [segments]);
   const chopstickGeometry = useMemo(() => createChopstickGeometry(), []);
   const trayGeometry = useMemo(() => createTrayGeometry(), []);
   const mayoGeometry = useMemo(() => createMayoGeometry(), []);
   const sauceGeometry = useMemo(() => createSauceGeometry(), []);
   const onionGeometries = useMemo(() => createOnionGeometries(), []);
-  const gradientMap = useMemo(() => createGradientMap(4), []);
+  const garnishGeometry = useMemo(() => createGarnishGeometry(), []);
+  const gradientMap = useMemo(() => createGradientMap(5), []);
 
   const chopstickRef = useRef<THREE.Group>(null);
   const trayRef = useRef<THREE.Group>(null);
   const shadowRef = useRef<THREE.Mesh>(null);
-  const scatterRef = useRef<THREE.Group>(null);
+  const driftRef = useRef<THREE.Group>(null);
   const ballRefs = useRef<(THREE.Group | null)[]>([]);
   const state = useRef<BallState[]>(
     Array.from({ length: BALL_COUNT }, (): BallState => ({ p: 0, s: 0, t: 0 })),
@@ -85,32 +84,31 @@ export default function HeroScene() {
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    // 1. Autoplay: the balls drop onto the chopstick and the letters appear.
+    // 1. Autoplay: the balls drop onto the chopstick, then each big letter
+    //    falls into place down the left side.
     const letters = gsap.utils.toArray<HTMLElement>("[data-hero-letter]");
-    gsap.set(letters, { opacity: 0, yPercent: -70 });
+    gsap.set(letters, { yPercent: -170, opacity: 0, rotate: -10 });
 
-    const drop = gsap.timeline({ delay: 0.5 });
+    const drop = gsap.timeline({ delay: 0.4, defaults: { ease: "power2.out" } });
     state.current.forEach((ball, index) => {
       const at = index * 0.34;
-      drop.to(ball, { p: 1, duration: 0.55, ease: "power2.in" }, at);
+      drop.to(ball, { p: 1, duration: 0.7, ease: "power2.in" }, at);
       drop.fromTo(
         ball,
         { s: 1 },
-        { s: 0, duration: 0.9, ease: "elastic.out(1, 0.35)" },
-        at + 0.5,
+        { s: 0, duration: 0.95, ease: "elastic.out(1, 0.32)" },
+        at + 0.6,
       );
       if (letters[index]) {
         drop.to(
           letters[index],
-          { opacity: 1, yPercent: 0, duration: 0.4, ease: "back.out(2)" },
-          at + 0.5,
+          { yPercent: 0, opacity: 1, rotate: 0, duration: 1.05, ease: "bounce.out" },
+          at + 0.35,
         );
       }
     });
 
-    // 2. Scroll: the same balls arc off the chopstick and settle in the tray.
-    //    The poster is pinned with CSS sticky, so a single scrubbed timeline
-    //    covers desktop and touch alike.
+    // 2. Scroll: the balls arc off the chopstick and settle in the tray.
     const transfer = gsap.timeline({
       scrollTrigger: {
         trigger: "#opening",
@@ -128,7 +126,7 @@ export default function HeroScene() {
     };
   }, { dependencies: [] });
 
-  useFrame((_, delta) => {
+  useFrame(() => {
     const rect = rectRef.current;
     if (!rect) return;
 
@@ -154,21 +152,19 @@ export default function HeroScene() {
       chopstick.scale.set(chopRadius / 0.08, length, chopRadius / 0.08);
     }
 
-    // Paper-boat tray, sitting low in the poster.
+    // Folded paper-boat tray, sitting low in the poster.
     const trayCx = toX(rect.left + rect.width * 0.5);
-    const trayCy = toY(rect.top + rect.height * 0.79);
-    const trayScaleX = rect.width * 0.34 * wpp;
-    const trayScaleY = rect.width * 0.15 * wpp;
-    const trayScaleZ = rect.width * 0.24 * wpp;
+    const trayCy = toY(rect.top + rect.height * 0.82);
+    const trayRadius = rect.width * 0.29 * wpp;
     const tray = trayRef.current;
     if (tray) {
       tray.position.set(trayCx, trayCy, 0.05);
-      tray.rotation.set(-0.22, 0, 0);
-      tray.scale.set(trayScaleX, trayScaleY, trayScaleZ);
+      tray.rotation.set(-0.16, 0, 0);
+      tray.scale.set(trayRadius, trayRadius * 0.5, trayRadius);
     }
     if (shadowRef.current) {
-      shadowRef.current.position.set(trayCx, trayCy - trayScaleY * 0.55, 0.04);
-      shadowRef.current.scale.set(trayScaleX * 1.3, trayScaleY * 0.7, 1);
+      shadowRef.current.position.set(trayCx, trayCy - trayRadius * 0.34, 0.03);
+      shadowRef.current.scale.set(trayRadius * 1.35, trayRadius * 0.5, 1);
     }
 
     const arc = rect.height * 0.16 * wpp;
@@ -186,9 +182,9 @@ export default function HeroScene() {
 
       const col = i % 4;
       const row = Math.floor(i / 4);
-      const slotX = toX(rect.left + rect.width * 0.5 + (col - 1.5) * diameterPx * 1.22);
-      const slotY = toY(rect.top + rect.height * 0.79 + (row - 0.5) * diameterPx * 1.15);
-      const slotZ = 0.34 + row * 0.12;
+      const slotX = toX(rect.left + rect.width * 0.5 + (col - 1.5) * diameterPx * 1.16);
+      const slotY = toY(rect.top + rect.height * (0.76 + row * 0.055));
+      const slotZ = 0.26 + row * 0.1;
 
       const dropX = THREE.MathUtils.lerp(startX, chopX, Math.min(1, progress * 1.25));
       const dropY = THREE.MathUtils.lerp(airborne, chopY, progress);
@@ -210,17 +206,21 @@ export default function HeroScene() {
       );
     }
 
-    // Gentle drift for the loose onion strands.
-    const scatter = scatterRef.current;
-    if (scatter) {
+    // Garnish drifting smoothly down the panel, wrapping at the bottom.
+    const drift = driftRef.current;
+    if (drift) {
       const time = performance.now() / 1000;
-      scatter.position.set(centerX, toY(rect.top + rect.height * 0.42), 0.3);
-      scatter.children.forEach((child, index) => {
-        child.rotation.z = time * 0.25 + index;
-        child.position.y = Math.sin(time * 0.8 + index) * 0.06;
+      drift.children.forEach((child, index) => {
+        const piece = DRIFT[index % DRIFT.length];
+        const progress = (time * piece.speed + piece.phase) % 1;
+        child.position.x = toX(rect.left + rect.width * piece.x);
+        child.position.y = toY(rect.top + rect.height * (0.02 + progress * 0.95));
+        child.position.z = 0.3;
+        child.rotation.z = time * 0.6 + index;
+        child.rotation.x = Math.sin(time * 0.4 + index) * 0.6;
+        child.visible = true;
       });
     }
-    void delta;
   });
 
   return (
@@ -237,33 +237,38 @@ export default function HeroScene() {
       <group ref={trayRef}>
         <mesh geometry={trayGeometry}>
           <meshToonMaterial
-            color="#E9D3A3"
+            color="#E7D2A0"
             gradientMap={gradientMap}
             side={THREE.DoubleSide}
           />
         </mesh>
-        <mesh geometry={trayGeometry} scale={1.03}>
+        <mesh geometry={trayGeometry} scale={1.02}>
           <meshBasicMaterial color={INK} side={THREE.BackSide} />
         </mesh>
       </group>
 
       <mesh ref={shadowRef}>
-        <circleGeometry args={[1, 40]} />
+        <circleGeometry args={[1, 44]} />
         <meshBasicMaterial color="#1B1B22" transparent opacity={0.16} />
       </mesh>
 
-      <group ref={scatterRef}>
-        {SCATTER.map((piece, index) => (
-          <mesh
-            key={index}
-            geometry={onionGeometries[index % onionGeometries.length]}
-            position={[(piece.x - 0.5) * 1.2, (piece.y - 0.5) * 1.2, 0]}
-            rotation={[0, 0, piece.r]}
-            scale={0.7}
-          >
-            <meshToonMaterial color="#86C23F" gradientMap={gradientMap} />
-          </mesh>
-        ))}
+      <group ref={driftRef}>
+        {DRIFT.map((piece, index) =>
+          piece.sauce ? (
+            <mesh key={index} scale={0.6}>
+              <sphereGeometry args={[0.06, 10, 10]} />
+              <meshToonMaterial color="#7A3212" gradientMap={gradientMap} />
+            </mesh>
+          ) : (
+            <mesh
+              key={index}
+              geometry={garnishGeometry}
+              scale={0.7 + (index % 3) * 0.12}
+            >
+              <meshToonMaterial color="#86C23F" gradientMap={gradientMap} />
+            </mesh>
+          ),
+        )}
       </group>
 
       {state.current.map((_, index) => (
@@ -276,7 +281,7 @@ export default function HeroScene() {
           <mesh geometry={ballGeometry}>
             <meshToonMaterial color="#C25A1E" gradientMap={gradientMap} />
           </mesh>
-          <mesh geometry={ballGeometry} scale={1.08}>
+          <mesh geometry={ballGeometry} scale={1.07}>
             <meshBasicMaterial color={INK} side={THREE.BackSide} />
           </mesh>
           <mesh geometry={sauceGeometry}>
