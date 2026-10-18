@@ -23,6 +23,24 @@ const ballPositions = [
   { left: 65, top: 79 },
 ];
 
+const steps = [
+  {
+    num: "01",
+    title: "Install the GitHub App",
+    body: "Add Takoyaki to your personal account or organization. For org tracking, install on the org directly.",
+  },
+  {
+    num: "02",
+    title: "Run /github link",
+    body: "Connect your Discord account to your GitHub username via OAuth.",
+  },
+  {
+    num: "03",
+    title: "Run /setchannel",
+    body: "Pick a channel and choose Standard Mode (personal pings) or Org Mode (anonymous org-wide events). Done.",
+  },
+];
+
 export function Commands() {
   const scope = useRef<HTMLDivElement>(null);
   const ballsRef = useRef<(HTMLButtonElement | null)[]>([]);
@@ -47,7 +65,6 @@ export function Commands() {
         gsap.set(dragging.el, { x: event.clientX - dragging.sx, y: event.clientY - dragging.sy });
         return;
       }
-      // Balls lean toward the cursor.
       ballsRef.current.forEach((ball, index) => {
         if (!ball) return;
         const rect = ball.getBoundingClientRect();
@@ -75,8 +92,6 @@ export function Commands() {
         event.clientY < rect.bottom;
       if (!inside) {
         gsap.to(dragging.el, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.5)" });
-      } else {
-        gsap.to(dragging.el, { scale: 1, duration: 0.3, ease: "back.out(2)" });
       }
     };
 
@@ -103,8 +118,7 @@ export function Commands() {
     );
 
     gsap.utils.toArray<HTMLElement>("[data-ball]", scope.current).forEach((ball, index) => {
-      // Two fall from the left, one from the right, and so on.
-      const side = index % 3 === 2 ? 1 : -1;
+      const side = index % 3 === 2 ? 1 : -1; // two from the left, one from the right
       drop.fromTo(
         ball,
         { xPercent: side * 58, yPercent: -520, opacity: 0, rotate: side * 16 },
@@ -113,37 +127,33 @@ export function Commands() {
       );
     });
 
-    gsap.to("[data-curtain]", {
-      yPercent: -102,
-      ease: "none",
-      scrollTrigger: {
-        trigger: "[data-curtain-section]",
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1,
-      },
-    });
-
+    // The bill unrolls downward like a letter, then floats.
     gsap.fromTo(
       "[data-receipt]",
-      { opacity: 0, y: 140, rotate: -16, scale: 0.84, transformOrigin: "50% 90%" },
+      { clipPath: "inset(0% 0% 100% 0%)", y: 0 },
       {
-        opacity: 1,
-        y: 0,
-        rotate: 0,
-        scale: 1,
-        ease: "power3.out",
-        scrollTrigger: { trigger: "[data-curtain-section]", start: "top 70%", end: "top 15%", scrub: true },
+        clipPath: "inset(0% 0% 0% 0%)",
+        ease: "none",
+        scrollTrigger: { trigger: "[data-bill]", start: "top 85%", end: "bottom bottom", scrub: 1 },
+      },
+    );
+    gsap.fromTo(
+      "[data-receipt-roll]",
+      { top: "0%" },
+      {
+        top: "100%",
+        ease: "none",
+        scrollTrigger: { trigger: "[data-bill]", start: "top 85%", end: "bottom bottom", scrub: 1 },
       },
     );
     gsap.to("[data-receipt]", {
       y: -10,
-      rotate: 1.4,
+      rotate: 0.8,
       duration: 3.6,
       ease: "sine.inOut",
       yoyo: true,
       repeat: -1,
-      delay: 0.6,
+      delay: 0.4,
     });
     gsap.to("[data-receipt-shadow]", {
       scaleX: 1.08,
@@ -152,7 +162,7 @@ export function Commands() {
       ease: "sine.inOut",
       yoyo: true,
       repeat: -1,
-      delay: 0.6,
+      delay: 0.4,
     });
   }, { scope });
 
@@ -206,41 +216,30 @@ export function Commands() {
         </div>
       </section>
 
-      <section className="curtain" data-curtain-section>
-        <div className="curtain__receipt">
-          <div className="receipt__shadow" data-receipt-shadow aria-hidden="true" />
-          <div className="receipt" data-receipt>
+      <section className="bill" data-bill>
+        <div className="bill__sticky">
+          <div className="bill__shadow" data-receipt-shadow aria-hidden="true" />
+          <div className="bill__stage">
             <div className="receipt__chopsticks" aria-hidden="true">
               <span className="receipt__stick receipt__stick--a" />
               <span className="receipt__stick receipt__stick--b" />
             </div>
 
-            <p className="receipt__thanks">Thank you!</p>
-            <p className="receipt__lead">Set up Takoyaki in your server</p>
-            <p className="receipt__note">
-              From real-time pings to sticky stats — your commits are always welcome at Takoyaki.
-            </p>
+            <div className="receipt" data-receipt>
+              <p className="receipt__thanks">Setup</p>
+            <p className="receipt__lead">Three steps, then it just runs</p>
+            <p className="receipt__note">From install to your first ping in under a minute.</p>
 
-            <p className="receipt__dash">Catch you on your next commit</p>
-
-            <div className="receipt__table">
-              <div className="receipt__tr receipt__tr--head">
-                <span>Qty</span>
-                <span>Item</span>
-                <span>Price</span>
-              </div>
-              {commands.map((item) => (
-                <div className="receipt__tr" key={`bill-${item.id}`}>
-                  <span>1</span>
-                  <span className="receipt__item">{item.command}</span>
-                  <span>{item.price}</span>
+            <div className="receipt__steps">
+              {steps.map((step) => (
+                <div className="receipt__step" key={step.num}>
+                  <span className="receipt__num">{step.num}</span>
+                  <div>
+                    <h3>{step.title}</h3>
+                    <p>{step.body}</p>
+                  </div>
                 </div>
               ))}
-              <div className="receipt__tr receipt__tr--total">
-                <span />
-                <span>Total</span>
-                <span>hot &amp; ready</span>
-              </div>
             </div>
 
             <div className="receipt__divider" aria-hidden="true" />
@@ -248,9 +247,11 @@ export function Commands() {
             <p className="receipt__brand">Takoyaki</p>
             <p className="receipt__estd">estd 2025</p>
             <p className="receipt__tag">hot off the grill!</p>
+
+            <span className="receipt__roll-edge" data-receipt-roll aria-hidden="true" />
+            </div>
           </div>
         </div>
-        <div className="curtain__panel" data-curtain aria-hidden="true" />
       </section>
     </div>
   );
