@@ -25,7 +25,10 @@ export function About() {
         { opacity: 0, y: 28 },
         { opacity: 1, y: 0, ease: "none", duration: 0.5 },
         0.55,
-      );
+      )
+      // Then it clears away as you scroll past, like a portfolio name.
+      .to("[data-about-name]", { opacity: 0, scale: 1.8, ease: "none", duration: 0.3 }, 1.05)
+      .to("[data-about-text]", { opacity: 0, y: -28, ease: "none", duration: 0.25 }, 1.08);
   }, { scope });
 
   return (

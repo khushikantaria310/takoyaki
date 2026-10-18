@@ -2,18 +2,18 @@
 export function TakoyakiPlate({ className }: { className?: string }) {
   const ball = (x: number, y: number, scale: number, tilt: number, key: string) => (
     <g key={key} transform={`translate(${x} ${y}) rotate(${tilt}) scale(${scale})`}>
-      <circle r="40" fill="#e39a34" stroke="var(--ink)" strokeWidth="4" />
-      <path d="M-35 2c2 15 16 26 35 26 12 0 22-5 28-13-6 6-16 9-28 9-14 0-26-8-30-22Z" fill="#f2b85e" />
+      <circle r="40" fill="url(#takoBall)" stroke="var(--ink)" strokeWidth="4" />
       <path
-        d="M-37 0c0-20 16-34 37-34s37 14 37 34c0 12-9 20-22 22-4 1-7-1-8-5-1-4-5-6-9-4-3 1-5 5-9 5-5 0-7-4-9-8-1-3-3-5-6-5-6 0-11-3-11-5Z"
-        fill="#6b3410"
+        d="M-36-2c0-19 16-32 36-32s36 13 36 32c0 12-9 19-22 21-4 1-7-1-8-5-1-4-5-6-9-4-3 1-5 5-9 5-5 0-7-4-9-8-1-3-3-5-6-5-5 0-9-2-9-4Z"
+        fill="url(#takoSauce)"
         stroke="var(--ink)"
         strokeWidth="3"
         strokeLinejoin="round"
       />
+      <ellipse cx="-14" cy="-20" rx="12" ry="7" fill="url(#takoGloss)" />
       <path
         d="M-12-23c-3-9 6-14 10-8 1-8 11-8 13 0 5-5 13 0 10 9-3 7-9 9-16 9s-14-3-17-10Z"
-        fill="#e8c98a"
+        fill="url(#takoFlake)"
         stroke="var(--ink)"
         strokeWidth="2.5"
         strokeLinejoin="round"

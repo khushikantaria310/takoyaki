@@ -5,10 +5,12 @@ import { Commands } from "@/components/Commands";
 import { Footer } from "@/components/Footer";
 import BonitoCursor from "@/components/BonitoCursor";
 import FooterMotion from "@/components/FooterMotion";
+import { SvgDefs } from "@/components/SvgDefs";
 
 export default function Page() {
   return (
     <main id="main">
+      <SvgDefs />
       <BonitoCursor />
       <FooterMotion />
       <Hero />

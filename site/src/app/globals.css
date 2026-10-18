@@ -16,6 +16,8 @@
   --onion: #5e8c34;
   --tray: #cba36a;
   --tray-dark: #a87f48;
+  --red: #8d231c;
+  --red-light: #a8332a;
 }
 
 * {
@@ -51,6 +53,13 @@ body {
   font-family: "Zen Kaku Gothic New", "Klee One", "Hiragino Maru Gothic ProN", system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.6;
+}
+
+.svg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
 /* Big bold Japanese display face for the headings and wordmark. */
@@ -140,7 +149,7 @@ button {
   font-size: clamp(1rem, 1.7vw, 1.35rem);
   font-weight: 600;
   letter-spacing: 0.05em;
-  text-decoration: none;
+  text-decoration: none !important;
   color: var(--ink);
   opacity: 0.78;
   transition: opacity 160ms ease, color 160ms ease;
@@ -149,7 +158,8 @@ button {
 .topnav a:hover,
 .topnav a.is-active {
   opacity: 1;
-  color: var(--navy);
+  color: var(--ink);
+  text-decoration: none !important;
 }
 
 /* ---------- Screens ---------- */
@@ -664,13 +674,14 @@ button {
   display: grid;
   gap: 0.45rem;
   width: min(520px, 54vw);
-  border: 2px solid rgba(35, 40, 28, 0.45);
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 20px;
   padding: 1.35rem 1.6rem;
-  background: rgba(247, 245, 235, 0.2);
+  background: rgba(141, 35, 28, 0.62);
   -webkit-backdrop-filter: blur(16px) saturate(1.15);
   backdrop-filter: blur(16px) saturate(1.15);
-  box-shadow: 0 16px 44px rgba(35, 40, 28, 0.18);
+  box-shadow: 0 16px 44px rgba(24, 12, 10, 0.3);
+  color: #fff5ec;
   text-align: left;
   white-space: normal;
   z-index: 20;
@@ -679,21 +690,20 @@ button {
 .tag--glass strong {
   font-size: 1.75rem;
   font-weight: 600;
-  color: var(--ink);
+  color: #ffffff;
 }
 
 .tag--glass .tag__desc {
   font-size: 1.14rem;
   line-height: 1.55;
-  color: var(--ink);
-  opacity: 0.92;
+  color: rgba(255, 245, 236, 0.88);
 }
 
 .tag--glass em {
   font-style: normal;
   font-size: 1.02rem;
   font-weight: 600;
-  color: var(--takoyaki-dark);
+  color: #f6d9a0;
 }
 
 .tag--above {
@@ -991,11 +1001,13 @@ button {
   display: inline-flex;
   min-height: 52px;
   align-items: center;
-  border: 2px solid var(--ink);
+  border: 2px solid rgba(255, 255, 255, 0.28);
   border-radius: 999px;
   padding: 0.75rem 1.6rem;
-  background: var(--ink);
-  color: var(--paper);
+  background: rgba(141, 35, 28, 0.9);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #fff5ec;
   font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
@@ -1004,7 +1016,7 @@ button {
 
 .footer-button:hover {
   transform: translateY(-2px);
-  background: var(--takoyaki-dark);
+  background: var(--red-light);
 }
 
 .footer-status {
