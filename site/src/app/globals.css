@@ -408,6 +408,7 @@ button {
   width: clamp(118px, 13.5vw, 188px);
   height: clamp(118px, 13.5vw, 188px);
   cursor: grab;
+  touch-action: none;
 }
 
 .ball--plate .ball-art {

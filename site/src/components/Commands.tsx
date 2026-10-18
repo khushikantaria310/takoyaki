@@ -82,8 +82,8 @@ export function Commands() {
       const dragging = dragRef.current;
       if (!dragging) return;
       dragRef.current = null;
+      const el = dragging.el;
 
-      // Drop it in the bowl and it stays; drop it outside and it springs back.
       const bowl = document.querySelector("[data-bowl]");
       const rect = bowl?.getBoundingClientRect();
       const inside =
@@ -93,10 +93,38 @@ export function Commands() {
         event.clientY > rect.top &&
         event.clientY < rect.bottom;
 
-      if (inside) {
-        gsap.to(dragging.el, { scale: 1, duration: 0.3, ease: "back.out(2)" });
-      } else {
-        gsap.to(dragging.el, { x: 0, y: 0, scale: 1, duration: 0.7, ease: "elastic.out(1, 0.5)" });
+      if (!inside) {
+        gsap.to(el, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.5)" });
+        return;
+      }
+
+      // Snap to the nearest slot so the ball visibly settles into the bowl.
+      const elRect = el.getBoundingClientRect();
+      const cx = elRect.left + elRect.width / 2;
+      const cy = elRect.top + elRect.height / 2;
+      let best: { x: number; y: number } | null = null;
+      let bestDistance = Infinity;
+      document.querySelectorAll("[data-slot]").forEach((slot) => {
+        const r = slot.getBoundingClientRect();
+        const sx = r.left + r.width / 2;
+        const sy = r.top + r.height / 2;
+        const distance = Math.hypot(sx - cx, sy - cy);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = { x: sx, y: sy };
+        }
+      });
+
+      const currentX = Number(gsap.getProperty(el, "x")) || 0;
+      const currentY = Number(gsap.getProperty(el, "y")) || 0;
+      if (best) {
+        const target = best as { x: number; y: number };
+        gsap.to(el, {
+          x: currentX + (target.x - cx),
+          y: currentY + (target.y - cy),
+          duration: 0.45,
+          ease: "back.out(1.6)",
+        });
       }
     };
 
@@ -181,7 +209,7 @@ export function Commands() {
             {commands.map((item, index) => {
               const slot = ballPositions[index % ballPositions.length];
               return (
-                <div className="plate-slot" key={item.id} style={{ left: `${slot.left}%`, top: `${slot.top}%` }}>
+                <div className="plate-slot" data-slot key={item.id} style={{ left: `${slot.left}%`, top: `${slot.top}%` }}>
                   <button
                     type="button"
                     className="ball ball--plate"
@@ -194,6 +222,12 @@ export function Commands() {
                       if (!window.matchMedia("(pointer: fine)").matches) return;
                       const ball = ballsRef.current[index];
                       if (!ball) return;
+                      event.preventDefault();
+                      try {
+                        (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+                      } catch {
+                        /* ignore */
+                      }
                       dragRef.current = { el: ball, sx: event.clientX, sy: event.clientY };
                       gsap.to(ball, { scale: 1.12, duration: 0.25, ease: "back.out(2)" });
                     }}
