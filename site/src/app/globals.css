@@ -395,10 +395,9 @@ button {
 
 .chopstick-col {
   position: absolute;
-  top: 0;
-  height: 100%;
+  top: 30%;
+  height: 52%;
   width: 240px;
-  transform: rotate(-11deg);
 }
 
 .chopstick-col--l {
@@ -411,11 +410,11 @@ button {
 
 .chopstick {
   position: absolute;
-  top: 12%;
+  top: 0;
   left: 50%;
   width: 16px;
-  height: 78%;
-  transform: translateX(-50%);
+  height: 82%;
+  transform: translateX(-50%) rotate(-11deg);
   border: 3px solid var(--ink);
   border-radius: 8px 8px 4px 4px;
   background: linear-gradient(90deg, var(--tray-dark), var(--tray) 44%, #f0dcae 60%, #c39a63);
@@ -427,11 +426,11 @@ button {
   position: absolute;
   z-index: 3;
   left: 50%;
-  top: 26%;
+  top: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transform: translateX(-50%);
+  transform: translateX(-50%) rotate(-11deg);
 }
 
 .skewer-balls .ball + .ball {
@@ -441,6 +440,10 @@ button {
 .ball--skewer {
   width: 118px;
   height: 118px;
+}
+
+.skewer-balls .tag--glass {
+  rotate: 11deg;
 }
 
 /* Balls shoulder-to-shoulder on the plate. */
