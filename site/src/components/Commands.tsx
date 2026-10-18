@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -25,6 +25,68 @@ const ballPositions = [
 
 export function Commands() {
   const scope = useRef<HTMLDivElement>(null);
+  const ballsRef = useRef<(HTMLButtonElement | null)[]>([]);
+  const quickRef = useRef<{ x: (v: number) => void; y: (v: number) => void }[]>([]);
+  const dragRef = useRef<{ el: HTMLButtonElement; sx: number; sy: number } | null>(null);
+
+  useEffect(() => {
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+    quickRef.current = ballsRef.current.map((ball) =>
+      ball
+        ? {
+            x: gsap.quickTo(ball, "x", { duration: 0.6, ease: "power3" }),
+            y: gsap.quickTo(ball, "y", { duration: 0.6, ease: "power3" }),
+          }
+        : { x: () => {}, y: () => {} },
+    );
+
+    const onMove = (event: PointerEvent) => {
+      const dragging = dragRef.current;
+      if (dragging) {
+        gsap.set(dragging.el, { x: event.clientX - dragging.sx, y: event.clientY - dragging.sy });
+        return;
+      }
+      // Balls lean toward the cursor.
+      ballsRef.current.forEach((ball, index) => {
+        if (!ball) return;
+        const rect = ball.getBoundingClientRect();
+        const dx = event.clientX - (rect.left + rect.width / 2);
+        const dy = event.clientY - (rect.top + rect.height / 2);
+        const distance = Math.hypot(dx, dy);
+        const reach = 260;
+        const pull = distance < reach ? (1 - distance / reach) * 0.24 : 0;
+        quickRef.current[index]?.x(dx * pull);
+        quickRef.current[index]?.y(dy * pull);
+      });
+    };
+
+    const onUp = (event: PointerEvent) => {
+      const dragging = dragRef.current;
+      if (!dragging) return;
+      dragRef.current = null;
+      const plate = document.querySelector("[data-plate]");
+      const rect = plate?.getBoundingClientRect();
+      const inside =
+        rect &&
+        event.clientX > rect.left &&
+        event.clientX < rect.right &&
+        event.clientY > rect.top &&
+        event.clientY < rect.bottom;
+      if (!inside) {
+        gsap.to(dragging.el, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.5)" });
+      } else {
+        gsap.to(dragging.el, { scale: 1, duration: 0.3, ease: "back.out(2)" });
+      }
+    };
+
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerup", onUp);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+    };
+  }, []);
 
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -33,7 +95,6 @@ export function Commands() {
       scrollTrigger: { trigger: "#commands", start: "top top", end: "bottom bottom", scrub: 1 },
     });
 
-    // Plate glides in from the right and lands centred.
     drop.fromTo(
       "[data-plate]",
       { xPercent: 130, opacity: 0 },
@@ -41,7 +102,6 @@ export function Commands() {
       0,
     );
 
-    // Balls fall in smoothly once the plate has landed.
     gsap.utils.toArray<HTMLElement>("[data-ball]", scope.current).forEach((ball, index) => {
       drop.fromTo(
         ball,
@@ -51,7 +111,6 @@ export function Commands() {
       );
     });
 
-    // Curtain slides away.
     gsap.to("[data-curtain]", {
       yPercent: -102,
       ease: "none",
@@ -63,7 +122,6 @@ export function Commands() {
       },
     });
 
-    // The bill flies in like a sheet of paper, then settles with a gentle float.
     gsap.fromTo(
       "[data-receipt]",
       { opacity: 0, y: 140, rotate: -16, scale: 0.84, transformOrigin: "50% 90%" },
@@ -92,7 +150,7 @@ export function Commands() {
       <section id="commands" className="stage stage--tray">
         <div className="stage__head">
           <p className="stage__eyebrow">Commands</p>
-          <h2 className="stage__title">Point at a ball for its command</h2>
+          <h2 className="stage__title">Pick up a takoyaki and place it on the plate</h2>
         </div>
 
         <div className="stage__sticky">
@@ -110,6 +168,16 @@ export function Commands() {
                     className="ball ball--plate"
                     data-ball
                     aria-label={`${item.command}. ${item.note}`}
+                    ref={(element) => {
+                      ballsRef.current[index] = element;
+                    }}
+                    onPointerDown={(event) => {
+                      if (!window.matchMedia("(pointer: fine)").matches) return;
+                      const ball = ballsRef.current[index];
+                      if (!ball) return;
+                      dragRef.current = { el: ball, sx: event.clientX, sy: event.clientY };
+                      gsap.to(ball, { scale: 1.12, duration: 0.25, ease: "back.out(2)" });
+                    }}
                   >
                     <Ball size={170} tilt={tilts[index % tilts.length]} />
                     <span className="tag tag--glass tag--above">

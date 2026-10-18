@@ -331,6 +331,11 @@ button {
 .ball--plate {
   width: clamp(132px, 13.5vw, 178px);
   height: clamp(132px, 13.5vw, 178px);
+  cursor: grab;
+}
+
+.ball--plate:active {
+  cursor: grabbing;
 }
 
 .slot {
