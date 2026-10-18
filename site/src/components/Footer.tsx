@@ -1,19 +1,57 @@
 import { discordInviteUrl } from "@/lib/site-config";
 
+const repo = "https://github.com/logizel/takoyaki";
+
 export function Footer() {
   return (
     <footer className="site-footer">
-      <div className="site-footer__inner">
-        <div>
-          <p className="footer-mark">たこやき</p>
-          <p className="footer-note">GitHub → Discord, served fresh.</p>
+      <div className="footer-inner">
+        <h2 className="footer-headline">never miss a commit again</h2>
+        <p className="footer-sub">pings, stats &amp; leaderboards — right in your Discord</p>
+
+        <div className="footer-cta">
+          <a className="footer-button" href={discordInviteUrl} target="_blank" rel="noreferrer">
+            Add Takoyaki to your server
+          </a>
+          <span className="footer-status">
+            <span className="footer-dot" aria-hidden="true" /> bot online
+          </span>
         </div>
-        <nav className="footer-links" aria-label="Footer">
-          <a href="#home">home</a>
-          <a href="#features">features</a>
-          <a href="#commands">commands</a>
-          <a href={discordInviteUrl} target="_blank" rel="noreferrer">add to discord</a>
-        </nav>
+
+        <div className="footer-rule" />
+
+        <div className="footer-columns">
+          <div className="footer-col">
+            <h3>Product</h3>
+            <a className="footer-link footer-link--accent" href="#home">Home</a>
+            <a className="footer-link" href="#features">Features</a>
+            <a className="footer-link" href="#commands">Commands</a>
+          </div>
+          <div className="footer-col">
+            <h3>Open source</h3>
+            <a className="footer-link" href={repo} target="_blank" rel="noreferrer">GitHub repo</a>
+            <a className="footer-link" href={repo} target="_blank" rel="noreferrer">Star the repo</a>
+          </div>
+          <div className="footer-col">
+            <h3>Connect</h3>
+            <a className="footer-link" href={repo} target="_blank" rel="noreferrer">GitHub</a>
+            <a className="footer-link" href={discordInviteUrl} target="_blank" rel="noreferrer">Add to Discord</a>
+          </div>
+        </div>
+
+        <div className="footer-rule" />
+
+        <div className="footer-bottom">
+          <span className="footer-brand">
+            <span className="footer-mark" aria-hidden="true">たこやき</span> takoyaki
+          </span>
+          <span className="footer-status">
+            <span className="footer-dot" aria-hidden="true" /> bot online
+          </span>
+          <span className="footer-meta">pings in real time</span>
+          <span className="footer-meta">© 2026</span>
+          <span className="footer-meta">made with love, hot off the grill</span>
+        </div>
       </div>
     </footer>
   );
