@@ -2,6 +2,7 @@ export type Feature = {
   id: string;
   label: string;
   note: string;
+  desc: string;
 };
 
 export type CommandItem = {
@@ -10,27 +11,67 @@ export type CommandItem = {
   note: string;
 };
 
-/** Feature copy mirrors the Logizel/takoyaki README. */
+/** Feature copy follows the Logizel/takoyaki README. */
 export const features: Feature[] = [
-  { id: "pings", label: "Real-time pings", note: "Push, PR & issue alerts" },
-  { id: "stats", label: "Contribution stats", note: "/stats me" },
-  { id: "streak", label: "Streak heatmap", note: "/stats streak" },
-  { id: "leaderboards", label: "Leaderboards", note: "/stats top" },
-  { id: "compare", label: "Compare", note: "/stats compare" },
-  { id: "topday", label: "Top day", note: "/stats top-day" },
-  { id: "modes", label: "Personal & org modes", note: "/setchannel" },
-  { id: "setup", label: "Easy setup", note: "/github link" },
+  {
+    id: "pings",
+    label: "Real-time pings",
+    note: "Pushes, PRs, issues, CI",
+    desc: "Get notified the moment someone pushes, opens a pull request, files an issue, or a CI/CD workflow completes. Each event links straight to the relevant GitHub page. Private repos stay anonymous.",
+  },
+  {
+    id: "stats",
+    label: "Contribution stats",
+    note: "/stats me",
+    desc: "Pull live data straight from GitHub: total counts, daily averages, and side-by-side comparisons with teammates.",
+  },
+  {
+    id: "streak",
+    label: "Streak heatmap",
+    note: "/stats streak",
+    desc: "Six months of commit history rendered as an ANSI heatmap, right inside Discord. No dashboard, no context switch.",
+  },
+  {
+    id: "leaderboards",
+    label: "Leaderboards",
+    note: "/stats top",
+    desc: "Rank the server by commits today or all year. Good-natured bragging rights, updated automatically.",
+  },
+  {
+    id: "compare",
+    label: "Compare",
+    note: "/stats compare",
+    desc: "Line your trailing-year commit count up against any teammate in the server.",
+  },
+  {
+    id: "topday",
+    label: "Top day",
+    note: "/stats top-day",
+    desc: "A daily leaderboard of who has the most commits today.",
+  },
+  {
+    id: "modes",
+    label: "Personal & org modes",
+    note: "/setchannel",
+    desc: "Standard mode pings linked users; Org mode tracks a whole organisation, anonymised.",
+  },
+  {
+    id: "setup",
+    label: "Easy setup",
+    note: "/github link",
+    desc: "Install the GitHub App and link your account in one command — no per-repo webhooks.",
+  },
 ];
 
 export const commands: CommandItem[] = [
-  { id: "link", command: "/github link", note: "Install the app & link" },
-  { id: "unlink", command: "/github unlink", note: "Remove your link" },
-  { id: "setchannel", command: "/setchannel", note: "Pick a channel (admin)" },
-  { id: "me", command: "/stats me", note: "Your 365-day total" },
-  { id: "streak", command: "/stats streak", note: "Yearly streak chart" },
-  { id: "compare", command: "/stats compare", note: "Compare two users" },
-  { id: "top", command: "/stats top", note: "Server leaderboard" },
-  { id: "topday", command: "/stats top-day", note: "Today’s top committer" },
+  { id: "link", command: "/github link", note: "Install the app & link your account." },
+  { id: "unlink", command: "/github unlink", note: "Remove your GitHub link." },
+  { id: "setchannel", command: "/setchannel", note: "Pick a channel, Standard or Org mode. Admin only." },
+  { id: "me", command: "/stats me", note: "Your commits today and over the past 365 days." },
+  { id: "streak", command: "/stats streak", note: "Your commit streak chart for the past year." },
+  { id: "compare", command: "/stats compare", note: "Compare your commits with another user." },
+  { id: "top", command: "/stats top", note: "The server leaderboard for the past 365 days." },
+  { id: "topday", command: "/stats top-day", note: "Who has the most commits today." },
 ];
 
 export const bill = [

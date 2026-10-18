@@ -9,37 +9,25 @@ import { Plate } from "@/components/Plate";
 import { HandArrow } from "@/components/HandArrow";
 import { bill, commands } from "@/lib/data";
 
-const slots = [
-  { left: 34, top: 78, tilt: -7 },
-  { left: 46, top: 75, tilt: 5 },
-  { left: 58, top: 75, tilt: -4 },
-  { left: 70, top: 78, tilt: 8 },
-  { left: 30, top: 87, tilt: -6 },
-  { left: 43, top: 89, tilt: 3 },
-  { left: 56, top: 89, tilt: -9 },
-  { left: 69, top: 87, tilt: 6 },
-];
+const tilts = [-6, 4, -3, 6, -5, 3, -7, 5];
 
-const hover = (index: number) =>
-  window.dispatchEvent(new CustomEvent("tako:hover", { detail: { index } }));
-
-/** Balls drop into the tray, then a curtain slides away to the setup bill. */
+/** Balls drop into the plate and sit shoulder to shoulder; point for a command. */
 export function Commands() {
   const scope = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const balls = gsap.utils.toArray<HTMLElement>("[data-slot]", scope.current);
+    const balls = gsap.utils.toArray<HTMLElement>("[data-ball]", scope.current);
     const drop = gsap.timeline({
       scrollTrigger: { trigger: "#commands", start: "top top", end: "bottom bottom", scrub: 1 },
     });
     balls.forEach((ball, index) => {
       drop.fromTo(
         ball,
-        { yPercent: -560, opacity: 0, rotate: 12 },
-        { yPercent: 0, opacity: 1, rotate: 0, ease: "bounce.out", duration: 1 },
-        index * 0.34,
+        { yPercent: -460, opacity: 0 },
+        { yPercent: 0, opacity: 1, ease: "bounce.out", duration: 1 },
+        index * 0.3,
       );
     });
 
@@ -67,48 +55,44 @@ export function Commands() {
     );
   }, { scope });
 
+  const row = (items: typeof commands, start: number) => (
+    <div className="plate-balls__row">
+      {items.map((item, index) => (
+        <button
+          type="button"
+          className="ball ball--plate"
+          data-ball
+          key={item.id}
+          aria-label={`${item.command}. ${item.note}`}
+        >
+          <Ball size={92} tilt={tilts[(start + index) % tilts.length]} />
+          <span className="tag tag--glass tag--above">
+            <span className="tag__cmd">
+              <HandArrow className="tag__arrow" />
+              {item.command}
+            </span>
+            <span className="tag__desc">{item.note}</span>
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <div ref={scope}>
       <section id="commands" className="stage stage--tray">
         <div className="stage__head">
-          <p className="stage__eyebrow">The commands</p>
+          <p className="stage__eyebrow">Commands</p>
           <h2 className="stage__title">Point at a ball for its command</h2>
         </div>
 
         <div className="stage__sticky">
           <Plate className="stage-plate" />
 
-          {commands.map((item, index) => {
-            const slot = slots[index % slots.length];
-            return (
-              <div
-                className="slot slot--tray"
-                key={item.id}
-                style={{ left: `${slot.left}%`, top: `${slot.top}%` }}
-              >
-                <button
-                  type="button"
-                  className="ball ball--sm"
-                  data-slot
-                  data-kind="plate"
-                  aria-label={`${item.command} — ${item.note}`}
-                  onMouseEnter={() => hover(index)}
-                  onFocus={() => hover(index)}
-                  onMouseLeave={() => hover(-1)}
-                  onBlur={() => hover(-1)}
-                >
-                  <Ball size={66} tilt={slot.tilt} />
-                  <span className="tag tag--free">
-                    <HandArrow className="tag__arrow" />
-                    <span className="tag__text">
-                      {item.command}
-                      <em>{item.note}</em>
-                    </span>
-                  </span>
-                </button>
-              </div>
-            );
-          })}
+          <div className="plate-balls">
+            {row(commands.slice(0, 4), 0)}
+            {row(commands.slice(4, 8), 4)}
+          </div>
         </div>
       </section>
 

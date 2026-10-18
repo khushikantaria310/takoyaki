@@ -242,12 +242,20 @@ button {
 .stage__head {
   position: absolute;
   z-index: 6;
-  top: clamp(4.5rem, 11vh, 7rem);
+  top: clamp(3.4rem, 8.5vh, 5rem);
   left: 50%;
-  width: min(100% - 3rem, 640px);
+  width: min(100% - 3rem, 680px);
   transform: translateX(-50%);
   text-align: center;
   pointer-events: none;
+}
+
+.stage__sub {
+  margin: 0.55rem auto 0;
+  max-width: 34rem;
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  color: var(--navy);
+  opacity: 0.85;
 }
 
 .stage__eyebrow {
@@ -278,13 +286,71 @@ button {
 .skewer {
   position: absolute;
   left: 50%;
-  top: 10%;
-  width: 20px;
-  height: 82%;
+  top: 15%;
+  width: 18px;
+  height: 76%;
   transform: translateX(-50%);
   border: 3px solid var(--ink);
   border-radius: 11px 11px 5px 5px;
   background: linear-gradient(90deg, var(--tray-dark), var(--tray) 46%, #e6cfa0);
+}
+
+/* Balls stacked shoulder-to-shoulder on the chopstick. */
+.skewer-balls {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 16%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+}
+
+.skewer-balls .ball + .ball {
+  margin-top: -40px;
+}
+
+.ball--skewer {
+  width: 112px;
+  height: 112px;
+}
+
+/* Balls shoulder-to-shoulder on the plate. */
+.plate-balls {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 11%;
+  display: grid;
+  gap: 0;
+  transform: translateX(-50%);
+}
+
+.plate-balls__row {
+  display: flex;
+  justify-content: center;
+}
+
+.plate-balls__row > .ball + .ball {
+  margin-left: -16px;
+}
+
+.plate-balls__row + .plate-balls__row {
+  margin-top: -34px;
+}
+
+.plate-balls__row:nth-child(2) {
+  margin-left: 50px;
+}
+
+.plate-balls__row:nth-child(2) .ball {
+  z-index: 2;
+}
+
+.ball--plate {
+  width: 96px;
+  height: 96px;
 }
 
 .slot {
@@ -394,6 +460,65 @@ button {
   font-style: normal;
   font-size: 0.86rem;
   opacity: 0.8;
+}
+
+/* Transparent dialogue box */
+.tag--glass {
+  display: grid;
+  gap: 0.3rem;
+  width: min(320px, 34vw);
+  border: 2px solid rgba(35, 40, 28, 0.55);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  background: rgba(243, 236, 215, 0.32);
+  -webkit-backdrop-filter: blur(10px) saturate(1.1);
+  backdrop-filter: blur(10px) saturate(1.1);
+  box-shadow: 0 10px 30px rgba(35, 40, 28, 0.14);
+  text-align: left;
+  white-space: normal;
+  z-index: 20;
+}
+
+.tag--glass strong {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.tag--glass .tag__desc {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--ink);
+  opacity: 0.9;
+}
+
+.tag--glass em {
+  font-style: normal;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--takoyaki-dark);
+}
+
+.tag--above {
+  left: 50%;
+  top: auto;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%);
+}
+
+.tag__cmd {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.tag__cmd .tag__arrow {
+  width: 42px;
+  height: 28px;
+  flex: 0 0 auto;
 }
 
 /* ---------- Tray stage ---------- */

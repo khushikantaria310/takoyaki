@@ -7,12 +7,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ball } from "@/components/Ball";
 import { features } from "@/lib/data";
 
-const tilts = [-8, 6, -4, 9, -6, 3, -9, 5];
+const tilts = [-6, 4, -3, 6, -5, 3, -7, 5];
 
-const hover = (index: number) =>
-  window.dispatchEvent(new CustomEvent("tako:hover", { detail: { index } }));
-
-/** Balls are skewered onto the chopstick one by one as you scroll. */
+/** The balls are stacked adjacent on the chopstick; point at one for its story. */
 export function Features() {
   const scope = useRef<HTMLElement>(null);
 
@@ -20,20 +17,20 @@ export function Features() {
     gsap.registerPlugin(ScrollTrigger);
 
     const reveal = gsap.timeline({
-      scrollTrigger: { trigger: scope.current, start: "top 70%", end: "top 20%", scrub: true },
+      scrollTrigger: { trigger: scope.current, start: "top 70%", end: "top 25%", scrub: true },
     });
-    reveal.fromTo("[data-feature-head]", { opacity: 0, y: 24 }, { opacity: 1, y: 0 });
+    reveal.fromTo("[data-feature-head]", { opacity: 0, y: 20 }, { opacity: 1, y: 0 });
 
-    const balls = gsap.utils.toArray<HTMLElement>("[data-slot]", scope.current);
+    const balls = gsap.utils.toArray<HTMLElement>("[data-ball]", scope.current);
     const drop = gsap.timeline({
       scrollTrigger: { trigger: scope.current, start: "top top", end: "bottom bottom", scrub: 1 },
     });
     balls.forEach((ball, index) => {
       drop.fromTo(
         ball,
-        { yPercent: -520, opacity: 0, rotate: -12 },
-        { yPercent: 0, opacity: 1, rotate: 0, ease: "bounce.out", duration: 1 },
-        index * 0.34,
+        { yPercent: -420, opacity: 0 },
+        { yPercent: 0, opacity: 1, ease: "bounce.out", duration: 1 },
+        index * 0.32,
       );
     });
   }, { scope });
@@ -41,34 +38,32 @@ export function Features() {
   return (
     <section id="features" className="stage" ref={scope}>
       <div className="stage__head" data-feature-head>
-        <p className="stage__eyebrow">On the menu</p>
-        <h2 className="stage__title">Point at a ball to see what it does</h2>
+        <p className="stage__eyebrow">Features</p>
+        <h2 className="stage__title">Everything you’d check a dashboard for</h2>
+        <p className="stage__sub">Except you don’t have to. It shows up where your team already talks.</p>
       </div>
 
       <div className="stage__sticky">
         <div className="skewer" data-skewer aria-hidden="true" />
 
-        {features.map((feature, index) => (
-          <div className="slot" key={feature.id} style={{ top: `${20 + index * 8.5}%` }}>
+        <div className="skewer-balls">
+          {features.map((feature, index) => (
             <button
               type="button"
-              className="ball"
-              data-slot
-              data-kind="stick"
-              aria-label={`${feature.label} — ${feature.note}`}
-              onMouseEnter={() => hover(index)}
-              onFocus={() => hover(index)}
-              onMouseLeave={() => hover(-1)}
-              onBlur={() => hover(-1)}
+              className="ball ball--skewer"
+              data-ball
+              key={feature.id}
+              aria-label={`${feature.label}. ${feature.desc}`}
             >
-              <Ball size={78} tilt={tilts[index % tilts.length]} />
-              <span className="tag tag--box">
+              <Ball size={104} tilt={tilts[index % tilts.length]} />
+              <span className="tag tag--glass">
                 <strong>{feature.label}</strong>
+                <span className="tag__desc">{feature.desc}</span>
                 <em>{feature.note}</em>
               </span>
             </button>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
