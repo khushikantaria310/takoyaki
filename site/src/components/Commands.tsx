@@ -5,19 +5,19 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ball } from "@/components/Ball";
-import { Tray } from "@/components/Tray";
+import { Plate } from "@/components/Plate";
 import { HandArrow } from "@/components/HandArrow";
 import { bill, commands } from "@/lib/data";
 
 const slots = [
-  { left: 30, top: 71, tilt: -7 },
-  { left: 44, top: 68, tilt: 5 },
-  { left: 58, top: 68, tilt: -4 },
-  { left: 72, top: 71, tilt: 8 },
-  { left: 26, top: 81, tilt: -6 },
-  { left: 39, top: 83, tilt: 3 },
-  { left: 52, top: 83, tilt: -9 },
-  { left: 65, top: 81, tilt: 6 },
+  { left: 34, top: 78, tilt: -7 },
+  { left: 46, top: 75, tilt: 5 },
+  { left: 58, top: 75, tilt: -4 },
+  { left: 70, top: 78, tilt: 8 },
+  { left: 30, top: 87, tilt: -6 },
+  { left: 43, top: 89, tilt: 3 },
+  { left: 56, top: 89, tilt: -9 },
+  { left: 69, top: 87, tilt: 6 },
 ];
 
 const hover = (index: number) =>
@@ -76,7 +76,7 @@ export function Commands() {
         </div>
 
         <div className="stage__sticky">
-          <Tray className="stage-tray" />
+          <Plate className="stage-plate" />
 
           {commands.map((item, index) => {
             const slot = slots[index % slots.length];
