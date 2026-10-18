@@ -24,10 +24,12 @@ export function Commands() {
     });
 
     // The plate slides in from the right; the balls drop the moment it lands.
+    // The plate slides in from the right and lands centred; the balls drop
+    // the moment it settles.
     drop.fromTo(
       "[data-plate]",
-      { xPercent: 125, opacity: 0 },
-      { xPercent: 0, opacity: 1, ease: "power3.out", duration: 1.1 },
+      { xPercent: 130, opacity: 0 },
+      { xPercent: 0, opacity: 1, ease: "power4.out", duration: 1.3 },
       0,
     );
     balls.forEach((ball, index) => {
@@ -35,7 +37,7 @@ export function Commands() {
         ball,
         { yPercent: -560, opacity: 0 },
         { yPercent: 0, opacity: 1, ease: "bounce.out", duration: 1 },
-        1 + index * 0.3,
+        1.25 + index * 0.3,
       );
     });
 
