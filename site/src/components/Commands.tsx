@@ -11,16 +11,16 @@ import { commands } from "@/lib/data";
 
 const tilts = [-6, 4, -3, 6, -5, 3, -7, 5];
 
-/** The balls start in two rows above the bowl; drag them into it. */
+/** 4 at the back, 4 in front, seated in the bowl. */
 const ballPositions = [
-  { left: 34, top: 26 },
-  { left: 45, top: 26 },
-  { left: 56, top: 26 },
-  { left: 67, top: 26 },
-  { left: 34, top: 39 },
-  { left: 45, top: 39 },
-  { left: 56, top: 39 },
-  { left: 67, top: 39 },
+  { left: 33, top: 63 },
+  { left: 44, top: 63 },
+  { left: 56, top: 63 },
+  { left: 67, top: 63 },
+  { left: 33, top: 77 },
+  { left: 44, top: 77 },
+  { left: 56, top: 77 },
+  { left: 67, top: 77 },
 ];
 
 const steps = [
@@ -46,6 +46,7 @@ export function Commands() {
   const ballsRef = useRef<(HTMLButtonElement | null)[]>([]);
   const quickRef = useRef<{ x: (v: number) => void; y: (v: number) => void }[]>([]);
   const dragRef = useRef<{ el: HTMLButtonElement; sx: number; sy: number } | null>(null);
+  const placedRef = useRef<boolean[]>([]);
 
   useEffect(() => {
     quickRef.current = ballsRef.current.map((ball) =>
@@ -65,6 +66,8 @@ export function Commands() {
       }
       ballsRef.current.forEach((ball, index) => {
         if (!ball) return;
+        // A ball the user has placed keeps its position — no magnetic pull.
+        if (placedRef.current[index]) return;
         const rect = ball.getBoundingClientRect();
         const dx = event.clientX - (rect.left + rect.width / 2);
         const dy = event.clientY - (rect.top + rect.height / 2);
@@ -97,11 +100,17 @@ export function Commands() {
     });
     intro.fromTo("[data-commands-head]", { opacity: 0, y: 20 }, { opacity: 1, y: 0 });
 
+    // Balls drop into the bowl one by one as you scroll (alternating sides).
+    const drop = gsap.timeline({
+      scrollTrigger: { trigger: "#commands", start: "top top", end: "bottom bottom", scrub: 1 },
+    });
     gsap.utils.toArray<HTMLElement>("[data-ball]", scope.current).forEach((ball, index) => {
-      gsap.fromTo(
+      const side = index % 3 === 2 ? 1 : -1; // two from the left, one from the right
+      drop.fromTo(
         ball,
-        { opacity: 0, scale: 0.7 },
-        { opacity: 1, scale: 1, ease: "back.out(1.4)", duration: 0.7, delay: index * 0.06 },
+        { xPercent: side * 58, yPercent: -520, opacity: 0, rotate: side * 16 },
+        { xPercent: 0, yPercent: 0, opacity: 1, rotate: 0, ease: "back.out(1.25)", duration: 1.15 },
+        index * 0.3,
       );
     });
 
@@ -150,7 +159,7 @@ export function Commands() {
         <div className="stage__sticky">
           <div className="stage__head" data-commands-head>
             <p className="stage__eyebrow">Commands</p>
-            <h2 className="stage__title">Drag each takoyaki into the bowl</h2>
+            <h2 className="stage__title">Point at a takoyaki for its command</h2>
           </div>
 
           <div className="stage-bowl-wrap" data-bowl>
@@ -180,6 +189,7 @@ export function Commands() {
                         /* ignore */
                       }
                       dragRef.current = { el: ball, sx: event.clientX, sy: event.clientY };
+                      placedRef.current[index] = true;
                       gsap.to(ball, { scale: 1.12, duration: 0.25, ease: "back.out(2)" });
                     }}
                   >
