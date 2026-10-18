@@ -321,7 +321,7 @@ button {
   position: absolute;
   z-index: 3;
   left: 50%;
-  bottom: 22%;
+  bottom: 15%;
   display: grid;
   gap: 0;
   transform: translateX(-50%);
@@ -333,15 +333,15 @@ button {
 }
 
 .plate-balls__row > .ball + .ball {
-  margin-left: -30px;
+  margin-left: -32px;
 }
 
 .plate-balls__row + .plate-balls__row {
-  margin-top: -66px;
+  margin-top: -70px;
 }
 
 .plate-balls__row:nth-child(2) {
-  margin-left: 92px;
+  margin-left: 98px;
 }
 
 .plate-balls__row:nth-child(2) .ball {
@@ -349,8 +349,8 @@ button {
 }
 
 .ball--plate {
-  width: 184px;
-  height: 184px;
+  width: 196px;
+  height: 196px;
 }
 
 .slot {
@@ -536,13 +536,20 @@ button {
 }
 
 /* ---------- Tray stage ---------- */
-.stage-plate {
+.stage-plate-wrap {
   position: absolute;
-  left: 50%;
-  bottom: -18%;
-  width: min(170%, 1700px);
+  z-index: 2;
+  right: 0;
+  bottom: 6%;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  will-change: transform;
+}
+
+.stage-plate-img {
+  width: min(56%, 560px);
   height: auto;
-  transform: translateX(-50%);
 }
 
 /* ---------- Curtain + receipt ---------- */
