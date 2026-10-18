@@ -3,6 +3,7 @@ import { Archivo, Geist_Mono, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import SceneCanvasMount from "@/components/SceneCanvasMount";
+import Nav from "@/components/Nav";
 
 const display = Archivo({
   subsets: ["latin"],
@@ -37,9 +38,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "(function(){try{var m=!window.matchMedia('(prefers-reduced-motion: reduce)').matches;var c=document.createElement('canvas');var g=c.getContext('webgl2')||c.getContext('webgl');if(m&&g){document.documentElement.classList.add('fx');}}catch(e){}})();",
           }}
         />
-        <a className="skip-link" href="#main">Skip to the poster</a>
+        <a className="skip-link" href="#main">Skip to content</a>
         <SceneCanvasMount />
         <SmoothScroll />
+        <Nav />
         {children}
       </body>
     </html>

@@ -27,7 +27,7 @@ export default function FeatureNav() {
           key={feature.id}
           type="button"
           className="feature-nav__dot"
-          aria-label={`Show feature: ${feature.title}${feature.comingSoon ? " (coming soon)" : ""}`}
+          aria-label={`Show feature: ${feature.title}`}
           onFocus={() => show(index)}
           onBlur={() => hide()}
           onMouseEnter={() => show(index)}
