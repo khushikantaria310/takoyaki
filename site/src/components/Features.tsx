@@ -5,9 +5,11 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ball } from "@/components/Ball";
+import { HandArrow } from "@/components/HandArrow";
 import { features } from "@/lib/data";
 
 const tilts = [-6, 4, -3, 6, -5, 3, -7, 5];
+const shortLabels = ["Pings", "Stats", "Streak", "Leaders", "Compare", "Top day", "Modes", "Setup"];
 
 /** Balls split 4 + 4 between a left and a right chopstick. */
 export function Features() {
@@ -27,12 +29,29 @@ export function Features() {
     });
     balls.forEach((ball, index) => {
       const side = index % 2 === 0 ? -1 : 1;
+      const landedLabel = ball.querySelector<HTMLElement>("[data-landed-label]");
+      const contactShadow = ball.querySelector<HTMLElement>("[data-contact-shadow]");
+      const at = index * 0.3;
       drop.fromTo(
         ball,
         { yPercent: -420, opacity: 0, rotate: side * 12 },
-        { yPercent: 0, opacity: 1, rotate: 0, ease: "back.out(1.25)", duration: 1.1 },
-        index * 0.3,
+        { yPercent: 0, opacity: 1, rotate: 0, ease: "power2.in", duration: 0.78 },
+        at,
       );
+      // Compress on contact, then spring back to a plump resting shape.
+      drop.to(ball, { scaleX: 1.13, scaleY: 0.84, duration: 0.1, ease: "power2.in" }, at + 0.76);
+      drop.to(ball, { scaleX: 1, scaleY: 1, duration: 0.42, ease: "elastic.out(1, 0.38)" }, at + 0.86);
+      if (contactShadow) {
+        drop.fromTo(contactShadow, { opacity: 0, scaleX: 0.35 }, { opacity: 0.42, scaleX: 1, duration: 0.35 }, at + 0.76);
+      }
+      if (landedLabel) {
+        drop.fromTo(
+          landedLabel,
+          { opacity: 0, y: 8 },
+          { opacity: 1, y: 0, ease: "power2.out", duration: 0.35 },
+          index * 0.3 + 0.75,
+        );
+      }
     });
   }, { scope });
 
@@ -48,8 +67,9 @@ export function Features() {
         <div className="chopstick-pair">
           {[0, 1].map((column) => (
             <div className={`chopstick-col chopstick-col--${column === 0 ? "l" : "r"}`} key={column}>
-              <span className="chopstick" aria-hidden="true" />
-              <div className="skewer-balls">
+              <div className="skewer-stack">
+                <span className="chopstick" aria-hidden="true" />
+                <div className="skewer-balls">
                 {features.slice(column * 4, column * 4 + 4).map((feature, index) => (
                   <button
                     type="button"
@@ -58,16 +78,20 @@ export function Features() {
                     key={feature.id}
                     aria-label={`${feature.label}. ${feature.desc}`}
                   >
-                    <Ball size={118} tilt={tilts[(column * 4 + index) % tilts.length]} />
-                    <span
-                      className={`tag tag--glass ${index % 2 === 0 ? "tag--left" : "tag--right"}`}
-                    >
+                    <span className="ball-contact-shadow" data-contact-shadow aria-hidden="true" />
+                    <Ball size={152} tilt={tilts[(column * 4 + index) % tilts.length]} />
+                    <span className={`tag tag--landed ${index % 2 === 0 ? "tag--right" : "tag--left"}`} data-landed-label>
+                      <HandArrow className={`tag__arrow ${index % 2 === 0 ? "" : "tag__arrow--right"}`} />
+                      <span>{shortLabels[column * 4 + index]}</span>
+                    </span>
+                    <span className={`tag tag--glass ${column === 0 ? "tag--right" : "tag--left"}`}>
                       <strong>{feature.label}</strong>
                       <span className="tag__desc">{feature.desc}</span>
                       <em>{feature.note}</em>
                     </span>
                   </button>
                 ))}
+                </div>
               </div>
             </div>
           ))}
