@@ -11,9 +11,9 @@ export default function FooterMotion() {
     const context = gsap.context(() => {
       gsap.fromTo(
         "[data-footer-mark]",
-        { yPercent: 150, opacity: 0 },
+        { yPercent: 170, opacity: 0 },
         {
-          yPercent: 0,
+          yPercent: -50,
           opacity: 1,
           ease: "power3.out",
           scrollTrigger: { trigger: ".site-footer", start: "top 95%", end: "top 40%", scrub: 1 },
