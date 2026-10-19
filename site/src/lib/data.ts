@@ -75,6 +75,24 @@ export const commands: CommandItem[] = [
   { id: "topday", command: "/stats top-day", note: "Who has the most commits today.", price: "auto" },
 ];
 
+export const setupSteps = [
+  {
+    num: "01",
+    title: "Install the GitHub App",
+    body: "Add Takoyaki to your personal account or organization. For org tracking, install on the org directly.",
+  },
+  {
+    num: "02",
+    title: "Run /github link",
+    body: "Connect your Discord account to your GitHub username via OAuth.",
+  },
+  {
+    num: "03",
+    title: "Run /setchannel",
+    body: "Pick a channel and choose Standard Mode (personal pings) or Org Mode (anonymous org-wide events). Done.",
+  },
+];
+
 export const bill = [
   { label: "Invite Takoyaki", value: "free" },
   { label: "/github link", value: "link your account" },
