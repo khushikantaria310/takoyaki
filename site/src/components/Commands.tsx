@@ -66,6 +66,10 @@ export function Commands() {
 
     const onUp = () => {
       // The ball stays exactly where the cursor left it — no springing back.
+      if (dragRef.current) {
+        // Add a subtle settling bounce
+        gsap.to(dragRef.current.el, { scale: 1, duration: 0.4, ease: "elastic.out(1, 0.5)" });
+      }
       dragRef.current = null;
     };
 

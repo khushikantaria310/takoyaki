@@ -68,6 +68,22 @@ function drawReceipt(ctx: CanvasRenderingContext2D) {
   ctx.fillStyle = edge;
   ctx.fillRect(0, 0, TEX_W, TEX_H);
 
+  // Visible crease/fold lines on the paper
+  ctx.strokeStyle = "rgba(120,100,58,0.25)";
+  ctx.lineWidth = 2;
+  // Vertical center crease
+  ctx.beginPath();
+  ctx.moveTo(TEX_W / 2, 150);
+  ctx.lineTo(TEX_W / 2, TEX_H - 80);
+  ctx.stroke();
+  // Horizontal crease lines
+  for (let cy = 320; cy < 1350; cy += 220) {
+    ctx.beginPath();
+    ctx.moveTo(80, cy);
+    ctx.lineTo(TEX_W - 80, cy);
+    ctx.stroke();
+  }
+
   ctx.textAlign = "center";
   ctx.fillStyle = "#161616";
   ctx.font = '400 84px "Dela Gothic One", "Zen Kaku Gothic New", sans-serif';
@@ -162,6 +178,7 @@ function Paper({ progress }: { progress: React.MutableRefObject<number> }) {
     if (!mesh) return;
     const geometry = mesh.geometry as THREE.PlaneGeometry;
     const position = geometry.attributes.position as THREE.BufferAttribute;
+    const normal = geometry.attributes.normal as THREE.BufferAttribute;
     const time = clock.getElapsedTime();
     const p = progress.current;
     const roll = 1 - p; // normalised height of the roll edge (1 top → 0 bottom)
@@ -178,9 +195,14 @@ function Paper({ progress }: { progress: React.MutableRefObject<number> }) {
         // the rolling cylinder that travels downward as you scroll.
         const d = (roll - yn) * PAPER_H;
         const theta = Math.min(Math.PI, d / R);
+        
+        // Visible fold lines - add sharp crease displacement
+        const foldStrength = Math.sin(d * 40) * 0.003 * (1 - p);
+        const foldTheta = theta + foldStrength;
+        
         position.setX(i, bx);
-        position.setY(i, rollY - R * Math.sin(theta));
-        position.setZ(i, R * (1 - Math.cos(theta)) + Math.sin(bx * 2 + time) * 0.006);
+        position.setY(i, rollY - R * Math.sin(foldTheta));
+        position.setZ(i, R * (1 - Math.cos(foldTheta)) + Math.sin(bx * 2 + time) * 0.006);
       } else {
         // Above it the letter is revealed, hanging with a soft flutter.
         const flutter =

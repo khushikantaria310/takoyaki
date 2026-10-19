@@ -525,6 +525,11 @@ button {
   height: clamp(118px, 13.5vw, 188px);
   cursor: grab;
   touch-action: none;
+  transition: transform 0.15s ease-out;
+}
+
+.ball--plate:active {
+  cursor: grabbing;
 }
 
 .ball--plate .ball-art {
