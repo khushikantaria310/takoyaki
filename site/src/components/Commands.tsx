@@ -6,25 +6,43 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ball } from "@/components/Ball";
 import BillPaper from "@/components/BillPaper";
-import { Bowl } from "@/components/Bowl";
 import { HandArrow } from "@/components/HandArrow";
+import { Plate } from "@/components/Plate";
 import { commands, setupSteps } from "@/lib/data";
 
 const tilts = [-6, 4, -3, 6, -5, 3, -7, 5];
 
-/** 4 at the back, 4 in front, seated in the bowl. */
-const ballPositions = [
-  { left: 33, top: 63 },
-  { left: 44, top: 63 },
-  { left: 56, top: 63 },
-  { left: 67, top: 63 },
-  { left: 33, top: 77 },
-  { left: 44, top: 77 },
-  { left: 56, top: 77 },
-  { left: 67, top: 77 },
+/**
+ * Where each ball's hand-written note + arrow come from, so every ball is
+ * pointed at from a different direction.
+ *   t = from above the ball, b = from below; l/c/r = left/centre/right.
+ */
+const arrowPos: Record<string, "tl" | "tc" | "tr" | "bl" | "bc" | "br"> = {
+  link: "tl",
+  unlink: "tc",
+  setchannel: "tc",
+  me: "tr",
+  streak: "bl",
+  compare: "bc",
+  top: "bc",
+  topday: "br",
+};
+
+/**
+ * Where each takoyaki sits on the plate, in the plate's own 1000×480 space.
+ * Four in the back row, four in front — all the same size, neatly spaced,
+ * and the front row overlaps the back one so the pile reads as heaped.
+ */
+const spots = [
+  { x: 275, y: 226, z: 1 },
+  { x: 425, y: 220, z: 1 },
+  { x: 575, y: 220, z: 1 },
+  { x: 725, y: 226, z: 1 },
+  { x: 275, y: 318, z: 2 },
+  { x: 425, y: 322, z: 2 },
+  { x: 575, y: 322, z: 2 },
+  { x: 725, y: 318, z: 2 },
 ];
-
-
 
 export function Commands() {
   const scope = useRef<HTMLDivElement>(null);
@@ -32,6 +50,83 @@ export function Commands() {
   const quickRef = useRef<{ x: (v: number) => void; y: (v: number) => void }[]>([]);
   const dragRef = useRef<{ el: HTMLButtonElement; sx: number; sy: number } | null>(null);
   const placedRef = useRef<boolean[]>([]);
+
+  const renderBall = (item: (typeof commands)[number], index: number) => {
+    const spot = spots[index];
+    return (
+      <div
+        className="plate-slot"
+        key={item.id}
+        style={{
+          left: `${(spot.x / 1000) * 100}%`,
+          top: `${(spot.y / 480) * 100}%`,
+          zIndex: spot.z,
+        }}
+      >
+        <button
+          type="button"
+          className="ball ball--plate"
+          data-ball
+          data-slot
+          aria-label={`${item.command}. ${item.note}`}
+          ref={(element) => {
+            ballsRef.current[index] = element;
+          }}
+          onPointerDown={(event) => {
+            const ball = ballsRef.current[index];
+            if (!ball) return;
+            event.preventDefault();
+            try {
+              (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+            } catch {
+              /* ignore */
+            }
+            dragRef.current = { el: ball, sx: event.clientX, sy: event.clientY };
+            placedRef.current[index] = true;
+            gsap.to(ball, { scale: 1.12, duration: 0.25, ease: "back.out(2)" });
+          }}
+        >
+          <Ball size={200} tilt={tilts[index % tilts.length]} />
+          <span
+            className={`tag tag--above tag--${arrowPos[item.id]}${spot.z === 1 ? " tag--row-back" : ""}`}
+            aria-hidden="true"
+          >
+            {spot.z === 1 || arrowPos[item.id][0] === "t" ? (
+              <>
+                <span className="tag__bubble">
+                  <span className="tag__note">
+                    <span className="tag__note-in">
+                      <span className="tag__note-text">{item.note}</span>
+                      <span className={`tag__price price--${item.price}`}>{item.price}</span>
+                    </span>
+                  </span>
+                </span>
+                <span className="tag__label">
+                  <span className="tag__label-text">{item.command}</span>
+                  <HandArrow className="tag__label-arrow" />
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="tag__label">
+                  <span className="tag__label-text">{item.command}</span>
+                  <HandArrow className="tag__label-arrow" />
+                </span>
+                <span className="tag__bubble">
+                  <span className="tag__note">
+                    <span className="tag__note-in">
+                      <span className="tag__note-text">{item.note}</span>
+                      <span className={`tag__price price--${item.price}`}>{item.price}</span>
+                    </span>
+                  </span>
+                </span>
+              </>
+            )}
+          </span>
+        </button>
+      </div>
+    );
+  };
 
   useEffect(() => {
     quickRef.current = ballsRef.current.map((ball) =>
@@ -67,7 +162,6 @@ export function Commands() {
     const onUp = () => {
       // The ball stays exactly where the cursor left it — no springing back.
       if (dragRef.current) {
-        // Add a subtle settling bounce
         gsap.to(dragRef.current.el, { scale: 1, duration: 0.4, ease: "elastic.out(1, 0.5)" });
       }
       dragRef.current = null;
@@ -89,18 +183,35 @@ export function Commands() {
     });
     intro.fromTo("[data-commands-head]", { opacity: 0, y: 20 }, { opacity: 1, y: 0 });
 
-    // Balls drop into the bowl one by one as you scroll (alternating sides).
-    const drop = gsap.timeline({
-      scrollTrigger: { trigger: "#commands", start: "top top", end: "bottom bottom", scrub: 1 },
+    // Each takoyaki falls onto the plate, bounces, and settles for good.
+    const fall = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#commands",
+        start: "top 55%",
+        toggleActions: "play none none none",
+      },
     });
+
     gsap.utils.toArray<HTMLElement>("[data-ball]", scope.current).forEach((ball, index) => {
-      const side = index % 3 === 2 ? 1 : -1; // two from the left, one from the right
-      drop.fromTo(
-        ball,
-        { xPercent: side * 58, yPercent: -520, opacity: 0, rotate: side * 16 },
-        { xPercent: 0, yPercent: 0, opacity: 1, rotate: 0, ease: "back.out(1.25)", duration: 1.15 },
-        index * 0.3,
-      );
+      const at = index * 0.14;
+      const spin = (index % 2 === 0 ? 1 : -1) * (8 + index * 2);
+
+      fall
+        .fromTo(
+          ball,
+          { y: -window.innerHeight * 1.1, opacity: 0, rotation: spin * 3 },
+          { opacity: 1, duration: 0.08 },
+          at,
+        )
+        // Gravity: accelerating drop onto the plate.
+        .to(ball, { y: 0, duration: 1.05, ease: "power1.in" }, at)
+        // Impact: the ball squashes and hops.
+        .to(ball, { scaleY: 0.76, scaleX: 1.18, duration: 0.09, ease: "power2.out" }, at + 1.05)
+        .to(ball, { y: -46, duration: 0.24, ease: "power2.out" }, at + 1.09)
+        // Settle: it bounces a couple of times, then comes to rest.
+        .to(ball, { y: 0, duration: 0.85, ease: "bounce.out" }, at + 1.33)
+        .to(ball, { scaleY: 1, scaleX: 1, duration: 0.45, ease: "elastic.out(1, 0.4)" }, at + 1.14)
+        .to(ball, { rotation: spin, duration: 0.9, ease: "elastic.out(1, 0.35)" }, at + 1.14);
     });
 
     // The bill unrolls downward like a letter, then floats.
@@ -140,14 +251,6 @@ export function Commands() {
       repeat: -1,
       delay: 0.4,
     });
-
-    // Steam drifting off the bowl.
-    gsap.utils.toArray<HTMLElement>(".steam__wisp", scope.current).forEach((wisp, index) => {
-      gsap
-        .timeline({ repeat: -1, delay: index * 0.7 })
-        .fromTo(wisp, { yPercent: 30, opacity: 0, scale: 0.8 }, { opacity: 0.5, duration: 1.3, ease: "sine.out" })
-        .to(wisp, { yPercent: -160, scale: 1.3, opacity: 0, duration: 2.6, ease: "sine.in" });
-    });
   }, { scope });
 
   return (
@@ -159,55 +262,13 @@ export function Commands() {
             <h2 className="stage__title">Point at a takoyaki for its command</h2>
           </div>
 
-          <div className="stage-bowl-wrap" data-bowl>
-            <Bowl className="stage-bowl" />
-          </div>
-
-          <div className="steam" aria-hidden="true">
-            {[0, 1, 2, 3].map((wisp) => (
-              <span className="steam__wisp" key={wisp} style={{ left: `${30 + wisp * 13}%` }} />
-            ))}
-          </div>
-
-          <div className="plate-balls">
-            {commands.map((item, index) => {
-              const slot = ballPositions[index % ballPositions.length];
-              return (
-                <div className="plate-slot" data-slot key={item.id} style={{ left: `${slot.left}%`, top: `${slot.top}%` }}>
-                  <button
-                    type="button"
-                    className="ball ball--plate"
-                    data-ball
-                    aria-label={`${item.command}. ${item.note}`}
-                    ref={(element) => {
-                      ballsRef.current[index] = element;
-                    }}
-                    onPointerDown={(event) => {
-                      const ball = ballsRef.current[index];
-                      if (!ball) return;
-                      event.preventDefault();
-                      try {
-                        (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
-                      } catch {
-                        /* ignore */
-                      }
-                      dragRef.current = { el: ball, sx: event.clientX, sy: event.clientY };
-                      placedRef.current[index] = true;
-                      gsap.to(ball, { scale: 1.12, duration: 0.25, ease: "back.out(2)" });
-                    }}
-                  >
-                    <Ball size={170} tilt={tilts[index % tilts.length]} />
-                    <span className="tag tag--glass tag--above">
-                      <span className="tag__cmd">
-                        <HandArrow className="tag__arrow" />
-                        {item.command}
-                      </span>
-                      <span className="tag__desc">{item.note}</span>
-                    </span>
-                  </button>
-                </div>
-              );
-            })}
+          <div className="stage-plate-wrap">
+            <div className="plate-scene">
+              <Plate className="plate-scene__back" />
+              <div className="plate-scene__balls">
+                {commands.map((item, index) => renderBall(item, index))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
