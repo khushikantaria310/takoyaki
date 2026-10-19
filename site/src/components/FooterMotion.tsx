@@ -19,6 +19,15 @@ export default function FooterMotion() {
           scrollTrigger: { trigger: ".site-footer", start: "top 95%", end: "top 40%", scrub: 1 },
         },
       );
+
+      // Slow breathing drift on the watermark so it never feels static.
+      gsap.to("[data-footer-mark]", {
+        letterSpacing: "0.14em",
+        duration: 7,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+      });
     });
     return () => context.revert();
   }, []);
