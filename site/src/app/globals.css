@@ -391,30 +391,43 @@ button {
   position: absolute;
   z-index: 2;
   inset: 0;
+  --ball-size: clamp(104px, 16vh, 168px);
 }
 
 .chopstick-col {
   position: absolute;
-  top: 30%;
-  height: 52%;
-  width: 240px;
+  top: 39%;
+  transform: translateX(-50%);
 }
 
 .chopstick-col--l {
-  left: 27%;
+  left: 24%;
 }
 
+/* The right skewer sits half a ball lower, so its labels interleave
+   with the left ones instead of colliding in the middle. */
 .chopstick-col--r {
-  left: 63%;
+  left: 76%;
+  top: calc(39% + var(--ball-size) * 0.32);
+}
+
+/* The stick wraps the four-ball stack, so it only fits four. */
+.skewer-stack {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: rotate(-11deg);
 }
 
 .chopstick {
   position: absolute;
-  top: 0;
+  z-index: 0;
+  top: calc(var(--ball-size) * -0.16);
+  bottom: calc(var(--ball-size) * -0.16);
   left: 50%;
   width: 16px;
-  height: 82%;
-  transform: translateX(-50%) rotate(-11deg);
+  transform: translateX(-50%);
   border: 3px solid var(--ink);
   border-radius: 8px 8px 4px 4px;
   background: linear-gradient(90deg, var(--tray-dark), var(--tray) 44%, #f0dcae 60%, #c39a63);
@@ -423,27 +436,39 @@ button {
 
 /* Balls stacked shoulder-to-shoulder on the chopstick. */
 .skewer-balls {
-  position: absolute;
+  position: relative;
   z-index: 3;
-  left: 50%;
-  top: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transform: translateX(-50%) rotate(-11deg);
 }
 
 .skewer-balls .ball + .ball {
-  margin-top: -42px;
+  margin-top: calc(var(--ball-size) * -0.38);
 }
 
 .ball--skewer {
-  width: 118px;
-  height: 118px;
+  width: var(--ball-size);
+  height: var(--ball-size);
 }
 
-.skewer-balls .tag--glass {
+.skewer-balls .tag--glass,
+.skewer-balls .tag--landed {
   rotate: 11deg;
+}
+
+.ball-contact-shadow {
+  position: absolute;
+  z-index: -1;
+  bottom: 1px;
+  left: 17%;
+  width: 66%;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(23, 27, 15, 0.46), rgba(23, 27, 15, 0) 72%);
+  filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Balls shoulder-to-shoulder on the plate. */
@@ -591,6 +616,24 @@ button {
   pointer-events: none;
 }
 
+/* The real 3D paper sheet. */
+.bill__canvas {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bill__canvas canvas {
+  display: block;
+}
+
+.paper3d .bill__stage > .receipt,
+.paper3d .receipt__chopsticks,
+.paper3d .bill__shadow {
+  opacity: 0;
+}
+
 .receipt__steps {
   display: grid;
   gap: 1.1rem;
@@ -600,31 +643,34 @@ button {
 
 .receipt__step {
   display: grid;
-  grid-template-columns: 3rem 1fr;
-  gap: 0.9rem;
-  border-top: 2px solid rgba(28, 28, 28, 0.85);
-  padding-top: 0.9rem;
+  grid-template-columns: 4rem 1fr;
+  gap: 1.1rem;
+  border-top: 3px solid rgba(22, 22, 22, 0.9);
+  padding-top: 1.1rem;
 }
 
 .receipt__num {
   font-family: "Dela Gothic One", system-ui, sans-serif;
-  font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
   line-height: 1.1;
+  color: #161616;
 }
 
 .receipt__step h3 {
-  margin: 0 0 0.25rem;
-  font-size: clamp(0.85rem, 1.8vw, 1.05rem);
-  letter-spacing: 0.04em;
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.35rem, 2.6vw, 1.8rem);
+  letter-spacing: 0.02em;
+  color: #161616;
+  font-weight: 700;
 }
 
 .receipt__step p {
   margin: 0;
-  font-size: clamp(0.68rem, 1.4vw, 0.82rem);
+  font-size: clamp(1rem, 2vw, 1.3rem);
   line-height: 1.6;
-  letter-spacing: 0.03em;
-  text-transform: none;
-  color: rgba(28, 28, 28, 0.8);
+  letter-spacing: 0.02em;
+  color: #2e2e2e;
+  font-weight: 500;
 }
 
 .receipt__roll-edge {
@@ -691,6 +737,48 @@ button {
   opacity: 0;
   pointer-events: none;
   transition: opacity 160ms ease;
+}
+
+/* After landing, a small ink arrow + one-word feature sits beside each ball. */
+.tag--landed {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  color: var(--ink);
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  z-index: 8;
+}
+
+.tag--landed .tag__arrow {
+  width: 64px;
+  height: 40px;
+  flex: 0 0 auto;
+}
+
+.tag__arrow--right {
+  transform: rotate(180deg);
+}
+
+.tag--landed > span:last-child {
+  font-family: "Dela Gothic One", "Zen Kaku Gothic New", sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  letter-spacing: 0.01em;
+}
+
+.ball:hover .tag--landed,
+.ball:focus-visible .tag--landed {
+  opacity: 0 !important;
 }
 
 .ball:hover .tag,
@@ -867,6 +955,7 @@ button {
 
 .receipt {
   position: relative;
+  z-index: 1;
   width: 100%;
   padding: 3rem 2.6rem 2.4rem;
   background-color: #e7ddc0;
@@ -881,17 +970,31 @@ button {
   color: #1c1c1c;
 }
 
+.receipt::before {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 18px;
+  background: linear-gradient(180deg, transparent, rgba(104, 83, 43, 0.16));
+  content: "";
+  pointer-events: none;
+}
+
 /* Real tapered wooden chopsticks holding the bill. */
 .receipt__chopsticks {
   position: absolute;
-  z-index: 2;
-  top: -56px;
-  left: 50%;
-  width: 128%;
+  z-index: 0;
+  top: -70px;
+  left: -6%;
+  width: 112%;
   height: auto;
-  transform: translateX(-50%);
   filter: drop-shadow(0 12px 12px rgba(18, 24, 10, 0.3));
   pointer-events: none;
+}
+
+.receipt__chopsticks--front {
+  z-index: 3;
 }
 
 .bill__stage {
@@ -908,9 +1011,10 @@ button {
 
 .receipt__lead {
   margin: 0.5rem 0 0;
-  font-size: clamp(0.9rem, 1.9vw, 1.15rem);
-  font-weight: 600;
+  font-size: clamp(1.15rem, 2.3vw, 1.6rem);
+  font-weight: 700;
   letter-spacing: 0.12em;
+  color: #161616;
 }
 
 .receipt__note {
@@ -1051,9 +1155,9 @@ button {
 .footer-watermark {
   position: absolute;
   z-index: 0;
-  top: -0.28em;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   font-family: "Dela Gothic One", system-ui, sans-serif;
   font-size: clamp(5rem, 22vw, 19rem);
   line-height: 1;
@@ -1218,6 +1322,20 @@ button {
   font-size: 0.86rem;
 }
 
+@media (max-width: 1100px) {
+  .chopstick-col--l { left: 18%; }
+  .chopstick-col--r { left: 82%; }
+
+  .tag--landed > span:last-child {
+    font-size: clamp(1.5rem, 2.8vw, 2rem);
+  }
+
+  .tag--landed .tag__arrow {
+    width: 56px;
+    height: 36px;
+  }
+}
+
 @media (max-width: 720px) {
   .tag--box {
     min-width: 150px;
@@ -1227,13 +1345,25 @@ button {
     width: min(260px, 62vw);
   }
 
+  .chopstick-col--l { left: 15%; }
+  .chopstick-col--r { left: 85%; }
+
+  .tag--landed > span:last-child {
+    font-size: clamp(1.15rem, 4.6vw, 1.6rem);
+  }
+
+  .tag--landed .tag__arrow {
+    width: 44px;
+    height: 28px;
+  }
+
   .ball--skewer {
-    width: 72px;
-    height: 72px;
+    width: 124px;
+    height: 124px;
   }
 
   .skewer-balls .ball + .ball {
-    margin-top: -26px;
+    margin-top: -46px;
   }
 
   .ball--plate {
