@@ -5,9 +5,10 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ball } from "@/components/Ball";
+import BillPaper from "@/components/BillPaper";
 import { Bowl } from "@/components/Bowl";
 import { HandArrow } from "@/components/HandArrow";
-import { commands } from "@/lib/data";
+import { commands, setupSteps } from "@/lib/data";
 
 const tilts = [-6, 4, -3, 6, -5, 3, -7, 5];
 
@@ -23,23 +24,7 @@ const ballPositions = [
   { left: 67, top: 77 },
 ];
 
-const steps = [
-  {
-    num: "01",
-    title: "Install the GitHub App",
-    body: "Add Takoyaki to your personal account or organization. For org tracking, install on the org directly.",
-  },
-  {
-    num: "02",
-    title: "Run /github link",
-    body: "Connect your Discord account to your GitHub username via OAuth.",
-  },
-  {
-    num: "03",
-    title: "Run /setchannel",
-    body: "Pick a channel and choose Standard Mode (personal pings) or Org Mode (anonymous org-wide events). Done.",
-  },
-];
+
 
 export function Commands() {
   const scope = useRef<HTMLDivElement>(null);
@@ -226,24 +211,18 @@ export function Commands() {
       <section className="bill" data-bill>
         <div className="bill__sticky">
           <div className="bill__shadow" data-receipt-shadow aria-hidden="true" />
+          <BillPaper />
           <div className="bill__stage">
-            <svg className="receipt__chopsticks" viewBox="0 0 660 130" aria-hidden="true">
+            <svg className="receipt__chopsticks receipt__chopsticks--back" viewBox="0 0 900 220" aria-hidden="true">
+              {/* Back stick — tucks behind the paper. */}
               <polygon
-                points="2,118 18,96 654,30 654,39 18,107"
+                points="0,112 900,15 900,25 0,128"
                 fill="url(#takoWood)"
                 stroke="var(--ink)"
                 strokeWidth="3"
                 strokeLinejoin="round"
               />
-              <polygon
-                points="58,10 76,18 642,102 642,111 76,28"
-                fill="url(#takoWood)"
-                stroke="var(--ink)"
-                strokeWidth="3"
-                strokeLinejoin="round"
-              />
-              <line x1="24" y1="101" x2="648" y2="34" stroke="rgba(255,255,255,0.4)" strokeWidth="3" strokeLinecap="round" />
-              <line x1="80" y1="20" x2="636" y2="105" stroke="rgba(255,255,255,0.32)" strokeWidth="3" strokeLinecap="round" />
+              <line x1="40" y1="112" x2="880" y2="20" stroke="rgba(255,255,255,0.4)" strokeWidth="3" strokeLinecap="round" />
             </svg>
 
             <div className="receipt" data-receipt>
@@ -252,7 +231,7 @@ export function Commands() {
             <p className="receipt__note">From install to your first ping in under a minute.</p>
 
             <div className="receipt__steps">
-              {steps.map((step) => (
+              {setupSteps.map((step) => (
                 <div className="receipt__step" key={step.num}>
                   <span className="receipt__num">{step.num}</span>
                   <div>
@@ -271,6 +250,18 @@ export function Commands() {
 
             <span className="receipt__roll-edge" data-receipt-roll aria-hidden="true" />
             </div>
+
+            <svg className="receipt__chopsticks receipt__chopsticks--front" viewBox="0 0 900 220" aria-hidden="true">
+              {/* Front stick — lies across the paper. */}
+              <polygon
+                points="0,92 900,195 900,205 0,108"
+                fill="url(#takoWood)"
+                stroke="var(--ink)"
+                strokeWidth="3"
+                strokeLinejoin="round"
+              />
+              <line x1="40" y1="100" x2="880" y2="200" stroke="rgba(255,255,255,0.32)" strokeWidth="3" strokeLinecap="round" />
+            </svg>
           </div>
         </div>
       </section>
