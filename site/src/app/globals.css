@@ -4,8 +4,9 @@
 
 :root {
   color-scheme: light;
-  --sage: #a9b77c;
-  --sage-deep: #93a468;
+  /* Background theme — swap these two to go back to the pastel green. */
+  --sage: #ffffff;
+  --sage-deep: #f1f1ee;
   --paper: #f3ecd7;
   --ink: #23281c;
   --navy: #23281c;
@@ -26,7 +27,9 @@
 
 html,
 body {
-  background: linear-gradient(180deg, #b3c187 0%, #a3b073 100%) fixed;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.1'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #f9f5e9 0%, #efe8d3 100%) fixed;
   scroll-behavior: auto;
 }
 
@@ -265,6 +268,18 @@ button {
   filter: drop-shadow(0 14px 0 rgba(35, 40, 28, 0.08));
 }
 
+/* The opening shot: a hand lifts the cover off the plate. */
+.cloche-scene {
+  width: min(94vw, 820px);
+}
+
+.cloche-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
 .wordmark {
   display: grid;
   justify-items: center;
@@ -275,14 +290,14 @@ button {
 }
 
 .wordmark__jp {
-  font-size: clamp(3rem, 8vw, 5.4rem);
+  font-size: clamp(3.4rem, 11vw, 7.4rem);
   font-weight: 600;
   letter-spacing: 0.35em;
   text-indent: 0.35em;
 }
 
 .wordmark__rm {
-  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-size: clamp(1.35rem, 4vw, 2.8rem);
   letter-spacing: 0.55em;
   text-indent: 0.55em;
 }
@@ -334,6 +349,7 @@ button {
   font-weight: 600;
   font-size: clamp(1.5rem, 3.2vw, 2.4rem);
   line-height: 1.6;
+  color: var(--red);
 }
 
 /* ---------- Stage sections (features / commands) ---------- */
@@ -357,8 +373,8 @@ button {
   margin: 0.6rem auto 0;
   max-width: 40rem;
   font-size: clamp(1rem, 2vw, 1.35rem);
-  color: var(--ink);
-  opacity: 0.85;
+  color: var(--red);
+  opacity: 0.95;
 }
 
 .stage__eyebrow {
@@ -471,21 +487,69 @@ button {
   pointer-events: none;
 }
 
-/* Balls shoulder-to-shoulder on the plate. */
-.stage-bowl-wrap {
+/* The plate the takoyaki are served on. */
+.stage-plate-wrap {
   position: absolute;
-  z-index: 1;
-  left: 50%;
-  bottom: 5%;
-  width: min(78%, 860px);
-  transform: translateX(-50%);
-  filter: drop-shadow(0 26px 28px rgba(18, 24, 10, 0.28));
+  z-index: 2;
+  right: 0;
+  bottom: 8%;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0 1.5rem;
+  pointer-events: none;
 }
 
-.stage-bowl {
+.plate-scene {
+  position: relative;
+  width: min(96%, 1000px);
+  aspect-ratio: 1000 / 480;
+}
+
+.plate-scene__back {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  overflow: visible;
+}
+
+/* The balls sit on top of the dish, in two neat rows. */
+.plate-scene__balls {
+  position: absolute;
+  inset: 0;
+}
+
+.plate-slot {
+  position: absolute;
+  width: 16.5%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+}
+
+.ball--plate {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: grab;
+  touch-action: none;
+  transition: transform 0.15s ease-out;
+}
+
+.ball--plate:active {
+  cursor: grabbing;
+}
+
+.ball--plate .ball-art {
+  width: 100%;
+  height: 100%;
 }
 
 .stage__script {
@@ -509,35 +573,8 @@ button {
   letter-spacing: 0.06em;
 }
 
-.plate-balls {
-  position: absolute;
-  z-index: 3;
-  inset: 0;
-}
-
-.plate-slot {
-  position: absolute;
-  transform: translate(-50%, -50%);
-}
-
-.ball--plate {
-  width: clamp(118px, 13.5vw, 188px);
-  height: clamp(118px, 13.5vw, 188px);
-  cursor: grab;
-  touch-action: none;
-  transition: transform 0.15s ease-out;
-}
-
-.ball--plate:active {
-  cursor: grabbing;
-}
-
 .ball--plate .ball-art {
   opacity: 0.95;
-}
-
-.stage-plate-img {
-  filter: drop-shadow(0 34px 30px rgba(18, 24, 10, 0.34));
 }
 
 /* Chopsticks holding the bill, and its flowy shadow. */
@@ -916,21 +953,202 @@ button {
   flex: 0 0 auto;
 }
 
-/* ---------- Tray stage ---------- */
-.stage-plate-wrap {
-  position: absolute;
-  z-index: 2;
-  right: 0;
-  bottom: 4%;
-  left: 0;
+/* ---------- Tray stage: bold command labels + hand-written notes ---------- */
+.plate-scene .tag {
+  top: auto;
+  bottom: calc(92% + 8px);
+  left: 50%;
   display: flex;
-  justify-content: center;
-  will-change: transform;
+  flex-direction: column;
+  align-items: center;
+  width: max-content;
+  gap: 0;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 24;
 }
 
-.stage-plate-img {
-  width: min(58%, 700px);
+/* The command, set bold and straight like the labels on the features page. */
+.plate-scene .tag__label {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--ink);
+  font-family: "Dela Gothic One", "Zen Kaku Gothic New", sans-serif;
+  font-size: clamp(0.95rem, 1.9vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.plate-scene .tag__label-arrow {
+  width: clamp(28px, 3.2vw, 44px);
   height: auto;
+  flex: 0 0 auto;
+}
+
+/* Where the label sits around its ball. */
+.plate-scene .tag--tl {
+  transform: translateX(-102%);
+}
+
+.plate-scene .tag--tr {
+  transform: translateX(2%);
+}
+
+.plate-scene .tag--bl,
+.plate-scene .tag--bc,
+.plate-scene .tag--br {
+  bottom: auto;
+  top: calc(92% + 8px);
+}
+
+.plate-scene .tag--bl {
+  transform: translateX(-94%);
+}
+
+.plate-scene .tag--br {
+  transform: translateX(-6%);
+}
+
+/* The arrow reaches toward the ball from wherever the label sits. */
+.plate-scene .tag--tl .tag__label-arrow {
+  transform: rotate(-120deg);
+}
+
+.plate-scene .tag--tc .tag__label-arrow {
+  transform: rotate(-90deg);
+}
+
+.plate-scene .tag--tr .tag__label-arrow {
+  order: -1;
+  transform: rotate(-60deg);
+}
+
+.plate-scene .tag--bl .tag__label-arrow {
+  transform: rotate(120deg);
+}
+
+.plate-scene .tag--bc .tag__label-arrow {
+  transform: rotate(90deg);
+}
+
+.plate-scene .tag--br .tag__label-arrow {
+  order: -1;
+  transform: rotate(60deg);
+}
+
+/* The hand-written note appears on hover, straight and big, centred on
+   the label and growing away from the ball. */
+.plate-scene .tag__bubble {
+  position: absolute;
+  left: 50%;
+  z-index: 5;
+  display: grid;
+  grid-template-rows: 0fr;
+  width: max-content;
+  max-width: min(360px, 46vw);
+  opacity: 0;
+  transform: translateX(-50%);
+  transition:
+    grid-template-rows 320ms ease,
+    opacity 200ms ease;
+}
+
+.plate-scene .tag--tl .tag__bubble,
+.plate-scene .tag--tc .tag__bubble,
+.plate-scene .tag--tr .tag__bubble {
+  bottom: calc(100% + 0.35em);
+}
+
+.plate-scene .tag--bl .tag__bubble,
+.plate-scene .tag--bc .tag__bubble,
+.plate-scene .tag--br .tag__bubble {
+  top: calc(100% + 0.35em);
+}
+
+.plate-scene .tag__note {
+  display: flex;
+  min-height: 0;
+  align-items: flex-start;
+  gap: 0.55rem;
+  overflow: hidden;
+}
+
+.plate-scene .tag__note-text {
+  width: max-content;
+  max-width: min(320px, 42vw);
+  font-family: "Caveat", "Klee One", cursive;
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  line-height: 1.04;
+  text-align: left;
+  color: var(--ink);
+}
+
+.plate-scene .ball:hover .tag__bubble,
+.plate-scene .ball:focus-visible .tag__bubble {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+/* Lift the hovered ball above the rest of the pile. */
+.plate-scene .plate-slot:has(.ball:hover),
+.plate-scene .plate-slot:has(.ball:focus-visible) {
+  z-index: 10 !important;
+}
+
+/* Back-row labels float above the whole pile so the front row never
+   covers them. */
+.plate-scene .tag--row-back {
+  bottom: calc(152% + 6px);
+}
+
+/* A hanko-style price stamp, rotated like it was pressed by hand. */
+.plate-scene .tag__price {
+  position: relative;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 2.5px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: 3px 3px 0 rgba(35, 40, 28, 0.25);
+  color: #fff6ea;
+  font-family: "Dela Gothic One", "Zen Kaku Gothic New", sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  rotate: -8deg;
+}
+
+.plate-scene .tag__price::after {
+  position: absolute;
+  inset: 3px;
+  border: 1px dashed rgba(255, 246, 234, 0.65);
+  border-radius: 50%;
+  content: "";
+}
+
+.plate-scene .price--free {
+  background: #3e7d3e;
+}
+
+.plate-scene .price--admin {
+  background: #a32c22;
+}
+
+.plate-scene .price--auto {
+  background: #2b4a78;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plate-scene .tag__bubble {
+    transition: none;
+  }
 }
 
 /* ---------- Curtain + receipt ---------- */
@@ -1161,12 +1379,15 @@ button {
   position: absolute;
   z-index: 0;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  right: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
   font-family: "Dela Gothic One", system-ui, sans-serif;
-  font-size: clamp(5rem, 22vw, 19rem);
+  font-size: clamp(3.5rem, 14vw, 12rem);
   line-height: 1;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.08em;
+  text-indent: 0.08em;
   white-space: nowrap;
   color: rgba(35, 40, 28, 0.1);
   text-shadow: 0 12px 0 rgba(35, 40, 28, 0.05);
@@ -1371,21 +1592,8 @@ button {
     margin-top: -46px;
   }
 
-  .ball--plate {
-    width: 96px;
-    height: 96px;
-  }
-
-  .plate-balls__row > .ball + .ball {
-    margin-left: -18px;
-  }
-
-  .plate-balls__row + .plate-balls__row {
-    margin-top: -36px;
-  }
-
-  .plate-balls__row:nth-child(2) {
-    margin-left: 48px;
+  .plate-slot {
+    width: 18.5%;
   }
 
   .footer-bottom {
