@@ -523,7 +523,7 @@ button {
 
 .plate-slot {
   position: absolute;
-  width: 16.5%;
+  width: 17.5%;
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   pointer-events: auto;
@@ -953,201 +953,185 @@ button {
   flex: 0 0 auto;
 }
 
-/* ---------- Tray stage: bold command labels + hand-written notes ---------- */
-.plate-scene .tag {
-  top: auto;
-  bottom: calc(92% + 8px);
-  left: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: max-content;
-  gap: 0;
-  opacity: 1;
+/* ---------- Tray stage: notes scattered around the dish ---------- */
+/* The layer holding every label + long arrow, over the plate but
+   ignoring the pointer. */
+.plate-notes {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
   pointer-events: none;
-  z-index: 24;
 }
 
-/* The command, set bold and straight like the labels on the features page. */
-.plate-scene .tag__label {
-  position: relative;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  color: var(--ink);
+/* A label block: big bold command, smaller red explanation. */
+.plate-note {
+  position: absolute;
+  display: grid;
+  gap: 0.1em;
+  text-align: left;
+  transition: transform 240ms ease;
+}
+
+.plate-note.note--on {
+  transform: scale(1.06);
+}
+
+.note__cmd {
   font-family: "Dela Gothic One", "Zen Kaku Gothic New", sans-serif;
-  font-size: clamp(0.95rem, 1.9vw, 1.5rem);
+  font-size: clamp(1.4rem, 2.9vw, 2.4rem);
   font-weight: 700;
+  line-height: 1.18;
   letter-spacing: 0.01em;
-  line-height: 1.2;
+  color: var(--ink);
+}
+
+.note__desc {
+  max-width: 26ch;
+  font-family: "Zen Kaku Gothic New", sans-serif;
+  font-size: clamp(1.05rem, 1.9vw, 1.55rem);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--red);
+}
+
+/* Four wide columns above the dish, four below — staggered so no two
+   blocks ever touch. */
+.note--link { left: 1%; top: 3%; }
+.note--unlink { left: 26%; top: 13%; }
+.note--setchannel { left: 51%; top: 1%; }
+.note--me { left: 77%; top: 11%; }
+.note--streak { left: 0%; top: 84%; }
+.note--compare { left: 26%; top: 95%; }
+.note--top { left: 52%; top: 85%; }
+.note--topday { left: 78%; top: 74%; }
+
+/* ---------- Chopstick hand ---------- */
+.hand-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.hand {
+  --skin: #e7b08a;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(190px, 21vw, 270px);
+  transform-origin: 8% 88%;
+  will-change: transform;
+}
+
+/* The hand is drawn as a soft shadow silhouette, like it's cast on paper. */
+.hand__art {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: scaleX(-1);
+  opacity: 0.94;
+  filter: brightness(0.18) sepia(0.4) saturate(1.4) hue-rotate(45deg) blur(0.6px);
+}
+
+/* The sticks pinch shut around a picked ball. */
+.hand__stick {
+  transform-box: view-box;
+  transition: transform 220ms ease;
+}
+
+.hand__stick--a {
+  transform-origin: 298px 8px;
+}
+
+.hand__stick--b {
+  transform-origin: 308px 28px;
+}
+
+.hand--picking .hand__stick--a {
+  transform: rotate(1.8deg);
+}
+
+.hand--picking .hand__stick--b {
+  transform: rotate(-1.8deg);
+}
+
+/* The floating explanation: rides beside the carried ball, on whichever
+   side of the screen has room. Sized to its content so the command sits
+   on one straight line and the explanation wraps neatly. */
+.pick-note {
+  position: absolute;
+  z-index: 9;
+  display: grid;
+  gap: 0.1em;
+  width: max-content;
+  max-width: min(560px, 60vw);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.pick-note .note__cmd {
   white-space: nowrap;
 }
 
-.plate-scene .tag__label-arrow {
-  width: clamp(28px, 3.2vw, 44px);
-  height: auto;
-  flex: 0 0 auto;
-}
-
-/* Where the label sits around its ball. */
-.plate-scene .tag--tl {
-  transform: translateX(-102%);
-}
-
-.plate-scene .tag--tr {
-  transform: translateX(2%);
-}
-
-.plate-scene .tag--bl,
-.plate-scene .tag--bc,
-.plate-scene .tag--br {
-  bottom: auto;
-  top: calc(92% + 8px);
-}
-
-.plate-scene .tag--bl {
-  transform: translateX(-94%);
-}
-
-.plate-scene .tag--br {
-  transform: translateX(-6%);
-}
-
-/* The arrow reaches toward the ball from wherever the label sits. */
-.plate-scene .tag--tl .tag__label-arrow {
-  transform: rotate(-120deg);
-}
-
-.plate-scene .tag--tc .tag__label-arrow {
-  transform: rotate(-90deg);
-}
-
-.plate-scene .tag--tr .tag__label-arrow {
-  order: -1;
-  transform: rotate(-60deg);
-}
-
-.plate-scene .tag--bl .tag__label-arrow {
-  transform: rotate(120deg);
-}
-
-.plate-scene .tag--bc .tag__label-arrow {
-  transform: rotate(90deg);
-}
-
-.plate-scene .tag--br .tag__label-arrow {
-  order: -1;
-  transform: rotate(60deg);
-}
-
-/* The hand-written note appears on hover, straight and big, centred on
-   the label and growing away from the ball. */
-.plate-scene .tag__bubble {
-  position: absolute;
-  left: 50%;
-  z-index: 5;
-  display: grid;
-  grid-template-rows: 0fr;
+.pick-note .note__desc {
   width: max-content;
-  max-width: min(360px, 46vw);
-  opacity: 0;
-  transform: translateX(-50%);
-  transition:
-    grid-template-rows 320ms ease,
-    opacity 200ms ease;
+  max-width: 30ch;
 }
 
-.plate-scene .tag--tl .tag__bubble,
-.plate-scene .tag--tc .tag__bubble,
-.plate-scene .tag--tr .tag__bubble {
-  bottom: calc(100% + 0.35em);
+.pick-note--left {
+  right: calc(100% + 18px);
+  top: 45%;
+  text-align: right;
 }
 
-.plate-scene .tag--bl .tag__bubble,
-.plate-scene .tag--bc .tag__bubble,
-.plate-scene .tag--br .tag__bubble {
-  top: calc(100% + 0.35em);
-}
-
-.plate-scene .tag__note {
-  display: flex;
-  min-height: 0;
-  align-items: flex-start;
-  gap: 0.55rem;
-  overflow: hidden;
-}
-
-.plate-scene .tag__note-text {
-  width: max-content;
-  max-width: min(320px, 42vw);
-  font-family: "Caveat", "Klee One", cursive;
-  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
-  line-height: 1.04;
+.pick-note--right {
+  left: calc(100% + 18px);
+  top: 45%;
   text-align: left;
-  color: var(--ink);
 }
 
-.plate-scene .ball:hover .tag__bubble,
-.plate-scene .ball:focus-visible .tag__bubble {
-  grid-template-rows: 1fr;
-  opacity: 1;
+.pick-note--right.pick-note--on {
+  animation: pick-note-right-pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* Lift the hovered ball above the rest of the pile. */
-.plate-scene .plate-slot:has(.ball:hover),
-.plate-scene .plate-slot:has(.ball:focus-visible) {
-  z-index: 10 !important;
+.pick-note--left.pick-note--on {
+  animation: pick-note-side-pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* Back-row labels float above the whole pile so the front row never
-   covers them. */
-.plate-scene .tag--row-back {
-  bottom: calc(152% + 6px);
+@keyframes pick-note-side-pop {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-/* A hanko-style price stamp, rotated like it was pressed by hand. */
-.plate-scene .tag__price {
-  position: relative;
-  display: grid;
-  flex: 0 0 auto;
-  place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border: 2.5px solid var(--ink);
-  border-radius: 50%;
-  box-shadow: 3px 3px 0 rgba(35, 40, 28, 0.25);
-  color: #fff6ea;
-  font-family: "Dela Gothic One", "Zen Kaku Gothic New", sans-serif;
-  font-size: 0.58rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  rotate: -8deg;
+@keyframes pick-note-right-pop {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-.plate-scene .tag__price::after {
-  position: absolute;
-  inset: 3px;
-  border: 1px dashed rgba(255, 246, 234, 0.65);
-  border-radius: 50%;
-  content: "";
-}
+@media (max-width: 720px) {
+  .note__desc {
+    max-width: 20ch;
+  }
 
-.plate-scene .price--free {
-  background: #3e7d3e;
-}
+  .note--link { left: 0%; top: 0%; }
+  .note--unlink { left: 22%; top: 12%; }
+  .note--setchannel { left: 50%; top: 0%; }
+  .note--me { left: 70%; }
 
-.plate-scene .price--admin {
-  background: #a32c22;
-}
-
-.plate-scene .price--auto {
-  background: #2b4a78;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .plate-scene .tag__bubble {
-    transition: none;
+  .pick-note {
+    max-width: min(240px, 55vw);
   }
 }
 
@@ -1593,7 +1577,7 @@ button {
   }
 
   .plate-slot {
-    width: 18.5%;
+    width: 19.5%;
   }
 
   .footer-bottom {
