@@ -1,32 +1,21 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Ball } from "@/components/Ball";
 import BillPaper from "@/components/BillPaper";
-import { HandArrow } from "@/components/HandArrow";
+import Chopsticks from "@/components/Chopsticks";
 import { Plate } from "@/components/Plate";
 import { commands, setupSteps } from "@/lib/data";
 
 const tilts = [-6, 4, -3, 6, -5, 3, -7, 5];
 
 /**
- * Where each ball's hand-written note + arrow come from, so every ball is
- * pointed at from a different direction.
- *   t = from above the ball, b = from below; l/c/r = left/centre/right.
+ * The first four balls sit in the back row and the last four in front.
+ * Only used to know which half a command belongs to.
  */
-const arrowPos: Record<string, "tl" | "tc" | "tr" | "bl" | "bc" | "br"> = {
-  link: "tl",
-  unlink: "tc",
-  setchannel: "tc",
-  me: "tr",
-  streak: "bl",
-  compare: "bc",
-  top: "bc",
-  topday: "br",
-};
 
 /**
  * Where each takoyaki sits on the plate, in the plate's own 1000×480 space.
@@ -50,6 +39,62 @@ export function Commands() {
   const quickRef = useRef<{ x: (v: number) => void; y: (v: number) => void }[]>([]);
   const dragRef = useRef<{ el: HTMLButtonElement; sx: number; sy: number } | null>(null);
   const placedRef = useRef<boolean[]>([]);
+  // Which ball is being pointed at — the chopsticks descend to it and lift it.
+  const [active, setActive] = useState<number | null>(null);
+  const slotsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const pickRef = useRef<number | null>(null);
+  const prevActive = useRef<number | null>(null);
+  // Carrying the picked ball: where the cursor was when it was grabbed,
+  // and the tweens that slide its slot around.
+  const grabbedAt = useRef<{ x: number; y: number } | null>(null);
+  const cursorPos = useRef({ x: 0, y: 0 });
+  const followRef = useRef<{ x: (v: number) => void; y: (v: number) => void } | null>(null);
+  // Which side of the carried ball the command card sits on.
+  const [noteSide, setNoteSide] = useState<"left" | "right">("left");
+
+  // Pick up the pointed ball / put it back down.
+  useEffect(() => {
+    const prev = prevActive.current;
+    if (prev != null) {
+      const slot = slotsRef.current[prev];
+      if (slot) {
+        gsap.killTweensOf(slot);
+        gsap.to(slot, { x: 0, y: 0, scale: 1, duration: 0.55, ease: "power3.out" });
+      }
+    }
+    followRef.current = null;
+    if (active != null) {
+      const slot = slotsRef.current[active];
+      if (slot) {
+        grabbedAt.current = { ...cursorPos.current };
+        gsap.to(slot, { scale: 1.08, duration: 0.4, ease: "back.out(2)" });
+        followRef.current = {
+          x: gsap.quickTo(slot, "x", { duration: 0.35, ease: "power3" }),
+          y: gsap.quickTo(slot, "y", { duration: 0.35, ease: "power3" }),
+        };
+      }
+    } else {
+      grabbedAt.current = null;
+    }
+    pickRef.current = active;
+    prevActive.current = active;
+  }, [active]);
+
+  // Press Escape (or scroll away) to set a carried ball down again.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setActive(null);
+    };
+    const onWheel = () => setActive(null);
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("wheel", onWheel, { passive: true });
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("wheel", onWheel);
+    };
+  }, []);
+
+
 
   const renderBall = (item: (typeof commands)[number], index: number) => {
     const spot = spots[index];
@@ -57,6 +102,9 @@ export function Commands() {
       <div
         className="plate-slot"
         key={item.id}
+        ref={(element) => {
+          slotsRef.current[index] = element;
+        }}
         style={{
           left: `${(spot.x / 1000) * 100}%`,
           top: `${(spot.y / 480) * 100}%`,
@@ -72,7 +120,25 @@ export function Commands() {
           ref={(element) => {
             ballsRef.current[index] = element;
           }}
+          onPointerEnter={(event) => {
+            cursorPos.current = { x: event.clientX, y: event.clientY };
+            setActive(index);
+          }}
+          onPointerLeave={() =>
+            // A lagging carried ball must not "leave" its own cursor — the
+            // pick only ends on click or Escape.
+            setActive((current) => (pickRef.current === index || current !== index ? current : null))
+          }
+          onFocus={() => setActive(index)}
+          onBlur={() =>
+            setActive((current) => (pickRef.current === index || current !== index ? current : null))
+          }
           onPointerDown={(event) => {
+            // Already carrying this one? A click sets it back down.
+            if (pickRef.current === index) {
+              setActive(null);
+              return;
+            }
             const ball = ballsRef.current[index];
             if (!ball) return;
             event.preventDefault();
@@ -87,43 +153,15 @@ export function Commands() {
           }}
         >
           <Ball size={200} tilt={tilts[index % tilts.length]} />
-          <span
-            className={`tag tag--above tag--${arrowPos[item.id]}${spot.z === 1 ? " tag--row-back" : ""}`}
-            aria-hidden="true"
-          >
-            {spot.z === 1 || arrowPos[item.id][0] === "t" ? (
-              <>
-                <span className="tag__bubble">
-                  <span className="tag__note">
-                    <span className="tag__note-in">
-                      <span className="tag__note-text">{item.note}</span>
-                      <span className={`tag__price price--${item.price}`}>{item.price}</span>
-                    </span>
-                  </span>
-                </span>
-                <span className="tag__label">
-                  <span className="tag__label-text">{item.command}</span>
-                  <HandArrow className="tag__label-arrow" />
-                </span>
-              </>
-            ) : (
-              <>
-                <span className="tag__label">
-                  <span className="tag__label-text">{item.command}</span>
-                  <HandArrow className="tag__label-arrow" />
-                </span>
-                <span className="tag__bubble">
-                  <span className="tag__note">
-                    <span className="tag__note-in">
-                      <span className="tag__note-text">{item.note}</span>
-                      <span className={`tag__price price--${item.price}`}>{item.price}</span>
-                    </span>
-                  </span>
-                </span>
-              </>
-            )}
-          </span>
         </button>
+
+        {/* The command, riding beside the lifted ball with room to read. */}
+        {active === index && (
+          <div className={`pick-note pick-note--${noteSide} pick-note--on`} aria-hidden="true">
+            <span className="note__cmd">{item.command}</span>
+            <span className="note__desc">{item.note}</span>
+          </div>
+        )}
       </div>
     );
   };
@@ -139,6 +177,23 @@ export function Commands() {
     );
 
     const onMove = (event: PointerEvent) => {
+      cursorPos.current = { x: event.clientX, y: event.clientY };
+
+      // A picked takoyaki is carried along with the cursor.
+      const follower = followRef.current;
+      const grabbed = grabbedAt.current;
+      if (follower && grabbed) {
+        const roomX = window.innerWidth * 0.42;
+        const roomY = window.innerHeight * 0.42;
+        const tx = Math.max(-roomX, Math.min(roomX, event.clientX - grabbed.x));
+        const ty = Math.max(-roomY, Math.min(roomY, event.clientY - grabbed.y));
+        follower.x(tx);
+        follower.y(ty);
+        // Put the card on whichever side has room.
+        const nextSide = event.clientX > window.innerWidth * 0.55 ? "left" : "right";
+        setNoteSide((current) => (current === nextSide ? current : nextSide));
+      }
+
       const dragging = dragRef.current;
       if (dragging) {
         gsap.set(dragging.el, { x: event.clientX - dragging.sx, y: event.clientY - dragging.sy });
@@ -148,6 +203,8 @@ export function Commands() {
         if (!ball) return;
         // A ball the user has placed keeps its position — no magnetic pull.
         if (placedRef.current[index]) return;
+        // A ball being lifted by the chopsticks is not tugged by the cursor.
+        if (pickRef.current === index) return;
         const rect = ball.getBoundingClientRect();
         const dx = event.clientX - (rect.left + rect.width / 2);
         const dy = event.clientY - (rect.top + rect.height / 2);
@@ -261,6 +318,9 @@ export function Commands() {
             <p className="stage__eyebrow">Commands</p>
             <h2 className="stage__title">Point at a takoyaki for its command</h2>
           </div>
+
+          {/* The chopstick hand rides above the plate, following the cursor. */}
+          <Chopsticks ballEl={active != null ? (ballsRef.current[active] ?? null) : null} />
 
           <div className="stage-plate-wrap">
             <div className="plate-scene">
