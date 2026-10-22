@@ -10,8 +10,15 @@ export function TakoyakiShape() {
 
       {/* Sauce cap: covers the top and drips unevenly down the sides. */}
       <path
-        d="M10 46c0-21 18-34 40-34s40 13 40 34c0 5-5 7-9 4-4-3-9 0-8 6 1 7-6 9-9 3-3-6-9-4-9 2 0 6-8 6-9 0-1-6-7-8-12-2 0-6 2-6 2s-4-2-6-2c-3 6-8 12-14 12Z"
+        d="M10 46c0-21 18-34 40-34s40 13 40 34c0 5-5 7-9 4-4-3-9 0-8 6 1 7-6 9-9 3-3-6-9-4-9 2 0 6-8 6-9 0-1-6-7-8-12-2 0-6 2-6 2s-4-2-6-2c-3 6-8 12-14 12C12 62 9 55 10 46Z"
         fill="url(#takoSauce)"
+      />
+      {/* Draw the sauce perimeter as a hand-shaped open outline. Keeping
+          the fill and outline separate avoids a straight closing seam
+          cutting across the fried base. */}
+      <path
+        d="M10 46c0-21 18-34 40-34s40 13 40 34c0 5-5 7-9 4-4-3-9 0-8 6 1 7-6 9-9 3-3-6-9-4-9 2 0 6-8 6-9 0-1-6-7-8-12-2 0-6 2-6 2s-4-2-6-2c-3 6-8 12-14 12C12 62 9 55 10 46Z"
+        fill="none"
         stroke="var(--ink)"
         strokeWidth="3"
         strokeLinejoin="round"
