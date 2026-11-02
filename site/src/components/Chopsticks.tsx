@@ -56,7 +56,9 @@ export default function Chopsticks({ ballEl }: { ballEl: HTMLElement | null }) {
       if (ballEl) {
         const r = ballEl.getBoundingClientRect();
         targetX = r.left + r.width / 2;
-        targetY = r.top + r.height / 2;
+        // Bury the tips in the upper half of the ball, so the ball covers
+        // them and reads as skewered rather than resting on top.
+        targetY = r.top + r.height * 0.44;
       } else if (cursor.current.known) {
         targetX = cursor.current.x;
         targetY = cursor.current.y;
@@ -73,18 +75,25 @@ export default function Chopsticks({ ballEl }: { ballEl: HTMLElement | null }) {
         smooth.y = targetY;
         smooth.known = true;
       }
-      // Ease the tips toward the target — smooth, with a little weight.
-      smooth.x += (targetX - smooth.x) * 0.11;
-      smooth.y += (targetY - smooth.y) * 0.11;
+      // Ease the tips toward the target — tighter while carrying a ball so
+      // the chopsticks stay visibly stuck inside it.
+      const follow = ballEl ? 0.45 : 0.11;
+      smooth.x += (targetX - smooth.x) * follow;
+      smooth.y += (targetY - smooth.y) * follow;
       const targetRot = ballEl ? -9 : -3;
       smooth.rot += (targetRot - smooth.rot) * 0.12;
 
       // Place the drawing so its tips sit on the smoothed point.
       let x = smooth.x - handW * TIP_X;
       let y = smooth.y - handH * TIP_Y;
-      // Never let the hand wander out of the stage.
-      x = Math.min(Math.max(x, -handW * 0.08), stageRect.width - handW * 0.9);
-      y = Math.min(Math.max(y, -handH * 0.04), stageRect.height - handH * 0.86);
+      // Never let the hand wander too far out of the stage. While a ball is
+      // carried, allow it to follow toward the edges so the tips stay buried.
+      const minX = ballEl ? -handW * 0.65 : -handW * 0.08;
+      const maxX = ballEl ? stageRect.width - handW * 0.15 : stageRect.width - handW * 0.9;
+      const minY = ballEl ? -handH * 0.92 : -handH * 0.04;
+      const maxY = ballEl ? stageRect.height - handH * 0.3 : stageRect.height - handH * 0.86;
+      x = Math.min(Math.max(x, minX), maxX);
+      y = Math.min(Math.max(y, minY), maxY);
 
       const t = (performance.now() - start) / 1000;
       const bob = picking ? 0 : Math.sin(t * 1.6) * 2;

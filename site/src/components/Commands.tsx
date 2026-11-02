@@ -12,10 +12,8 @@ import { commands, setupSteps } from "@/lib/data";
 
 const tilts = [-6, 4, -3, 6, -5, 3, -7, 5];
 
-/**
- * The first four balls sit in the back row and the last four in front.
- * Only used to know which half a command belongs to.
- */
+/** How far a ball rises once the chopsticks are in it. */
+const LIFT = 22;
 
 /**
  * Where each takoyaki sits on the plate, in the plate's own 1000×480 space.
@@ -65,6 +63,14 @@ export function Commands() {
     followRef.current = null;
     if (active != null) {
       const slot = slotsRef.current[active];
+      const ball = ballsRef.current[active];
+      if (ball) {
+        // Put the note on whichever side of the screen has room before the
+        // next pointer move can decide it.
+        const rect = ball.getBoundingClientRect();
+        const nextSide = rect.left + rect.width / 2 > window.innerWidth * 0.55 ? "left" : "right";
+        setNoteSide((current) => (current === nextSide ? current : nextSide));
+      }
       if (slot) {
         grabbedAt.current = { ...cursorPos.current };
         gsap.to(slot, { scale: 1.08, duration: 0.4, ease: "back.out(2)" });
@@ -72,6 +78,9 @@ export function Commands() {
           x: gsap.quickTo(slot, "x", { duration: 0.35, ease: "power3" }),
           y: gsap.quickTo(slot, "y", { duration: 0.35, ease: "power3" }),
         };
+        // Skewer it: pop the ball up off the plate as the hand closes in.
+        followRef.current.x(0);
+        followRef.current.y(-LIFT);
       }
     } else {
       grabbedAt.current = null;
@@ -94,8 +103,6 @@ export function Commands() {
     };
   }, []);
 
-
-
   const renderBall = (item: (typeof commands)[number], index: number) => {
     const spot = spots[index];
     return (
@@ -108,7 +115,7 @@ export function Commands() {
         style={{
           left: `${(spot.x / 1000) * 100}%`,
           top: `${(spot.y / 480) * 100}%`,
-          zIndex: spot.z,
+          zIndex: active === index ? 10 : spot.z,
         }}
       >
         <button
@@ -152,7 +159,7 @@ export function Commands() {
             gsap.to(ball, { scale: 1.12, duration: 0.25, ease: "back.out(2)" });
           }}
         >
-          <Ball size={200} tilt={tilts[index % tilts.length]} />
+          <Ball size={200} tilt={tilts[index % tilts.length]} shadow={active !== index} />
         </button>
 
         {/* The command, riding beside the lifted ball with room to read. */}
@@ -188,7 +195,7 @@ export function Commands() {
         const tx = Math.max(-roomX, Math.min(roomX, event.clientX - grabbed.x));
         const ty = Math.max(-roomY, Math.min(roomY, event.clientY - grabbed.y));
         follower.x(tx);
-        follower.y(ty);
+        follower.y(ty - LIFT);
         // Put the card on whichever side has room.
         const nextSide = event.clientX > window.innerWidth * 0.55 ? "left" : "right";
         setNoteSide((current) => (current === nextSide ? current : nextSide));
@@ -343,7 +350,7 @@ export function Commands() {
               <polygon
                 points="0,112 900,15 900,25 0,128"
                 fill="url(#takoWood)"
-                stroke="var(--ink)"
+                stroke="var(--line-ink)"
                 strokeWidth="3"
                 strokeLinejoin="round"
               />
@@ -352,28 +359,28 @@ export function Commands() {
 
             <div className="receipt" data-receipt>
               <p className="receipt__thanks">Setup</p>
-            <p className="receipt__lead">Three steps, then it just runs</p>
-            <p className="receipt__note">From install to your first ping in under a minute.</p>
+              <p className="receipt__lead">Three steps, then it just runs</p>
+              <p className="receipt__note">From install to your first ping in under a minute.</p>
 
-            <div className="receipt__steps">
-              {setupSteps.map((step) => (
-                <div className="receipt__step" key={step.num}>
-                  <span className="receipt__num">{step.num}</span>
-                  <div>
-                    <h3>{step.title}</h3>
-                    <p>{step.body}</p>
+              <div className="receipt__steps">
+                {setupSteps.map((step) => (
+                  <div className="receipt__step" key={step.num}>
+                    <span className="receipt__num">{step.num}</span>
+                    <div>
+                      <h3>{step.title}</h3>
+                      <p>{step.body}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            <div className="receipt__divider" aria-hidden="true" />
+              <div className="receipt__divider" aria-hidden="true" />
 
-            <p className="receipt__brand">Takoyaki</p>
-            <p className="receipt__estd">estd 2025</p>
-            <p className="receipt__tag">hot off the grill!</p>
+              <p className="receipt__brand">Takoyaki</p>
+              <p className="receipt__estd">estd 2025</p>
+              <p className="receipt__tag">hot off the grill!</p>
 
-            <span className="receipt__roll-edge" data-receipt-roll aria-hidden="true" />
+              <span className="receipt__roll-edge" data-receipt-roll aria-hidden="true" />
             </div>
 
             <svg className="receipt__chopsticks receipt__chopsticks--front" viewBox="0 0 900 220" aria-hidden="true">
@@ -381,7 +388,7 @@ export function Commands() {
               <polygon
                 points="0,92 900,195 900,205 0,108"
                 fill="url(#takoWood)"
-                stroke="var(--ink)"
+                stroke="var(--line-ink)"
                 strokeWidth="3"
                 strokeLinejoin="round"
               />

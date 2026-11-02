@@ -247,7 +247,7 @@ button {
   right: 0;
   left: 0;
   height: 4px;
-  background: rgba(35, 40, 28, 0.14);
+  background: rgba(255, 247, 239, 0.22);
   pointer-events: none;
 }
 
@@ -332,7 +332,7 @@ button {
   width: min(120vw, 1100px);
   aspect-ratio: 1;
   transform: translate(-50%, -58%);
-  background: radial-gradient(circle, rgba(243, 236, 215, 0.55) 0%, rgba(243, 236, 215, 0) 62%);
+  background: radial-gradient(circle, rgba(255, 146, 96, 0.22) 0%, rgba(255, 146, 96, 0) 62%);
   content: "";
   pointer-events: none;
 }
@@ -340,7 +340,7 @@ button {
 .hero-plate {
   width: min(88vw, 720px);
   height: auto;
-  filter: drop-shadow(0 14px 0 rgba(35, 40, 28, 0.08));
+  filter: drop-shadow(0 20px 28px rgba(24, 2, 2, 0.5));
 }
 
 /* The opening shot: a hand lifts the cover off the plate. */
@@ -519,7 +519,7 @@ button {
   left: 50%;
   width: 16px;
   transform: translateX(-50%);
-  border: 3px solid var(--ink);
+  border: 3px solid var(--line-ink);
   border-radius: 8px 8px 4px 4px;
   background: linear-gradient(90deg, var(--tray-dark), var(--tray) 44%, #f0dcae 60%, #c39a63);
   box-shadow: 3px 4px 0 rgba(24, 30, 12, 0.22);
@@ -565,7 +565,6 @@ button {
 /* The plate the takoyaki are served on. */
 .stage-plate-wrap {
   position: absolute;
-  z-index: 2;
   right: 0;
   bottom: 8%;
   left: 0;
@@ -649,7 +648,7 @@ button {
 }
 
 .ball--plate .ball-art {
-  opacity: 0.95;
+  opacity: 1;
 }
 
 /* Chopsticks holding the bill, and its flowy shadow. */
@@ -671,7 +670,7 @@ button {
   position: absolute;
   top: 22px;
   height: 14px;
-  border: 3px solid var(--ink);
+  border: 3px solid var(--line-ink);
   border-radius: 8px;
   background: linear-gradient(90deg, var(--tray-dark), var(--tray) 46%, #e6cfa0);
   box-shadow: 0 8px 14px rgba(18, 24, 10, 0.22);
@@ -960,13 +959,13 @@ button {
   display: grid;
   gap: 0.45rem;
   width: min(520px, 54vw);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.26);
   border-radius: 20px;
   padding: 1.35rem 1.6rem;
-  background: rgba(141, 35, 28, 0.62);
+  background: rgba(24, 6, 6, 0.74);
   -webkit-backdrop-filter: blur(16px) saturate(1.15);
   backdrop-filter: blur(16px) saturate(1.15);
-  box-shadow: 0 16px 44px rgba(24, 12, 10, 0.3);
+  box-shadow: 0 16px 44px rgba(12, 2, 2, 0.4);
   color: #fff5ec;
   text-align: left;
   white-space: normal;
@@ -1057,7 +1056,7 @@ button {
   font-weight: 700;
   line-height: 1.18;
   letter-spacing: 0.01em;
-  color: #202217;
+  color: var(--ink);
 }
 
 .note__desc {
@@ -1142,6 +1141,7 @@ button {
   max-width: min(640px, 72vw);
   pointer-events: none;
   opacity: 0;
+  text-shadow: 0 2px 14px rgba(40, 0, 0, 0.55);
 }
 
 .pick-note .note__cmd {
@@ -1408,7 +1408,7 @@ button {
 }
 
 .receipt__row--total {
-  border-top: 4px solid var(--ink);
+  border-top: 4px solid var(--line-ink);
   border-bottom: 0;
   margin-top: 0.9rem;
   padding-top: 1rem;

@@ -1,54 +1,65 @@
 /**
  * One takoyaki, drawn in a 100×100 box centred on the origin.
  * Shared by the hero scene, the plate art and the inline balls.
+ *
+ * Matches the hand-drawn reference: a light mocha fried ball under a
+ * dark sauce cap, a thin cursive mayo drizzle and green onion bits.
  */
+
+/** Thin cursive mayo drizzle, like the reference sketch. */
+const mayoDrizzle = [
+  "M23 31C27 26 32 25 34 28C36 31 32 33 30 31C28 29 31 27 34 27",
+  "M39 21C44 18 49 20 50 23",
+  "M53 20C58 22 60 26 58 29",
+  "M28 40C32 37 36 39 37 42",
+  "M43 33C47 31 51 33 52 36",
+];
+
 export function TakoyakiShape() {
   return (
     <g transform="translate(-50 -50)">
-      {/* Golden fried base. */}
-      <circle cx="50" cy="50" r="40" fill="url(#takoBall)" stroke="var(--ink)" strokeWidth="4" />
+      {/* Fried base, a light mocha with a thinner warm outline. */}
+      <circle
+        cx="50"
+        cy="50"
+        r="40"
+        fill="url(#takoBall)"
+        stroke="#5b3a27"
+        strokeWidth="2.2"
+      />
+      <ellipse cx="50" cy="78" rx="33" ry="9" fill="#7a4a2f" opacity="0.16" />
 
-      {/* Sauce cap: covers the top and drips unevenly down the sides. */}
+      {/* Dark sauce cap with a wavy edge and one big drip on the right. */}
       <path
-        d="M10 46c0-21 18-34 40-34s40 13 40 34c0 5-5 7-9 4-4-3-9 0-8 6 1 7-6 9-9 3-3-6-9-4-9 2 0 6-8 6-9 0-1-6-7-8-12-2 0-6 2-6 2s-4-2-6-2c-3 6-8 12-14 12C12 62 9 55 10 46Z"
+        d="M10 44C10 23 27 11 50 11C73 11 90 23 90 44C90 49 88 53 85 50C82 47 79 49 79 55C79 63 71 66 68 58C66 52 61 52 59 57C57 62 51 62 49 56C47 50 42 50 40 56C38 62 31 61 30 53C29 46 23 45 21 51C19 57 13 56 10 48Z"
         fill="url(#takoSauce)"
       />
-      {/* Draw the sauce perimeter as a hand-shaped open outline. Keeping
-          the fill and outline separate avoids a straight closing seam
-          cutting across the fried base. */}
-      <path
-        d="M10 46c0-21 18-34 40-34s40 13 40 34c0 5-5 7-9 4-4-3-9 0-8 6 1 7-6 9-9 3-3-6-9-4-9 2 0 6-8 6-9 0-1-6-7-8-12-2 0-6 2-6 2s-4-2-6-2c-3 6-8 12-14 12C12 62 9 55 10 46Z"
-        fill="none"
-        stroke="var(--ink)"
-        strokeWidth="3"
-        strokeLinejoin="round"
-      />
 
-      {/* Mayo squiggles running across the sauce. */}
-      <g fill="none" stroke="#f6efdd" strokeWidth="4.5" strokeLinecap="round">
-        <path d="M24 30c8-8 16-8 24-2s16 6 24 0" />
-        <path d="M21 41c8-8 16-8 24-2s16 6 24 0" />
-        <path d="M31 21c7-6 14-6 21-1" />
+      {/* Thin mayo squiggles, with a soft shadow underneath. */}
+      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <g stroke="#c9ad84" strokeWidth="3.4" opacity="0.28" transform="translate(0.4 0.8)">
+          {mayoDrizzle.map((d) => (
+            <path key={`ms-${d}`} d={d} />
+          ))}
+        </g>
+        <g stroke="#f8ecd4" strokeWidth="2.3">
+          {mayoDrizzle.map((d) => (
+            <path key={`m-${d}`} d={d} />
+          ))}
+        </g>
       </g>
 
-      {/* Green onion. */}
-      <g fill="#4e7a2e">
-        <rect x="28" y="47" width="8" height="4" rx="2" transform="rotate(-24 28 47)" />
-        <rect x="60" y="44" width="8" height="4" rx="2" transform="rotate(18 60 44)" />
-        <rect x="46" y="53" width="7" height="3.5" rx="1.8" transform="rotate(-6 46 53)" />
-        <rect x="38" y="24" width="6" height="3" rx="1.5" transform="rotate(12 38 24)" />
+      {/* Green onion bits. */}
+      <g fill="#4f7a2b">
+        <rect x="29" y="23" width="5" height="3" rx="1.2" transform="rotate(-18 29 23)" />
+        <rect x="42" y="17" width="5" height="3" rx="1.2" transform="rotate(12 42 17)" />
+        <rect x="54" y="21" width="5" height="3" rx="1.2" transform="rotate(-8 54 21)" />
+        <rect x="63" y="26" width="5" height="3" rx="1.2" transform="rotate(20 63 26)" />
+        <rect x="36" y="32" width="5" height="3" rx="1.2" transform="rotate(10 36 32)" />
+        <rect x="47" y="29" width="5" height="3" rx="1.2" transform="rotate(-25 47 29)" />
+        <rect x="69" y="35" width="4.6" height="2.8" rx="1.1" transform="rotate(6 69 35)" />
+        <rect x="26" y="38" width="4.6" height="2.8" rx="1.1" transform="rotate(30 26 38)" />
       </g>
-
-      {/* Sesame. */}
-      <g fill="#f4ead2">
-        <circle cx="36" cy="37" r="1.7" />
-        <circle cx="62" cy="39" r="1.7" />
-        <circle cx="50" cy="30" r="1.5" />
-        <circle cx="55" cy="48" r="1.4" />
-      </g>
-
-      {/* Soft highlight. */}
-      <ellipse cx="34" cy="26" rx="11" ry="6" fill="url(#takoGloss)" opacity="0.8" />
     </g>
   );
 }
