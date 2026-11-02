@@ -22,6 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
+        <div className="ambient-bg" aria-hidden="true" />
         <SmoothScroll />
         <Nav />
         {children}

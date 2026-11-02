@@ -3,23 +3,24 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
-  /* Background theme — swap these two to go back to the pastel green. */
-  /* Warm washi / toasted sesame paper, translucent over the scene canvas. */
-  --sage: rgba(237, 220, 181, 0.82);
-  --sage-deep: rgba(223, 202, 156, 0.82);
-  --paper: #f3ecd7;
-  --ink: #23281c;
-  --navy: #23281c;
+  color-scheme: dark;
+  /* Deep lacquer-red backdrop, white ink throughout. */
+  --sage: rgba(152, 27, 24, 0.96);
+  --sage-deep: rgba(106, 14, 13, 0.96);
+  --paper: rgba(31, 7, 7, 0.72);
+  --ink: #fdf7ef;
+  --navy: #fdf7ef;
+  /* Dark ink reserved for illustration strokes so drawings keep their outlines. */
+  --line-ink: #20140f;
   --takoyaki: #c8842e;
-  --takoyaki-dark: #7a2e1e;
+  --takoyaki-dark: #f4cb8c;
   --takoyaki-light: #e0a94a;
   --mayo: #f2e8c9;
-  --onion: #5e8c34;
+  --onion: #8fc25a;
   --tray: #cba36a;
   --tray-dark: #a87f48;
-  --sauce: #6b3410;
-  --sauce-light: #8f4722;
+  --sauce: rgba(255, 240, 227, 0.86);
+  --sauce-light: #d14a35;
 }
 
 * {
@@ -38,7 +39,9 @@ html {
 body {
   background:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.1'/%3E%3C/svg%3E"),
-    linear-gradient(180deg, rgba(237, 220, 181, 0.82) 0%, rgba(223, 202, 156, 0.82) 100%) fixed;
+    radial-gradient(90% 55% at 50% -5%, rgba(255, 138, 96, 0.26) 0%, rgba(255, 138, 96, 0) 60%),
+    radial-gradient(120% 90% at 50% 115%, rgba(28, 3, 3, 0.55) 0%, rgba(28, 3, 3, 0) 62%),
+    linear-gradient(180deg, #a8261f 0%, #841813 52%, #5b0d0b 100%) fixed;
 }
 
 main {
@@ -55,6 +58,70 @@ main {
 
 .world-canvas canvas {
   display: block;
+}
+
+/* Subtle ambient heat-haze layer behind everything. */
+.ambient-bg {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ambient-bg::before,
+.ambient-bg::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0;
+  animation: ambient-drift 28s ease-in-out infinite;
+}
+
+.ambient-bg::before {
+  width: 50vmax;
+  height: 50vmax;
+  top: -10vmax;
+  left: 5vmax;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 176, 108, 0.2), transparent 70%);
+  animation-delay: 0s;
+}
+
+.ambient-bg::after {
+  width: 40vmax;
+  height: 40vmax;
+  bottom: -8vmax;
+  right: 2vmax;
+  background: radial-gradient(circle at 70% 70%, rgba(255, 128, 80, 0.15), transparent 70%);
+  animation-delay: -14s;
+}
+
+@keyframes ambient-drift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.15;
+  }
+  25% {
+    transform: translate3d(3vmax, -2vmax, 0) scale(1.05);
+    opacity: 0.22;
+  }
+  50% {
+    transform: translate3d(-2vmax, 4vmax, 0) scale(0.95);
+    opacity: 0.18;
+  }
+  75% {
+    transform: translate3d(-3vmax, -1vmax, 0) scale(1.02);
+    opacity: 0.2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-bg::before,
+  .ambient-bg::after {
+    animation: none;
+    opacity: 0.1;
+  }
 }
 
 body {
@@ -99,7 +166,7 @@ button {
 
 ::selection {
   background: var(--takoyaki);
-  color: var(--paper);
+  color: #1b0a06;
 }
 
 :focus-visible {
