@@ -213,6 +213,46 @@ button {
   overflow: visible;
 }
 
+/* ---------- Brand mark (takoyaki icon) ---------- */
+.brand {
+  position: fixed;
+  z-index: 45;
+  top: clamp(0.85rem, 2.4vh, 1.4rem);
+  left: clamp(1rem, 3vw, 2.4rem);
+  display: grid;
+  place-items: center;
+  width: clamp(48px, 5.2vw, 60px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transition: transform 220ms ease;
+}
+
+.brand:hover {
+  transform: translateY(-2px) rotate(-4deg);
+}
+
+.brand__art {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 6px 13px rgba(35, 0, 0, 0.4));
+  transition: filter 220ms ease;
+}
+
+.brand:hover .brand__art {
+  filter: drop-shadow(0 9px 20px rgba(35, 0, 0, 0.52));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand,
+  .brand__art {
+    transition: none;
+  }
+
+  .brand:hover {
+    transform: none;
+  }
+}
+
 /* ---------- Nav (plain text, right side, no box) ---------- */
 .topnav {
   position: fixed;

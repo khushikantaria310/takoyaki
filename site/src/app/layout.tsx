@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import Nav from "@/components/Nav";
@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   title: "たこやき · Takoyaki",
   description:
     "Takoyaki turns GitHub activity into real-time Discord pings, contribution stats, streak heatmaps, and leaderboards.",
+  manifest: "/manifest.webmanifest",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#a8261f",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
