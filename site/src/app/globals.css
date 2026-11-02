@@ -1430,7 +1430,7 @@ button {
   position: relative;
   overflow: hidden;
   background: none;
-  padding: clamp(3rem, 9vh, 5.5rem) clamp(1.2rem, 5vw, 3rem) clamp(2rem, 5vh, 3rem);
+  padding: clamp(3rem, 9vh, 5.5rem) clamp(1.2rem, 5vw, 3rem) 20rem;
   text-align: center;
 }
 
@@ -1448,10 +1448,42 @@ button {
   letter-spacing: 0.08em;
   text-indent: 0.08em;
   white-space: nowrap;
-  color: rgba(35, 40, 28, 0.1);
-  text-shadow: 0 12px 0 rgba(35, 40, 28, 0.05);
+  color: rgba(255, 247, 239, 0.12);
+  text-shadow: 0 12px 0 rgba(0, 0, 0, 0.18);
   pointer-events: none;
   user-select: none;
+}
+
+.footer-octopus {
+  position: absolute;
+  z-index: 0;
+  bottom: clamp(0.5rem, 1vw, 1rem);
+  left: 50%;
+  width: min(72vw, 720px);
+  translate: -50% 0;
+  opacity: 0.22;
+  pointer-events: none;
+  user-select: none;
+  animation: footer-octopus-drift 12s ease-in-out infinite;
+}
+
+.footer-octopus img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@keyframes footer-octopus-drift {
+  0%,
+  100% {
+    translate: -50% 0;
+    rotate: 0deg;
+  }
+
+  50% {
+    translate: -50% -8px;
+    rotate: -0.6deg;
+  }
 }
 
 .footer-inner {
@@ -1459,6 +1491,86 @@ button {
   z-index: 1;
   width: min(100%, 1120px);
   margin: 0 auto;
+}
+
+/* ---------- Footer tentacle crawl (walk cycle) ---------- */
+.footer-tentacles {
+  position: absolute;
+  z-index: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  pointer-events: none;
+  user-select: none;
+  overflow: hidden;
+  opacity: 0.18;
+}
+
+.footer-tentacles svg {
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  animation: tentacle-crawl 16s linear infinite;
+  will-change: transform;
+}
+
+@keyframes tentacle-crawl {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.footer-tentacle {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.25));
+}
+
+.footer-tentacle--1 { stroke-dasharray: 180 220; animation: tentacle-wave-1 1.8s ease-in-out infinite; }
+.footer-tentacle--2 { stroke-dasharray: 160 240; animation: tentacle-wave-2 2.1s ease-in-out infinite; }
+.footer-tentacle--3 { stroke-dasharray: 200 200; animation: tentacle-wave-3 1.6s ease-in-out infinite; }
+.footer-tentacle--4 { stroke-dasharray: 140 260; animation: tentacle-wave-4 2.3s ease-in-out infinite; }
+.footer-tentacle--5 { stroke-dasharray: 170 230; animation: tentacle-wave-5 1.9s ease-in-out infinite; }
+.footer-tentacle--6 { stroke-dasharray: 150 250; animation: tentacle-wave-6 2.0s ease-in-out infinite; }
+
+@keyframes tentacle-wave-1 { 0%,100% { stroke-dashoffset: 0; } 50% { stroke-dashoffset: 200; } }
+@keyframes tentacle-wave-2 { 0%,100% { stroke-dashoffset: 0; } 50% { stroke-dashoffset: -200; } }
+@keyframes tentacle-wave-3 { 0%,100% { stroke-dashoffset: 0; } 50% { stroke-dashoffset: 220; } }
+@keyframes tentacle-wave-4 { 0%,100% { stroke-dashoffset: 0; } 50% { stroke-dashoffset: -220; } }
+@keyframes tentacle-wave-5 { 0%,100% { stroke-dashoffset: 0; } 50% { stroke-dashoffset: 180; } }
+@keyframes tentacle-wave-6 { 0%,100% { stroke-dashoffset: 0; } 50% { stroke-dashoffset: -180; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-tentacles svg,
+  .footer-tentacle {
+    animation: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .site-footer {
+    padding-bottom: clamp(10rem, 38vw, 16rem);
+  }
+
+  .footer-octopus {
+    width: min(80vw, 520px);
+    opacity: 0.2;
+  }
+
+  .footer-tentacles {
+    height: 80px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-octopus {
+    animation: none;
+  }
 }
 
 .footer-headline {
@@ -1473,7 +1585,7 @@ button {
 .footer-sub {
   margin: 0.6rem 0 0;
   font-size: clamp(0.95rem, 1.6vw, 1.2rem);
-  color: rgba(35, 40, 28, 0.8);
+  color: rgba(255, 247, 239, 0.82);
 }
 
 .footer-cta {
@@ -1492,19 +1604,20 @@ button {
   border: 2px solid rgba(255, 255, 255, 0.28);
   border-radius: 999px;
   padding: 0.75rem 1.6rem;
-  background: rgba(141, 35, 28, 0.9);
+  background: rgba(28, 6, 6, 0.62);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   color: #fff5ec;
   font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
-  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), background 180ms ease;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), background 180ms ease, border-color 180ms ease;
 }
 
 .footer-button:hover {
   transform: translateY(-2px);
-  background: var(--sauce-light);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .footer-status {
@@ -1527,7 +1640,7 @@ button {
 .footer-rule {
   height: 1px;
   margin: clamp(1.6rem, 4vh, 2.6rem) 0;
-  background: rgba(35, 40, 28, 0.28);
+  background: rgba(255, 247, 239, 0.28);
 }
 
 .footer-columns {
@@ -1552,7 +1665,7 @@ button {
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(35, 40, 28, 0.7);
+  color: rgba(255, 247, 239, 0.66);
 }
 
 .footer-link {
@@ -1580,7 +1693,7 @@ button {
   justify-content: center;
   gap: 0.9rem 1.6rem;
   font-size: 0.86rem;
-  color: rgba(35, 40, 28, 0.8);
+  color: rgba(255, 247, 239, 0.8);
 }
 
 .footer-brand {
@@ -1600,7 +1713,8 @@ button {
   padding: 0.1rem 0.35rem;
   font-size: 0.72rem;
   letter-spacing: 0.05em;
-  background: var(--label-orange);
+  background: var(--takoyaki);
+  color: #2a1408;
 }
 
 .footer-meta {
