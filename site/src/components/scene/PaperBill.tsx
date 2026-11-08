@@ -192,7 +192,7 @@ function drawReceipt(ctx: CanvasRenderingContext2D) {
     ctx.font = '400 44px "Dela Gothic One", "Zen Kaku Gothic New", sans-serif';
     ctx.fillText(step.num, 92, y);
 
-    ctx.font = '700 36px "Zen Kaku Gothic New", sans-serif';
+    ctx.font = '400 36px "Dela Gothic One", "Zen Kaku Gothic New", sans-serif';
     ctx.fillText(step.title, 196, y);
 
     y += 46;
@@ -250,12 +250,21 @@ function Paper({
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.anisotropy = 4;
 
-    // Redraw once the webfonts are available.
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(() => {
-        if (ctx) drawReceipt(ctx);
-        tex.needsUpdate = true;
-      });
+    // Redraw once the webfonts are available. Loading them explicitly matters:
+    // `fonts.ready` can resolve before the browser has requested the faces the
+    // canvas needs, which left the bill printed in a fallback font.
+    const fonts = document.fonts;
+    if (fonts) {
+      Promise.all([
+        fonts.load('400 84px "Dela Gothic One"'),
+        fonts.load('400 36px "Dela Gothic One"'),
+        fonts.load('600 22px "Zen Kaku Gothic New"'),
+      ])
+        .catch(() => undefined)
+        .then(() => {
+          if (ctx) drawReceipt(ctx);
+          tex.needsUpdate = true;
+        });
     }
     return tex;
   }, []);
