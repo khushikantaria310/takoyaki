@@ -160,6 +160,24 @@ a {
   color: inherit;
 }
 
+/* Forcefully strip link underlines everywhere — nav, footer, buttons,
+   hover, focus and active states included. */
+a,
+a:visited,
+a:hover,
+a:focus,
+a:focus-visible,
+a:active,
+.topnav,
+.topnav a,
+.site-footer,
+.site-footer a {
+  text-decoration: none !important;
+  -webkit-text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: 0 !important;
+}
+
 button {
   font-family: inherit;
 }
