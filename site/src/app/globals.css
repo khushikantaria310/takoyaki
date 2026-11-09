@@ -1508,47 +1508,29 @@ button {
   position: relative;
   overflow: hidden;
   background: none;
-  padding: clamp(3rem, 9vh, 5.5rem) clamp(1.2rem, 5vw, 3rem) 20rem;
+  padding: clamp(3rem, 9vh, 5.5rem) clamp(1.2rem, 5vw, 3rem) clamp(10rem, 25vw, 16rem);
   text-align: center;
 }
 
 .footer-watermark {
   position: absolute;
   z-index: 0;
-  top: 50%;
-  right: 0;
-  left: 0;
+  top: 55%;
+  left: 50%;
+  translate: -50% -50%;
   width: 100%;
+  max-width: none;
   text-align: center;
   font-family: "Dela Gothic One", system-ui, sans-serif;
-  font-size: clamp(3.5rem, 14vw, 12rem);
+  font-size: clamp(8rem, 22vw, 30rem);
   line-height: 1;
-  letter-spacing: 0.08em;
-  text-indent: 0.08em;
+  letter-spacing: 0.04em;
+  text-indent: 0.005em;
   white-space: nowrap;
-  color: rgba(255, 247, 239, 0.12);
-  text-shadow: 0 12px 0 rgba(0, 0, 0, 0.18);
+  color: rgba(255, 247, 239, 0.08);
+  text-shadow: 0 20px 0 rgba(0, 0, 0, 0.15);
   pointer-events: none;
   user-select: none;
-}
-
-.footer-octopus {
-  position: absolute;
-  z-index: 0;
-  bottom: clamp(0.5rem, 1vw, 1rem);
-  left: 50%;
-  width: min(72vw, 720px);
-  translate: -50% 0;
-  opacity: 0.22;
-  pointer-events: none;
-  user-select: none;
-  animation: footer-octopus-drift 12s ease-in-out infinite;
-}
-
-.footer-octopus img {
-  display: block;
-  width: 100%;
-  height: auto;
 }
 
 @keyframes footer-octopus-drift {
@@ -1632,18 +1614,15 @@ button {
 
 @media (max-width: 720px) {
   .site-footer {
-    padding-bottom: clamp(10rem, 38vw, 16rem);
+    padding-bottom: clamp(8rem, 25vw, 12rem);
   }
 
-  .footer-octopus {
-    width: min(80vw, 520px);
-    opacity: 0.2;
+  .footer-watermark {
+    font-size: clamp(6rem, 22vw, 14rem);
+    letter-spacing: 0.04em;
+    text-indent: 0.005em;
+    color: rgba(255, 247, 239, 0.06);
   }
-
-  .footer-tentacles {
-    height: 80px;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .footer-octopus {
@@ -1653,7 +1632,7 @@ button {
 
 .footer-headline {
   margin: 0;
-  font-size: clamp(2rem, 5vw, 3.6rem);
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.02;
@@ -1662,7 +1641,7 @@ button {
 
 .footer-sub {
   margin: 0.6rem 0 0;
-  font-size: clamp(0.95rem, 1.6vw, 1.2rem);
+  font-size: clamp(1.15rem, 1.9vw, 1.45rem);
   color: rgba(255, 247, 239, 0.82);
 }
 
@@ -1686,7 +1665,7 @@ button {
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   color: #fff5ec;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   text-decoration: none;
   transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), background 180ms ease, border-color 180ms ease;
@@ -1702,7 +1681,7 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: var(--ink);
 }
@@ -1739,7 +1718,7 @@ button {
 .footer-col h3 {
   margin: 0 0 0.35rem;
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.72rem;
+  font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -1748,7 +1727,7 @@ button {
 
 .footer-link {
   justify-self: center;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   text-decoration: none;
   color: var(--ink);
@@ -1770,7 +1749,7 @@ button {
   align-items: center;
   justify-content: center;
   gap: 0.9rem 1.6rem;
-  font-size: 0.86rem;
+  font-size: 1.05rem;
   color: rgba(255, 247, 239, 0.8);
 }
 
@@ -1778,7 +1757,7 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--ink);
 }
@@ -1789,14 +1768,14 @@ button {
   border: 2px solid var(--ink);
   border-radius: 6px;
   padding: 0.1rem 0.35rem;
-  font-size: 0.72rem;
+  font-size: 0.9rem;
   letter-spacing: 0.05em;
   background: var(--takoyaki);
   color: #2a1408;
 }
 
 .footer-meta {
-  font-size: 0.86rem;
+  font-size: 1.05rem;
 }
 
 @media (max-width: 1100px) {

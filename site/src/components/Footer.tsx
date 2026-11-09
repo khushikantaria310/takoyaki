@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { discordInviteUrl } from "@/lib/site-config";
 
 const repo = "https://github.com/logizel/takoyaki";
@@ -7,22 +6,13 @@ export function Footer() {
   return (
     <footer className="site-footer">
       <span className="footer-watermark" data-footer-mark aria-hidden="true">たこやき</span>
-      <div className="footer-octopus" aria-hidden="true">
-        <Image
-          src="/footer-octopus.png"
-          alt=""
-          width={980}
-          height={420}
-          sizes="(max-width: 720px) 80vw, 720px"
-        />
-      </div>
       <div className="footer-inner">
         <h2 className="footer-headline">never miss a commit again</h2>
         <p className="footer-sub">pings, stats &amp; leaderboards — right in your Discord</p>
 
         <div className="footer-cta">
           <a className="footer-button" href={discordInviteUrl} target="_blank" rel="noreferrer">
-            Add Takoyaki to your server
+            <span>Add Takoyaki to your server</span>
           </a>
           <span className="footer-status">
             <span className="footer-dot" aria-hidden="true" /> bot online
