@@ -696,7 +696,7 @@ button {
 
 .plate-slot {
   position: absolute;
-  width: 17.5%;
+  width: 19.5%;
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   pointer-events: auto;
@@ -1846,7 +1846,7 @@ button {
   }
 
   .plate-slot {
-    width: 19.5%;
+    width: 21.5%;
   }
 
   .footer-bottom {

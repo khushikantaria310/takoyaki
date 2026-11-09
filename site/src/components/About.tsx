@@ -36,8 +36,8 @@ export function About() {
       <div className="about__sticky">
         <h2 className="about__name" data-about-name>TAKOYAKI</h2>
         <p className="about__text" data-about-text>
-          Takoyaki is a GitHub → Discord bot. It watches your repositories and pings pushes, pull
-          requests, issues, new repos, and CI runs — then serves up contribution stats, streak
+          Takoyaki is a GitHub Discord bot. It watches your repositories and pings pushes, pull
+          requests, issues, new repos, and CI runs then serves up contribution stats, streak
           heatmaps, and leaderboards, all hot off the grill.
         </p>
       </div>
