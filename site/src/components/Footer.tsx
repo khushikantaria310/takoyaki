@@ -24,19 +24,19 @@ export function Footer() {
         <div className="footer-columns">
           <div className="footer-col">
             <h3>Product</h3>
-            <a className="footer-link footer-link--accent" href="#home">Home</a>
-            <a className="footer-link" href="#features">Features</a>
-            <a className="footer-link" href="#commands">Commands</a>
+            <a className="footer-link footer-link--accent" href="#home"><span>Home</span></a>
+            <a className="footer-link" href="#features"><span>Features</span></a>
+            <a className="footer-link" href="#commands"><span>Commands</span></a>
           </div>
           <div className="footer-col">
             <h3>Open source</h3>
-            <a className="footer-link" href={repo} target="_blank" rel="noreferrer">GitHub repo</a>
-            <a className="footer-link" href={repo} target="_blank" rel="noreferrer">Star the repo</a>
+            <a className="footer-link" href={repo} target="_blank" rel="noreferrer"><span>GitHub repo</span></a>
+            <a className="footer-link" href={repo} target="_blank" rel="noreferrer"><span>Star the repo</span></a>
           </div>
           <div className="footer-col">
             <h3>Connect</h3>
-            <a className="footer-link" href={repo} target="_blank" rel="noreferrer">GitHub</a>
-            <a className="footer-link" href={discordInviteUrl} target="_blank" rel="noreferrer">Add to Discord</a>
+            <a className="footer-link" href={repo} target="_blank" rel="noreferrer"><span>GitHub</span></a>
+            <a className="footer-link" href={discordInviteUrl} target="_blank" rel="noreferrer"><span>Add to Discord</span></a>
           </div>
         </div>
 

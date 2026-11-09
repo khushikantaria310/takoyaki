@@ -51,7 +51,7 @@ export default function Nav() {
             className={active === link.label ? "is-active" : undefined}
             aria-current={active === link.label ? "true" : undefined}
           >
-            {link.label}
+            <span>{link.label}</span>
           </a>
         ))}
       </nav>

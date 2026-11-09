@@ -178,6 +178,28 @@ a:active,
   text-underline-offset: 0 !important;
 }
 
+/* Some browser extensions/accessibility settings force anchor underlines at a
+   level our !important cannot beat. Painting the label in a child span and
+   keeping the anchor's own color transparent makes that forced line invisible
+   while preserving real links (new tab, middle click, right click). */
+.topnav a,
+.site-footer a {
+  color: transparent !important;
+}
+
+.topnav a > span,
+.site-footer a > span {
+  color: var(--ink);
+}
+
+.site-footer .footer-link--accent > span {
+  color: var(--takoyaki-dark);
+}
+
+.site-footer .footer-button > span {
+  color: #fff5ec;
+}
+
 button {
   font-family: inherit;
 }
@@ -1737,8 +1759,7 @@ button {
 }
 
 .footer-link:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.28em;
+  opacity: 1;
 }
 
 .footer-link--accent {
