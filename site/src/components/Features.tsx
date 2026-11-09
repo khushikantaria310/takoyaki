@@ -96,6 +96,8 @@ export function Features() {
             </div>
           ))}
         </div>
+
+        <p className="stage-hint">point at a takoyaki for its feature in detail</p>
       </div>
     </section>
   );

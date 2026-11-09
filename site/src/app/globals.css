@@ -620,20 +620,21 @@ button {
   pointer-events: none;
 }
 
-/* Tiny translucent how-to line pinned to the bottom of the commands stage. */
-.commands-hint {
+/* Tiny translucent how-to line pinned to the bottom of a section stage. */
+.stage-hint {
   position: absolute;
   z-index: 9;
   bottom: clamp(0.8rem, 2.2vh, 1.4rem);
   left: 50%;
-  width: min(92%, 760px);
+  width: min(96%, 1400px);
   margin: 0;
   transform: translateX(-50%);
   text-align: center;
-  font-size: clamp(0.7rem, 1.3vw, 0.86rem);
+  font-size: min(1.72rem, 2vw);
   font-weight: 500;
   line-height: 1.5;
   letter-spacing: 0.04em;
+  white-space: nowrap;
   color: rgba(255, 247, 239, 0.55);
   pointer-events: none;
 }
@@ -1624,9 +1625,10 @@ button {
     color: rgba(255, 247, 239, 0.06);
   }
 
-@media (prefers-reduced-motion: reduce) {
-  .footer-octopus {
-    animation: none;
+  .stage-hint {
+    width: min(92%, 760px);
+    font-size: clamp(0.95rem, 3.4vw, 1.25rem);
+    white-space: normal;
   }
 }
 
